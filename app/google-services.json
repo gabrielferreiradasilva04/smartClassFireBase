@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "664390324240",
+    "project_id": "smartclass-964b2",
+    "storage_bucket": "smartclass-964b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:664390324240:android:2e6162751d7c1c3cd8ba95",
+        "android_client_info": {
+          "package_name": "com.gabriel.smartclass"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVzID-z3F5ImRLes01D-PEH7tnEyu94Gs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
