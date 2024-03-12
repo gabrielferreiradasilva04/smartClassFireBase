@@ -3,8 +3,6 @@ package com.gabriel.smartclass.model;
 import java.util.Objects;
 
 public class User {
-
-    private Long id;
     private String firstName;
     private String lastName;
     private String email;
@@ -21,27 +19,9 @@ public class User {
         this.phone = phone;
     }
 
-    public User(Long id, String firstName, String lastName, String email, String document, String password, String phone) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.document = document;
-        this.password = password;
-        this.phone = phone;
-    }
 
     public User() {
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -95,12 +75,12 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id);
+        return Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(email);
     }
 
     @Override

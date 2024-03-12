@@ -18,7 +18,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class UserTypeDao {
+public class    UserTypeDao {
     private final String COLLNAME = "userTypes";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
