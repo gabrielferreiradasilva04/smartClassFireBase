@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="darkl_blue">#000080</color>
+    <color name="light_blue">#6495ED</color>
+    <color name="baby_blue">#87CEFA</color>
+    <color name="sky_blue">#00BFFF</color>
+    <color name="dark_orchid">#9932CC</color>
+    <color name="medium_orchid">#BA55D3</color>
 </resources>
