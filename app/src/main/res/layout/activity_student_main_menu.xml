@@ -13,6 +13,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="1dp"
         app:menu="@menu/bottom_action_bar_menu_student"
+        android:backgroundTint="@color/baby_blue"
         />
 
 

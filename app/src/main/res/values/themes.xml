@@ -5,5 +5,12 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.SmartClass" parent="Base.Theme.SmartClass" />
+
+    <style name="Theme.SmartClass" parent="Base.Theme.SmartClass">
+        <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView.Colored</item>
+        <item name="colorPrimary">@color/sky_blue</item>
+    </style>
+
+
+
 </resources>

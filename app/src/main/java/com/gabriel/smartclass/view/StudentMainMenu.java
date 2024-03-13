@@ -16,5 +16,7 @@ public class StudentMainMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityStudentMainMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
     }
 }
