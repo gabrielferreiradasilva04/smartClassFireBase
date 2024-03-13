@@ -5,12 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.gabriel.smartclass.R;
+import com.gabriel.smartclass.databinding.ActivityStudentMainMenuBinding;
 
 public class StudentMainMenu extends AppCompatActivity {
+    private ActivityStudentMainMenuBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_student_main_menu);
+        binding = ActivityStudentMainMenuBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
     }
 }

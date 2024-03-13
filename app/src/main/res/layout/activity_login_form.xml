@@ -10,12 +10,12 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/loginButton"
+        android:id="@+id/loginButton_login"
         style="@style/Button_Confirm_Forms"
         android:text="Entrar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edTxtPassword"
+        app:layout_constraintTop_toBottomOf="@id/edTxtPassword_login"
 
 
         />
@@ -25,7 +25,7 @@
         android:text="Cadastre-se"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginButton"
+        app:layout_constraintTop_toBottomOf="@id/loginButton_login"
         android:layout_marginTop="10dp"
 
 
@@ -33,21 +33,21 @@
         />
 
     <EditText
-        android:id="@+id/edTxtEmail"
+        android:id="@+id/edTxtEmail_login"
         style="@style/Edit_Text_Forms"
-        android:layout_marginTop="64dp"
-        android:inputType="text"
+        android:layout_marginTop="40dp"
         android:hint="E-mail"
-        app:layout_constraintTop_toBottomOf="@id/imgLogo"
-        app:layout_constraintStart_toStartOf="parent"
+        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgLogo" />
+
     <EditText
-        android:id="@+id/edTxtPassword"
+        android:id="@+id/edTxtPassword_login"
         style="@style/Edit_Text_Forms"
         android:hint="Senha"
         android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@id/edTxtEmail"
+        app:layout_constraintTop_toBottomOf="@id/edTxtEmail_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         />

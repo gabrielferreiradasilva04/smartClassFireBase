@@ -10,21 +10,31 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.controller.UserController;
+import com.gabriel.smartclass.controller.RegisterController;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RegisterForm extends AppCompatActivity {
     private Button loginButton;
     private Button registerButton;
-    private EditText edTxtDocument;
+    private RegisterController controller;
+    private EditText edTxtEmail;
+    private EditText edTxtPassword;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_form);
 
+
         this.loginButton = findViewById(R.id.loginButton_register);
         this.registerButton = findViewById(R.id.registerButton_register);
-        this.edTxtDocument = findViewById(R.id.edTxtDocument_Register);
+        this.edTxtEmail = findViewById(R.id.edTxtEmail_register);
+        this.edTxtPassword = findViewById(R.id.edTxtPassword_register);
+
+
+        this.controller = new RegisterController(this);
 
 
 
@@ -36,12 +46,8 @@ public class RegisterForm extends AppCompatActivity {
                 finish();
             }
         });
-        this.registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new UserController().createNewUserWithEmailAndPassword("gabriel0101@outlook.com", "123456789");
-                new UserController().updateUser();
-            }
+        this.registerButton.setOnClickListener(view ->{
+            controller.CreateNewUserByEmailAndPassword(edTxtEmail.getText().toString(), edTxtPassword.getText().toString(),this);
         });
     }
 }

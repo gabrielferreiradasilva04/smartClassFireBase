@@ -10,7 +10,7 @@
         android:icon="@drawable/ic_home"/>
     <item
         android:id="@+id/menu_notices"
-        android:title="@string/menu_notices"
+        android:title="@string/menu_news"
         android:icon="@drawable/ic_home"/>
 
 </menu>

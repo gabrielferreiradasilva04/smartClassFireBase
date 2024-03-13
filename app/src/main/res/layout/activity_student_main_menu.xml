@@ -7,12 +7,12 @@
     tools:context=".view.StudentMainMenu">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_action_bar"
+        android:id="@+id/bottom_action_bar_students"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="1dp"
-        app:menu="@menu/bottom_action_bar_menu"
+        app:menu="@menu/bottom_action_bar_menu_student"
         />
 
 

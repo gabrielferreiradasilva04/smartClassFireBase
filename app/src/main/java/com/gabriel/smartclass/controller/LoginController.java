@@ -1,2 +1,63 @@
-package com.gabriel.smartclass.controller;public class LoginController {
+package com.gabriel.smartclass.controller;
+
+import android.content.Context;
+import android.content.Intent;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
+import com.gabriel.smartclass.view.LoginForm;
+import com.gabriel.smartclass.view.StudentMainMenu;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class LoginController {
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+    LoginForm loginForm;
+
+    public LoginController(LoginForm loginForm){
+        this.loginForm = loginForm;
+    }
+
+
+    public void signInwithEmailAndPassword(String email, String password, Context context){
+        if(email.isEmpty() && password.isEmpty()){
+            Toast toast = Toast.makeText(context, "Preencha todos os campos!", Toast.LENGTH_LONG);
+            toast.show();
+        }else{
+            auth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful() && auth.getCurrentUser() != null){
+                        Intent i = new Intent(context, StudentMainMenu.class);
+                        context.startActivity(i);
+                    }
+                }
+            }).addOnFailureListener(e ->{
+                String errorMessage = "";
+                if(e.getClass().equals(FirebaseAuthInvalidCredentialsException.class)){
+                    errorMessage = "Credenciais inválidas";
+                }
+                if(e.getClass().equals(FirebaseNetworkException.class)){
+                    errorMessage = "Sem conexão com a internet, tente novamente mais tarde";
+                }
+                Toast toast = Toast.makeText(context, errorMessage, Toast.LENGTH_LONG);
+                toast.show();
+            });
+        }
+
+
+    }
 }
