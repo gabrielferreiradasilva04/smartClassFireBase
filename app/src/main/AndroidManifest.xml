@@ -17,7 +17,7 @@
             android:exported="false" />
         <activity
             android:name=".view.RegisterForm"
-            android:exported="false" />
+            android:exported="false" android:screenOrientation="portrait"/>
         <activity
             android:name=".view.LoginForm"
             android:exported="true">
