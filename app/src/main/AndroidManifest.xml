@@ -19,7 +19,7 @@
             android:name=".view.RegisterForm"
             android:exported="false" android:screenOrientation="portrait"/>
         <activity
-            android:name=".view.LoginForm"
+            android:name=".view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

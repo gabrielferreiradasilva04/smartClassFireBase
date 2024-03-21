@@ -82,4 +82,15 @@ public class Institution {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    @Override
+    public String toString() {
+        return "Institution{" +
+                "id='" + id + '\'' +
+                ", cnpj='" + cnpj + '\'' +
+                ", name='" + name + '\'' +
+                ", responsable_id=" + responsable_id +
+                ", duration='" + duration + '\'' +
+                '}';
+    }
 }

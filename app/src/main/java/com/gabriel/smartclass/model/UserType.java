@@ -3,16 +3,16 @@ package com.gabriel.smartclass.model;
 import java.util.Objects;
 
 public class UserType {
-    private String uuid;
+    private String id;
     private String description;
 
 
     public String getUuid() {
-        return uuid;
+        return id;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setUuid(String id) {
+        this.id = id;
     }
 
     public String getDescription() {
