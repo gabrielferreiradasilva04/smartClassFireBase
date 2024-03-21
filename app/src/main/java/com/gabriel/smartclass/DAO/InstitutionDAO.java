@@ -1,2 +1,4 @@
-package com.gabriel.smartclass.DAO;public class CourseDAO {
+package com.gabriel.smartclass.DAO;
+
+public class InstitutionDAO {
 }
