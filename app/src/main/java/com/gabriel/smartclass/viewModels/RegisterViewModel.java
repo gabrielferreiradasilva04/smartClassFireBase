@@ -1,10 +1,19 @@
-package com.gabriel.smartclass.controller;
+package com.gabriel.smartclass.viewModels;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import com.gabriel.smartclass.DAO.UserAuthDAO;
 import com.gabriel.smartclass.view.LoginForm;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -15,36 +24,24 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class RegisterController {
-    FirebaseAuth auth = FirebaseAuth.getInstance();
-    private Activity registerActivity;
+public class RegisterViewModel extends ViewModel {
+    private UserAuthDAO userAuthDAO;
 
-    public RegisterController(Activity registerActivity){
-        this.registerActivity = registerActivity;
+    public RegisterViewModel(){
+        this.userAuthDAO = new UserAuthDAO();
     }
 
-    public void CreateNewUserByEmailAndPassword(String email, String password, Context context){
-        if(email.isEmpty() || password.isEmpty()){
-            Toast toast = Toast.makeText(context, "Preencha todos os campos!", Toast.LENGTH_LONG);
-            toast.show();
-        }else{
-            auth = FirebaseAuth.getInstance();
-            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(register ->{
-                if(register.isSuccessful()){
-                    Toast toast = Toast.makeText(context, "Cadastro realizado com sucesso!", Toast.LENGTH_LONG);
-                    toast.show();
-
-                    Timer timer = new Timer();
-                    TimerTask task = new TimerTask() {
-                        @Override
-                        public void run() {
-                            Intent i = new Intent(context, LoginForm.class);
-                            context.startActivity(i);
-                        }
-                    };
-                    timer.schedule(task, 3000);
+    public void registerUser(String email, String password, Context context){
+        this.userAuthDAO.CreateNewUserByEmailAndPassword(email, password, new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                if (task.isSuccessful()) {
+                    Toast toast = Toast.makeText(context, "Cadastro realizado!", Toast.LENGTH_LONG);
                 }
-            }).addOnFailureListener( e ->{
+            }
+        }, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
                 String errorMessage = "";
                 if(e.getClass().equals(FirebaseAuthWeakPasswordException.class)){
                     errorMessage = "A senha deve conter pelo mesnos 6 caractéres";
@@ -60,9 +57,11 @@ public class RegisterController {
                 }
                 Toast toast = Toast.makeText(context, errorMessage, Toast.LENGTH_LONG);
                 toast.show();
-            });
-        }
-
+            }
+        });
     }
+
+
+
 
 }

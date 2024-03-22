@@ -10,8 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.controller.LoginController;
-import com.gabriel.smartclass.controller.RegisterController;
+import com.gabriel.smartclass.viewModels.LoginViewModel;
 
 
 public class LoginForm extends AppCompatActivity {
@@ -20,7 +19,7 @@ public class LoginForm extends AppCompatActivity {
     private EditText edTxtEmail;
     private EditText edTxtPassword;
 
-    private LoginController controller;
+    private LoginViewModel loginViewModel;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +30,7 @@ public class LoginForm extends AppCompatActivity {
         this.registerButton = findViewById(R.id.registerButton_login);
         this.edTxtEmail = findViewById(R.id.edTxtEmail_login);
         this.edTxtPassword = findViewById(R.id.edTxtPassword_login);
-        this.controller = new LoginController(this);
+        this.loginViewModel = new LoginViewModel();
 
         this.registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,7 +42,7 @@ public class LoginForm extends AppCompatActivity {
         });
 
         this.loginButton.setOnClickListener(view ->{
-            controller.signInwithEmailAndPassword(this.edTxtEmail.getText().toString(), this.edTxtPassword.getText().toString(), this);
+            loginViewModel.loginUser(this.edTxtEmail.getText().toString(), this.edTxtPassword.getText().toString(), this);
         });
     }
 }

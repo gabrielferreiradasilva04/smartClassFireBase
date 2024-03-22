@@ -10,15 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.controller.RegisterController;
-
-import java.util.Timer;
-import java.util.TimerTask;
+import com.gabriel.smartclass.viewModels.RegisterViewModel;
 
 public class RegisterForm extends AppCompatActivity {
     private Button loginButton;
     private Button registerButton;
-    private RegisterController controller;
+    private RegisterViewModel registerViewModel;
     private EditText edTxtEmail;
     private EditText edTxtPassword;
     @SuppressLint("MissingInflatedId")
@@ -34,7 +31,7 @@ public class RegisterForm extends AppCompatActivity {
         this.edTxtPassword = findViewById(R.id.edTxtPassword_register);
 
 
-        this.controller = new RegisterController(this);
+        this.registerViewModel = new RegisterViewModel();
 
 
 
@@ -47,7 +44,7 @@ public class RegisterForm extends AppCompatActivity {
             }
         });
         this.registerButton.setOnClickListener(view ->{
-            controller.CreateNewUserByEmailAndPassword(edTxtEmail.getText().toString(), edTxtPassword.getText().toString(),this);
+            registerViewModel.registerUser(edTxtEmail.getText().toString(), edTxtPassword.getText().toString(),this);
         });
     }
 }

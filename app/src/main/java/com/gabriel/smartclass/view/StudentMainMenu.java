@@ -26,6 +26,7 @@ public class StudentMainMenu extends AppCompatActivity {
         navigation();
     }
 
+    /*navegação entre as fragments*/
     private void navigation(){
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container_student);
         navController = navHostFragment.getNavController();
