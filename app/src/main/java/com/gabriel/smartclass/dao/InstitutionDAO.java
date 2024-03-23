@@ -23,7 +23,7 @@ public class InstitutionDAO {
     }
     public void listAllInstitutions(OnSuccessListener<QuerySnapshot> onSuccessListener){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection(COLLECTION).get().addOnSuccessListener(onSuccessListener);
+        db.collection(COLLECTION).get().addOnSuccessListener(onSuccessListener); /*oiii*/
     }
 
 }
