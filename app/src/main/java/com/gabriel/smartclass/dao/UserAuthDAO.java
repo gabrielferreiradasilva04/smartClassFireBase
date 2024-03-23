@@ -1,4 +1,4 @@
-package com.gabriel.smartclass.DAO;
+package com.gabriel.smartclass.dao;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 

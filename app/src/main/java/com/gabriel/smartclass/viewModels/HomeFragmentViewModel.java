@@ -2,16 +2,12 @@ package com.gabriel.smartclass.viewModels;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.gabriel.smartclass.DAO.InstitutionDAO;
+import com.gabriel.smartclass.dao.InstitutionDAO;
 import com.gabriel.smartclass.model.Institution;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 

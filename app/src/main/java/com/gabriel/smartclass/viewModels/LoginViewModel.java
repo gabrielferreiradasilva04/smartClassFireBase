@@ -7,18 +7,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
-import com.gabriel.smartclass.DAO.UserAuthDAO;
-import com.gabriel.smartclass.view.LoginForm;
+import com.gabriel.smartclass.dao.UserAuthDAO;
 import com.gabriel.smartclass.view.StudentMainMenu;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseNetworkException;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginViewModel extends ViewModel {
     FirebaseUser userAuth;

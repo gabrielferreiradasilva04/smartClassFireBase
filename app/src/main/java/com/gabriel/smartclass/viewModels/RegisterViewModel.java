@@ -1,28 +1,19 @@
 package com.gabriel.smartclass.viewModels;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.gabriel.smartclass.DAO.UserAuthDAO;
-import com.gabriel.smartclass.view.LoginForm;
+import com.gabriel.smartclass.dao.UserAuthDAO;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseNetworkException;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class RegisterViewModel extends ViewModel {
     private UserAuthDAO userAuthDAO;
