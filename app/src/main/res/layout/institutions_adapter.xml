@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/view_container"
+        android:layout_width="370dp"
+        android:layout_height="110dp"
+        android:layout_margin="20dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/container_institutions_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textInstitutionName_adapter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/TextView_Institutions_RecyclerView"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@id/view_container"
+        app:layout_constraintStart_toStartOf="@id/view_container"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textInstitutionCNPJ_adapter"
+        style="@style/TextView_Institutions_RecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@id/view_container"
+        app:layout_constraintStart_toStartOf="@id/view_container"
+        app:layout_constraintTop_toBottomOf="@+id/textInstitutionName_adapter" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

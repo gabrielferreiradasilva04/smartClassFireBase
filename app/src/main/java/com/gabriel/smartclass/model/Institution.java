@@ -1,15 +1,36 @@
 package com.gabriel.smartclass.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
+import com.google.firebase.firestore.PropertyName;
+
 import java.util.Objects;
 
-public class Institution {
+public class Institution implements Parcelable {
     private String id;
+    @PropertyName("cnpj")
+
     private String cnpj;
+    @PropertyName("name")
+
     private String name;
+    @PropertyName("reponsable_id")
+
     private InstitutionUser responsable_id;
-    private String duration;
 
     //getters and setters
+
+
+    protected Institution(Parcel in) {
+        id = in.readString();
+        cnpj = in.readString();
+        name = in.readString();
+        responsable_id = in.readParcelable(InstitutionUser.class.getClassLoader());
+    }
+
 
 
     public String getId() {
@@ -44,27 +65,19 @@ public class Institution {
         this.responsable_id = responsable_id;
     }
 
-    public String getDuration() {
-        return duration;
-    }
 
-    public void setDuration(String duration) {
-        this.duration = duration;
-    }
 
-    public Institution(String cnpj, String name, InstitutionUser responsable_id, String duration) {
+    public Institution(String cnpj, String name, InstitutionUser responsable_id){
         this.cnpj = cnpj;
         this.name = name;
         this.responsable_id = responsable_id;
-        this.duration = duration;
     }
 
-    public Institution(String id, String cnpj, String name, InstitutionUser responsable_id, String duration) {
+    public Institution(String id, String cnpj, String name, InstitutionUser responsable_id) {
         this.id = id;
         this.cnpj = cnpj;
         this.name = name;
         this.responsable_id = responsable_id;
-        this.duration = duration;
     }
 
     public Institution() {
@@ -90,7 +103,34 @@ public class Institution {
                 ", cnpj='" + cnpj + '\'' +
                 ", name='" + name + '\'' +
                 ", responsable_id=" + responsable_id +
-                ", duration='" + duration + '\'' +
                 '}';
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(cnpj);
+        dest.writeString(name);
+        dest.writeParcelable(responsable_id, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Institution> CREATOR = new Creator<Institution>() {
+        @Override
+        public Institution createFromParcel(Parcel in) {
+            return new Institution(in);
+        }
+
+        @Override
+        public Institution[] newArray(int size) {
+            return new Institution[size];
+        }
+    };
+
+
+
 }

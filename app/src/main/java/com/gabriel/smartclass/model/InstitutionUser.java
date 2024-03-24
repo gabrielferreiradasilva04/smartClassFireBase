@@ -1,14 +1,19 @@
 package com.gabriel.smartclass.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.sql.Timestamp;
 import java.util.Map;
 import java.util.Objects;
 
-public class InstitutionUser {
+public class InstitutionUser  implements Parcelable {
     private String id;
     private String userAuth_id;
     private UserType userType_id;
     private Map<String, Object> identification;
+
+
 
     public String getId() {
         return id;
@@ -71,6 +76,37 @@ public class InstitutionUser {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    /*implementação do Parcelable*/
+    protected InstitutionUser(Parcel in) {
+        id = in.readString();
+        userAuth_id = in.readString();
+        userType_id = in.readParcelable(UserType.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(userAuth_id);
+        dest.writeParcelable(userType_id, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<InstitutionUser> CREATOR = new Creator<InstitutionUser>() {
+        @Override
+        public InstitutionUser createFromParcel(Parcel in) {
+            return new InstitutionUser(in);
+        }
+
+        @Override
+        public InstitutionUser[] newArray(int size) {
+            return new InstitutionUser[size];
+        }
+    };
 
 
 }

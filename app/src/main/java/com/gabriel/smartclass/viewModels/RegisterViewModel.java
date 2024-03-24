@@ -1,12 +1,14 @@
 package com.gabriel.smartclass.viewModels;
 
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
 import com.gabriel.smartclass.dao.UserAuthDAO;
+import com.gabriel.smartclass.view.LoginForm;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -28,6 +30,9 @@ public class RegisterViewModel extends ViewModel {
             public void onComplete(@NonNull Task task) {
                 if (task.isSuccessful()) {
                     Toast toast = Toast.makeText(context, "Cadastro realizado!", Toast.LENGTH_LONG);
+                    toast.show();
+                    Intent i = new Intent(context, LoginForm.class);
+                    context.startActivity(i);
                 }
             }
         }, new OnFailureListener() {

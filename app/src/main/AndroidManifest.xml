@@ -13,11 +13,15 @@
         android:theme="@style/Theme.SmartClass"
         tools:targetApi="31">
         <activity
+            android:name=".view.UserInstitutionMenu"
+            android:exported="false" />
+        <activity
             android:name=".view.StudentMainMenu"
             android:exported="false" />
         <activity
             android:name=".view.RegisterForm"
-            android:exported="false" android:screenOrientation="portrait"/>
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.LoginForm"
             android:exported="true">

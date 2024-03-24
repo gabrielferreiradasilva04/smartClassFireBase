@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/menu_profile"
-        android:name="com.gabriel.smartclass.view.fragments.userfragments.profileFragment"
+        android:name="com.gabriel.smartclass.view.fragments.userfragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/menu_home"
-        android:name="com.gabriel.smartclass.view.fragments.userfragments.homeFragment"
+        android:name="com.gabriel.smartclass.view.fragments.userfragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/menu_news"
-        android:name="com.gabriel.smartclass.view.fragments.userfragments.newsFragment"
+        android:name="com.gabriel.smartclass.view.fragments.userfragments.NewsFragment"
         android:label="fragment_news"
         tools:layout="@layout/fragment_news" />
 </navigation>

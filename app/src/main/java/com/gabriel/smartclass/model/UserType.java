@@ -1,8 +1,13 @@
 package com.gabriel.smartclass.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.util.Objects;
 
-public class UserType {
+public class UserType implements Parcelable {
     private String id;
     private String description;
 
@@ -48,5 +53,16 @@ public class UserType {
         return "UserType{" +
                 "description='" + description + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+
+
     }
 }
