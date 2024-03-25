@@ -16,6 +16,7 @@ import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.InstitutionsAdapter;
 import com.gabriel.smartclass.databinding.FragmentHomeBinding;
 import com.gabriel.smartclass.model.Institution;
+import com.gabriel.smartclass.view.InstitutionsSearch;
 import com.gabriel.smartclass.view.UserInstitutionMenu;
 import com.gabriel.smartclass.viewModels.HomeFragmentViewModel;
 
@@ -82,6 +83,13 @@ public class HomeFragment extends Fragment {
                 homeFragmentViewModel.setSelectedInstitution(institution);
                 Intent i = new Intent(getContext(), UserInstitutionMenu.class);
                 i.putExtra("institution", institution );
+                startActivity(i);
+            }
+        });
+        binding.buttonAddInstitutionUserInstitutions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), InstitutionsSearch.class);
                 startActivity(i);
             }
         });

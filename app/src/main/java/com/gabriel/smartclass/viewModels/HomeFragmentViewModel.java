@@ -96,13 +96,16 @@ public class HomeFragmentViewModel extends ViewModel {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 for(DocumentSnapshot documentSnapshot : task.getResult()){
                     AppUser appUser = documentSnapshot.toObject(AppUser.class);
+                    appUser.setId(documentSnapshot.getId());
                     if(appUser!=null){
                         for (DocumentReference documentReference: appUser.getInstitutions()) {
                             documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @SuppressLint("NotifyDataSetChanged")
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    userInstitutionsAdapter.addItem(documentSnapshot.toObject(Institution.class));
+                                    Institution institution = documentSnapshot.toObject(Institution.class);
+                                    institution.setId(documentSnapshot.getId());
+                                    userInstitutionsAdapter.addItem(institution);
                                     userInstitutionsAdapter.notifyDataSetChanged();
                                 }
                             });

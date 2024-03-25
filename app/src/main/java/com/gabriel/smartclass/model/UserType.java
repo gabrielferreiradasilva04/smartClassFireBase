@@ -12,6 +12,34 @@ public class UserType implements Parcelable {
     private String description;
 
 
+    protected UserType(Parcel in) {
+        id = in.readString();
+        description = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(description);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<UserType> CREATOR = new Creator<UserType>() {
+        @Override
+        public UserType createFromParcel(Parcel in) {
+            return new UserType(in);
+        }
+
+        @Override
+        public UserType[] newArray(int size) {
+            return new UserType[size];
+        }
+    };
+
     public String getUuid() {
         return id;
     }
@@ -55,14 +83,5 @@ public class UserType implements Parcelable {
                 '}';
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-
-
-    }
 }

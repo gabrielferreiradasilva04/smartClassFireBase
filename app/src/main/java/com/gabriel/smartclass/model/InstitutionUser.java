@@ -3,17 +3,45 @@ package com.gabriel.smartclass.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.sql.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+
 import java.util.Map;
 import java.util.Objects;
 
 public class InstitutionUser  implements Parcelable {
     private String id;
     private String userAuth_id;
-    private UserType userType_id;
+    private DocumentReference  userType_id;
     private Map<String, Object> identification;
 
 
+    protected InstitutionUser(Parcel in) {
+        id = in.readString();
+        userAuth_id = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(userAuth_id);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<InstitutionUser> CREATOR = new Creator<InstitutionUser>() {
+        @Override
+        public InstitutionUser createFromParcel(Parcel in) {
+            return new InstitutionUser(in);
+        }
+
+        @Override
+        public InstitutionUser[] newArray(int size) {
+            return new InstitutionUser[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -31,11 +59,11 @@ public class InstitutionUser  implements Parcelable {
         this.userAuth_id = userAuth_id;
     }
 
-    public UserType getUserType_id() {
+    public DocumentReference getUserType_id() {
         return userType_id;
     }
 
-    public void setUserType_id(UserType userType_id) {
+    public void setUserType_id(DocumentReference userType_id) {
         this.userType_id = userType_id;
     }
 
@@ -51,13 +79,13 @@ public class InstitutionUser  implements Parcelable {
     }
 
 
-    public InstitutionUser(String userAuth_id, UserType userType_id, Map<String, Object> identification) {
+    public InstitutionUser(String userAuth_id, DocumentReference userType_id, Map<String, Object> identification) {
         this.userAuth_id = userAuth_id;
         this.userType_id = userType_id;
         this.identification = identification;
     }
 
-    public InstitutionUser(String id, String userAuth_id, UserType userType_id, Map<String, Object> identification) {
+    public InstitutionUser(String id, String userAuth_id, DocumentReference userType_id, Map<String, Object> identification) {
         this.id = id;
         this.userAuth_id = userAuth_id;
         this.userType_id = userType_id;
@@ -77,36 +105,7 @@ public class InstitutionUser  implements Parcelable {
         return Objects.hash(id);
     }
 
-    /*implementação do Parcelable*/
-    protected InstitutionUser(Parcel in) {
-        id = in.readString();
-        userAuth_id = in.readString();
-        userType_id = in.readParcelable(UserType.class.getClassLoader());
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(userAuth_id);
-        dest.writeParcelable(userType_id, flags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<InstitutionUser> CREATOR = new Creator<InstitutionUser>() {
-        @Override
-        public InstitutionUser createFromParcel(Parcel in) {
-            return new InstitutionUser(in);
-        }
-
-        @Override
-        public InstitutionUser[] newArray(int size) {
-            return new InstitutionUser[size];
-        }
-    };
 
 
 }
