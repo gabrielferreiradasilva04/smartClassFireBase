@@ -3,7 +3,6 @@ package com.gabriel.smartclass.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.PropertyName;
 

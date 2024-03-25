@@ -1,24 +1,18 @@
 package com.gabriel.smartclass.viewModels;
 
 import android.content.Context;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.gabriel.smartclass.adapter.InstitutionsAdapter;
-import com.gabriel.smartclass.dao.InstitutionDAO;
 import com.gabriel.smartclass.model.Institution;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
+import com.gabriel.smartclass.dao.InstitutionDAO;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +23,14 @@ public class InstitutionsSearchViewModel extends ViewModel {
     private InstitutionDAO dao;
     private Context context;
     private Institution selectedInstitution;
+
+    public InstitutionsAdapter getAdapter() {
+        return adapter;
+    }
+
+    public void setAdapter(InstitutionsAdapter adapter) {
+        this.adapter = adapter;
+    }
 
     public InstitutionsSearchViewModel(Context context){
         this.context = context;
@@ -47,10 +49,12 @@ public class InstitutionsSearchViewModel extends ViewModel {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
+                    institutions = new ArrayList<>();
                     for (DocumentSnapshot document: task.getResult()){
                         Institution institution = document.toObject(Institution.class);
                         institution.setId(document.getId());
-                        adapter.addItem(institution);
+                        institutions.add(institution);
+                        adapter.getInstitutionsMutableLiveData().setValue(institutions);
                         adapter.notifyDataSetChanged();
                     }
                 }

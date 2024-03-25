@@ -2,12 +2,8 @@ package com.gabriel.smartclass.viewModels;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,16 +13,12 @@ import com.gabriel.smartclass.dao.AppUserDAO;
 import com.gabriel.smartclass.dao.InstitutionDAO;
 import com.gabriel.smartclass.model.AppUser;
 import com.gabriel.smartclass.model.Institution;
-import com.gabriel.smartclass.view.RegisterForm;
-import com.gabriel.smartclass.view.StudentMainMenu;
-import com.gabriel.smartclass.view.UserInstitutionMenu;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;

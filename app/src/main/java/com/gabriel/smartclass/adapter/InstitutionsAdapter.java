@@ -3,19 +3,12 @@ package com.gabriel.smartclass.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.model.Institution;
-
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 public class InstitutionsAdapter extends RecyclerView.Adapter {
