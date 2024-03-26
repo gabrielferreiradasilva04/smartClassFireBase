@@ -13,6 +13,7 @@ public class InstitutionUser  implements Parcelable {
     private String userAuth_id;
     private DocumentReference  userType_id;
     private Map<String, Object> identification;
+    private boolean active;
 
 
     protected InstitutionUser(Parcel in) {
@@ -73,6 +74,14 @@ public class InstitutionUser  implements Parcelable {
 
     public void setIdentification(Map<String, Object> identification) {
         this.identification = identification;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public InstitutionUser() {

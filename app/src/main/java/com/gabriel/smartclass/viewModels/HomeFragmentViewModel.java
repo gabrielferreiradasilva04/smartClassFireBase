@@ -62,6 +62,7 @@ public class HomeFragmentViewModel extends ViewModel {
                     AppUser appUser = documentSnapshot.toObject(AppUser.class);
                     appUser.setId(documentSnapshot.getId());
 
+
                     for (DocumentReference documentReference: appUser.getInstitutions()) {
                         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @SuppressLint("NotifyDataSetChanged")

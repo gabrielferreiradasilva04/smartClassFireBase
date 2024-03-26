@@ -75,7 +75,6 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        homeFragmentViewModel = new HomeFragmentViewModel(getContext());
         getUserInstitutions();
         refresh();
         binding.buttonAddInstitutionUserInstitutions.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +90,8 @@ public class HomeFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void getUserInstitutions() {
+        homeFragmentViewModel = new HomeFragmentViewModel(getContext());
+
         homeFragmentViewModel.getUserInstitutions(binding.institutionsRecyclerViewHomeFragment, new InstitutionsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Institution institution) {
