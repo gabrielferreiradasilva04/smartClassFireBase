@@ -13,6 +13,7 @@ import com.gabriel.smartclass.dao.AppUserDAO;
 import com.gabriel.smartclass.dao.InstitutionDAO;
 import com.gabriel.smartclass.model.AppUser;
 import com.gabriel.smartclass.model.Institution;
+import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,16 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragmentViewModel extends ViewModel {
-    private InstitutionDAO institutionDAO;
-    private AppUserDAO appUserDAO;
-
-    private List<Institution> institutions;
+    private AppUserDAO appUserDAO;/*objeto usado para buscar os dados do usuario e suas instituições*/
     private List<Institution> userInstitutions;
     private InstitutionsAdapter userInstitutionsAdapter;
-    private InstitutionsAdapter institutionsAdapter;
     private Context context;
     private Institution selectedInstitution ;
-
     public Institution getSelectedInstitution() {
         return selectedInstitution;
     }
@@ -42,42 +38,18 @@ public class HomeFragmentViewModel extends ViewModel {
     public void setSelectedInstitution(Institution selectedInstitution) {
         this.selectedInstitution = selectedInstitution;
     }
-
     public InstitutionsAdapter getUserInstitutionsAdapter() {
         return userInstitutionsAdapter;
     }
 
-    public InstitutionsAdapter getInstitutionsAdapter() {
-        return institutionsAdapter;
-    }
 
 
     public HomeFragmentViewModel(Context context){
-        institutionDAO = new InstitutionDAO();
         appUserDAO = new AppUserDAO();
-        institutions = new ArrayList<>();
         userInstitutions = new ArrayList<>();
         this.context = context;
-
     }
 
-    public void getAllInstitutions(RecyclerView recyclerView, InstitutionsAdapter.ItemClickListener onInstitutionClick){
-        institutionsAdapter = new InstitutionsAdapter(institutions, onInstitutionClick);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(institutionsAdapter);
-        institutionDAO.listAllInstitutions(new OnSuccessListener<QuerySnapshot>() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for (DocumentSnapshot documentSnapshot: queryDocumentSnapshots.getDocuments()) {
-                    institutionsAdapter.addItem(documentSnapshot.toObject(Institution.class));
-                    institutionsAdapter.notifyDataSetChanged();
-                }
-
-            }
-        });
-    }
     public void getUserInstitutions(RecyclerView recyclerView, InstitutionsAdapter.ItemClickListener onClickUserInstitution){
         userInstitutionsAdapter = new InstitutionsAdapter(userInstitutions, onClickUserInstitution);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -89,19 +61,18 @@ public class HomeFragmentViewModel extends ViewModel {
                 for(DocumentSnapshot documentSnapshot : task.getResult()){
                     AppUser appUser = documentSnapshot.toObject(AppUser.class);
                     appUser.setId(documentSnapshot.getId());
-                    if(appUser!=null){
-                        for (DocumentReference documentReference: appUser.getInstitutions()) {
-                            documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @SuppressLint("NotifyDataSetChanged")
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    Institution institution = documentSnapshot.toObject(Institution.class);
-                                    institution.setId(documentSnapshot.getId());
-                                    userInstitutionsAdapter.addItem(institution);
-                                    userInstitutionsAdapter.notifyDataSetChanged();
-                                }
-                            });
-                        }
+
+                    for (DocumentReference documentReference: appUser.getInstitutions()) {
+                        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @SuppressLint("NotifyDataSetChanged")
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                Institution institution = documentSnapshot.toObject(Institution.class);
+                                institution.setId(documentSnapshot.getId());
+                                userInstitutionsAdapter.addItem(institution);
+                                userInstitutionsAdapter.notifyDataSetChanged();
+                            }
+                        });
                     }
                 }
 

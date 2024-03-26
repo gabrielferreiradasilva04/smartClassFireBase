@@ -1,10 +1,12 @@
 package com.gabriel.smartclass.view.fragments.userfragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Parcelable;
 import android.util.Log;
@@ -16,6 +18,7 @@ import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.InstitutionsAdapter;
 import com.gabriel.smartclass.databinding.FragmentHomeBinding;
 import com.gabriel.smartclass.model.Institution;
+import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
 import com.gabriel.smartclass.view.InstitutionsSearch;
 import com.gabriel.smartclass.view.UserInstitutionMenu;
 import com.gabriel.smartclass.viewModels.HomeFragmentViewModel;
@@ -36,7 +39,6 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private HomeFragmentViewModel homeFragmentViewModel;
-    private RecyclerView institutionsRecyclerView;
     private FragmentHomeBinding binding;
 
     public HomeFragment() {
@@ -68,15 +70,27 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        homeFragmentViewModel = new HomeFragmentViewModel(container.getContext());
+        homeFragmentViewModel = new HomeFragmentViewModel(getContext());
+        getUserInstitutions();
+        refresh();
+        binding.buttonAddInstitutionUserInstitutions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), InstitutionsSearch.class);
+                startActivity(i);
+            }
+        });
+        return binding.getRoot();
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void getUserInstitutions() {
         homeFragmentViewModel.getUserInstitutions(binding.institutionsRecyclerViewHomeFragment, new InstitutionsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Institution institution) {
@@ -86,15 +100,12 @@ public class HomeFragment extends Fragment {
                 startActivity(i);
             }
         });
-        binding.buttonAddInstitutionUserInstitutions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getContext(), InstitutionsSearch.class);
-                startActivity(i);
-            }
-        });
+        if (binding.swipeRefreshHomeFragment.isRefreshing()){
+            binding.swipeRefreshHomeFragment.setRefreshing(false);
+        }
+    }
 
-        return binding.getRoot();
-
+    public void refresh(){
+        binding.swipeRefreshHomeFragment.setOnRefreshListener(this::getUserInstitutions);
     }
 }

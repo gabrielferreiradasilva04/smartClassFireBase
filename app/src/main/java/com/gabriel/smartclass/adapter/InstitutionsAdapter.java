@@ -15,7 +15,6 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
     private List<Institution> institutions;
     private MutableLiveData<List<Institution>> institutionsMutableLiveData;
     private ItemClickListener itemClickListener;
-
     public MutableLiveData<List<Institution>> getInstitutionsMutableLiveData() {
         return institutionsMutableLiveData;
     }
@@ -23,9 +22,8 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
     public InstitutionsAdapter(List<Institution> institutions, ItemClickListener itemClickListener){
         this.institutions = institutions;
         institutionsMutableLiveData = new MutableLiveData<>();
-        institutionsMutableLiveData.setValue(institutions);
+        institutionsMutableLiveData.setValue(this.institutions);
         this.itemClickListener = itemClickListener;
-
     }
 
     @NonNull
@@ -37,6 +35,8 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        holder.itemView.setAlpha(0f);
+        holder.itemView.animate().alpha(1f).setDuration(300).start();
         String institutionName = institutionsMutableLiveData.getValue().get(position).getName();
         String cnpj = institutionsMutableLiveData.getValue().get(position).getCnpj();
         TextView textInstitutionName = holder.itemView.findViewById(R.id.textInstitutionName_adapter);
@@ -45,10 +45,8 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
         holder.itemView.setOnClickListener( view ->{
             itemClickListener.onItemClick(institutionsMutableLiveData.getValue().get(position));
         });
-
         textInstitutionName.setText(institutionName);
         textInstitutionCNPJ.setText(cnpj);
-
     }
 
     public void addItem(Institution institution){
@@ -68,11 +66,9 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
 
         }
         TextView textInstitutionName = itemView.findViewById(R.id.textInstitutionName_adapter);
-
         public TextView getTextInstitutionName() {
             return textInstitutionName;
         }
-
         public void setTextInstitutionName(TextView textInstitutionName) {
             this.textInstitutionName = textInstitutionName;
         }
