@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.PropertyName;
 
 import java.util.Objects;
@@ -18,17 +19,10 @@ public class Institution implements Parcelable {
     private String name;
     @PropertyName("reponsable_id")
 
-    private InstitutionUser responsable_id;
+    private DocumentReference responsable_id;
 
     //getters and setters
 
-
-    protected Institution(Parcel in) {
-        id = in.readString();
-        cnpj = in.readString();
-        name = in.readString();
-        responsable_id = in.readParcelable(InstitutionUser.class.getClassLoader());
-    }
 
 
 
@@ -56,23 +50,23 @@ public class Institution implements Parcelable {
         this.name = name;
     }
 
-    public InstitutionUser getResponsable_id() {
+    public DocumentReference getResponsable_id() {
         return responsable_id;
     }
 
-    public void setResponsable_id(InstitutionUser responsable_id) {
+    public void setResponsable_id(DocumentReference responsable_id) {
         this.responsable_id = responsable_id;
     }
 
 
 
-    public Institution(String cnpj, String name, InstitutionUser responsable_id){
+    public Institution(String cnpj, String name, DocumentReference responsable_id){
         this.cnpj = cnpj;
         this.name = name;
         this.responsable_id = responsable_id;
     }
 
-    public Institution(String id, String cnpj, String name, InstitutionUser responsable_id) {
+    public Institution(String id, String cnpj, String name, DocumentReference responsable_id) {
         this.id = id;
         this.cnpj = cnpj;
         this.name = name;
@@ -104,13 +98,17 @@ public class Institution implements Parcelable {
                 ", responsable_id=" + responsable_id +
                 '}';
     }
+    protected Institution(Parcel in) {
+        id = in.readString();
+        cnpj = in.readString();
+        name = in.readString();
+    }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(cnpj);
         dest.writeString(name);
-        dest.writeParcelable(responsable_id, flags);
     }
 
     @Override
@@ -129,6 +127,8 @@ public class Institution implements Parcelable {
             return new Institution[size];
         }
     };
+
+
 
 
 
