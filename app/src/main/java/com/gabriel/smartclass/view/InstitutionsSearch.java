@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +15,7 @@ import com.gabriel.smartclass.adapter.InstitutionsAdapter;
 import com.gabriel.smartclass.databinding.ActivityInstitutionsSearchBinding;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
+import com.gabriel.smartclass.view.linkRequests.LinkRequestForm;
 import com.gabriel.smartclass.viewModels.InstitutionsSearchViewModel;
 
 public class InstitutionsSearch extends AppCompatActivity {
@@ -47,7 +49,10 @@ public class InstitutionsSearch extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 viewModel.search(binding.recyclerViewInstitutionsFind, s.toString(), new InstitutionsAdapter.ItemClickListener() {
                     @Override
-                    public void onItemClick(Institution institution) {}
+                    public void onItemClick(Institution institution) {
+                        Intent i = new Intent(getApplicationContext(), LinkRequestForm.class);
+                        startActivity(i);
+                    }
                 });
                 viewModel.getAdapter().notifyDataSetChanged();
             }
