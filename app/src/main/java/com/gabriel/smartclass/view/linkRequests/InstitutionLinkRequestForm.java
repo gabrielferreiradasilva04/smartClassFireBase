@@ -1,0 +1,34 @@
+package com.gabriel.smartclass.view.linkRequests;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.widget.Spinner;
+
+import com.gabriel.smartclass.R;
+import com.gabriel.smartclass.adapter.SpinnerUserTypeAdapter;
+import com.gabriel.smartclass.databinding.ActivityInstitutionsSearchBinding;
+import com.gabriel.smartclass.databinding.ActivityLinkRequestFormBinding;
+import com.gabriel.smartclass.model.UserType;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class InstitutionLinkRequestForm extends AppCompatActivity {
+    private ActivityLinkRequestFormBinding binding;
+    private Spinner spinnerUserType;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityLinkRequestFormBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        List<UserType> userTypeList = new ArrayList<>();
+
+        spinnerUserType = binding.spinnerUserTypeLink;
+
+        spinnerUserType.setAdapter(new SpinnerUserTypeAdapter(this.getApplicationContext(), userTypeList));
+
+    }
+}

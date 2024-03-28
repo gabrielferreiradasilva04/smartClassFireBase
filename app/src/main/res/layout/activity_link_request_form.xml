@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_login_register"
-    tools:context=".view.linkRequests.LinkRequestForm">
+    tools:context=".view.linkRequests.InstitutionLinkRequestForm">
 
     <TextView
         android:id="@+id/title_linkRequest"
@@ -44,16 +44,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_link_institution_name"/>
 
-    <Spinner
-        android:id="@+id/spinner_user_type_link"
-
-        android:layout_width="333dp"
-        android:layout_height="51dp"
-        android:layout_margin="40dp"
-        android:layout_marginTop="20dp"
+    <TextView
+        android:id="@+id/labelSpinner"
+        android:textAlignment="textStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="40dp"
+        android:text="Para realizar a sua solicitação você deve escolher abaixo qual será o seu papel na instituição"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_link_title" />
+        app:layout_constraintTop_toBottomOf="@id/text_link_title" />
+
+    <Spinner
+        android:id="@+id/spinner_user_type_link"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_margin="40dp"
+        android:background="@drawable/background_spinner_userstype_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/labelSpinner"
+        tools:layout_editor_absoluteY="281dp" />
 
     <Button
         android:id="@+id/send_link_request"
@@ -63,8 +78,9 @@
         android:text="Enviar Solicitação"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/spinner_user_type_link"
-        />
+        app:layout_constraintVertical_bias="0.183" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,14 +8,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.InstitutionsAdapter;
 import com.gabriel.smartclass.databinding.ActivityInstitutionsSearchBinding;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
-import com.gabriel.smartclass.view.linkRequests.LinkRequestForm;
+import com.gabriel.smartclass.view.linkRequests.InstitutionLinkRequestForm;
 import com.gabriel.smartclass.viewModels.InstitutionsSearchViewModel;
 
 public class InstitutionsSearch extends AppCompatActivity {
@@ -50,7 +49,7 @@ public class InstitutionsSearch extends AppCompatActivity {
                 viewModel.search(binding.recyclerViewInstitutionsFind, s.toString(), new InstitutionsAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(Institution institution) {
-                        Intent i = new Intent(getApplicationContext(), LinkRequestForm.class);
+                        Intent i = new Intent(getApplicationContext(), InstitutionLinkRequestForm.class);
                         startActivity(i);
                     }
                 });
