@@ -26,8 +26,6 @@ public class InstitutionsSearchViewModel extends ViewModel {
     private List<Institution> institutions; /*Lista de instituições que vão compor os itens dentro do adapter*/
     private InstitutionDAO dao; /*dao para a pesquisa no banco*/
     private Context context; /*contexto da aplicação */
-    private Institution selectedInstitution; /*instituição selecionada no eveto de click*/
-
     private EmptyRecyclerViewObserver emptyRecyclerViewObserver; /*observador para mostrar a tela de recycler vazia*/
 
     /*getters and setters*/

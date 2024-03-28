@@ -21,6 +21,10 @@ public class SpinnerUserTypeAdapter extends BaseAdapter {
     private List<UserType> userTypeList;
     private MutableLiveData<List<UserType>> mutableLiveDataUserType;
 
+    public MutableLiveData<List<UserType>> getMutableLiveDataUserType() {
+        return mutableLiveDataUserType;
+    }
+
     public SpinnerUserTypeAdapter(Context context, List<UserType> userTypeList){
         this.userTypeList = userTypeList;
         this.mutableLiveDataUserType = new MutableLiveData<>(this.userTypeList);

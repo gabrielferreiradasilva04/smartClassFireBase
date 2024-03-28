@@ -9,7 +9,9 @@ import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.SpinnerUserTypeAdapter;
 import com.gabriel.smartclass.databinding.ActivityInstitutionsSearchBinding;
 import com.gabriel.smartclass.databinding.ActivityLinkRequestFormBinding;
+import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.UserType;
+import com.gabriel.smartclass.viewModels.InstitutionLinkRequestViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.List;
 public class InstitutionLinkRequestForm extends AppCompatActivity {
     private ActivityLinkRequestFormBinding binding;
     private Spinner spinnerUserType;
+    private InstitutionLinkRequestViewModel viewModel;
+    private Institution institutionSelected;
 
 
     @Override
@@ -24,11 +28,16 @@ public class InstitutionLinkRequestForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLinkRequestFormBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        List<UserType> userTypeList = new ArrayList<>();
 
+        this.institutionSelected = getIntent().getParcelableExtra("institution");
+        binding.textLinkInstitutionName.setText("Solicitação para: "+institutionSelected.getName());
+        viewModel = new InstitutionLinkRequestViewModel();
         spinnerUserType = binding.spinnerUserTypeLink;
+        viewModel.getUserTypesAndPopulateSpinner(spinnerUserType, this);
 
-        spinnerUserType.setAdapter(new SpinnerUserTypeAdapter(this.getApplicationContext(), userTypeList));
+
+
+
 
     }
 }

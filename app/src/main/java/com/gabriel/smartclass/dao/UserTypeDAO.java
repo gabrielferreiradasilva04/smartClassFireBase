@@ -46,4 +46,8 @@ public class UserTypeDAO {
         });
     }
 
+    public void getAllUserTypes(OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
+        db.collection("userTypes").get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+    }
+
 }

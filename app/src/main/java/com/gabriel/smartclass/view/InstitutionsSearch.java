@@ -50,6 +50,7 @@ public class InstitutionsSearch extends AppCompatActivity {
                     @Override
                     public void onItemClick(Institution institution) {
                         Intent i = new Intent(getApplicationContext(), InstitutionLinkRequestForm.class);
+                        i.putExtra("institution", institution);
                         startActivity(i);
                     }
                 });

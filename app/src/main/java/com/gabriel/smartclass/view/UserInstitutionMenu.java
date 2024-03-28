@@ -17,7 +17,6 @@ public class UserInstitutionMenu extends AppCompatActivity {
         binding = ActivityUserInstitutionMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         currentInstitution = getIntent().getParcelableExtra("institution");
-        Log.d("CurrentInstitution", "onCreate: "+currentInstitution.getName());
         binding.textViewG.setText(currentInstitution.getName());
 
     }
