@@ -15,21 +15,17 @@
         android:text="Entrar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edTxtPassword_login"
-
-
+        app:layout_constraintBottom_toTopOf="@id/registerButton_login"
         />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/registerButton_login"
         style="@style/Button_Confirm_Forms"
         android:text="Cadastre-se"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginButton_login"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="10dp"
-
-
-
         />
 
     <EditText

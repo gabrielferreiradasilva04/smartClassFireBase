@@ -4,6 +4,8 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gabriel.smartclass.databinding.EmptyRequestBinding;
+
 public class EmptyRecyclerViewObserver extends RecyclerView.AdapterDataObserver {
 /*Classe que mostra o layout vazio caso o recycler view passado para ela não possua nenhum item a ser mostrado*/
     private RecyclerView recyclerView;
@@ -12,7 +14,9 @@ public class EmptyRecyclerViewObserver extends RecyclerView.AdapterDataObserver 
     public EmptyRecyclerViewObserver(RecyclerView recyclerView, View emptyView){
         this.recyclerView = recyclerView;
         this.empView = emptyView;
+
     }
+
     @Override
     public void onChanged() {
         super.onChanged();

@@ -14,7 +14,7 @@
         android:text="Finalizar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edTxtPassword_register"
+        app:layout_constraintBottom_toTopOf="@id/loginButton_register"
         />
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/loginButton_register"
@@ -23,7 +23,7 @@
         android:text="Já Possuo uma Conta"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/registerButton_register"
+        app:layout_constraintBottom_toBottomOf="parent"
 
 
         />
@@ -43,6 +43,14 @@
         android:id="@+id/edTxtEmail_register"
         style="@style/Edit_Text_Forms"
         android:hint="E-mail"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toBottomOf="@id/edTxtName_Register" />
+    <EditText
+        android:id="@+id/edTxtName_Register"
+        style="@style/Edit_Text_Forms"
+        android:hint="Primeiro e último nome"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

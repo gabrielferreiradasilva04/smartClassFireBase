@@ -19,6 +19,7 @@ public class RegisterForm extends AppCompatActivity {
     private RegisterViewModel registerViewModel;
     private EditText edTxtEmail;
     private EditText edTxtPassword;
+    private EditText edTxtFirstAndLastName;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +30,7 @@ public class RegisterForm extends AppCompatActivity {
         this.edTxtEmail = findViewById(R.id.edTxtEmail_register);
         this.edTxtPassword = findViewById(R.id.edTxtPassword_register);
         this.registerViewModel = new RegisterViewModel();
-
-
+        this.edTxtFirstAndLastName = findViewById(R.id.edTxtName_Register);
         this.loginButton.setOnClickListener(goToLogin());
         register();
     }
@@ -39,7 +39,7 @@ public class RegisterForm extends AppCompatActivity {
 
     private void register() {
         this.registerButton.setOnClickListener(view ->{
-            registerViewModel.registerUser(edTxtEmail.getText().toString(), edTxtPassword.getText().toString(),this);
+            registerViewModel.registerUser(edTxtEmail.getText().toString(), edTxtPassword.getText().toString(), edTxtFirstAndLastName.getText().toString() ,this);
         });
     }
 

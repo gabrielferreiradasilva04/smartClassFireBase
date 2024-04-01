@@ -12,18 +12,28 @@ import com.gabriel.smartclass.model.Institution;
 import java.util.List;
 
 public class InstitutionsAdapter extends RecyclerView.Adapter {
-    private List<Institution> institutions;
     private MutableLiveData<List<Institution>> institutionsMutableLiveData;
     private ItemClickListener itemClickListener;
     public MutableLiveData<List<Institution>> getInstitutionsMutableLiveData() {
         return institutionsMutableLiveData;
     }
 
-    public InstitutionsAdapter(List<Institution> institutions, ItemClickListener itemClickListener){
-        this.institutions = institutions;
-        institutionsMutableLiveData = new MutableLiveData<>();
-        institutionsMutableLiveData.setValue(this.institutions);
+    public ItemClickListener getItemClickListener() {
+        return itemClickListener;
+    }
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
+    }
+
+    public InstitutionsAdapter(List<Institution> institutions, ItemClickListener itemClickListener){
+        institutionsMutableLiveData = new MutableLiveData<>();
+        institutionsMutableLiveData.setValue(institutions);
+        this.itemClickListener = itemClickListener;
+    }
+    public InstitutionsAdapter (List<Institution> institutions){
+        this.institutionsMutableLiveData = new MutableLiveData<>();
+        this.institutionsMutableLiveData.setValue(institutions);
     }
 
     @NonNull
@@ -41,12 +51,13 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
         String cnpj = institutionsMutableLiveData.getValue().get(position).getCnpj();
         TextView textInstitutionName = holder.itemView.findViewById(R.id.textInstitutionName_adapter);
         TextView textInstitutionCNPJ = holder.itemView.findViewById(R.id.textInstitutionCNPJ_adapter);
-
-        holder.itemView.setOnClickListener( view ->{
-            itemClickListener.onItemClick(institutionsMutableLiveData.getValue().get(position));
-        });
         textInstitutionName.setText(institutionName);
         textInstitutionCNPJ.setText(cnpj);
+        if(itemClickListener != null){
+            holder.itemView.setOnClickListener( view ->{
+                itemClickListener.onItemClick(institutionsMutableLiveData.getValue().get(position));
+            });
+        }
     }
 
     public void addItem(Institution institution){

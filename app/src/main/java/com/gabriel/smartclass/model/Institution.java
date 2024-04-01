@@ -11,21 +11,11 @@ import java.util.Objects;
 
 public class Institution implements Parcelable {
     private String id;
-    @PropertyName("cnpj")
-
     private String cnpj;
-    @PropertyName("name")
-
     private String name;
-    @PropertyName("reponsable_id")
-
     private DocumentReference responsable_id;
 
     //getters and setters
-
-
-
-
     public String getId() {
         return id;
     }

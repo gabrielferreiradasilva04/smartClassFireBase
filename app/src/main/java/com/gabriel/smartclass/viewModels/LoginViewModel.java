@@ -2,6 +2,7 @@ package com.gabriel.smartclass.viewModels;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,30 +26,37 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void loginUser(String email, String password, Context context){
-        userAuthDAO.signInwithEmailAndPassword(email, password, new OnCompleteListener() {
-            @Override
-            public void onComplete(@NonNull Task task) {
-                if(task.isSuccessful() && UserAuthDAO.auth != null ){
-                    Intent i = new Intent(context, StudentMainMenu.class);
-                    context.startActivity(i);
-                }
+        if(!email.equals("") && !password.equals("")){
+            userAuthDAO.signInwithEmailAndPassword(email, password, new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    if(task.isSuccessful() && UserAuthDAO.auth != null ){
+                        Intent i = new Intent(context, StudentMainMenu.class);
+                        context.startActivity(i);
+                        Log.d("RETORNO", "onComplete: "+ UserAuthDAO.auth.getCurrentUser().getDisplayName());
+                    }
 
-            }
-        }, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                String errorMessage = "";
-                if(e.getClass().equals(FirebaseAuthInvalidCredentialsException.class)){
-                    errorMessage = "Credenciais inválidas";
                 }
-                if(e.getClass().equals(FirebaseNetworkException.class)){
-                    errorMessage = "Sem conexão com a internet, tente novamente mais tarde";
-                }
-                Toast toast = Toast.makeText(context, errorMessage, Toast.LENGTH_LONG);
-                toast.show();
+            }, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    String errorMessage = "";
+                    if(e.getClass().equals(FirebaseAuthInvalidCredentialsException.class)){
+                        errorMessage = "Credenciais inválidas";
+                    }
+                    if(e.getClass().equals(FirebaseNetworkException.class)){
+                        errorMessage = "Sem conexão com a internet, tente novamente mais tarde";
+                    }
+                    Toast toast = Toast.makeText(context, errorMessage, Toast.LENGTH_LONG);
+                    toast.show();
 
-            }
-        });
+                }
+            });
+        }else{
+            Toast toast = Toast.makeText(context, "Credenciais inválidas", Toast.LENGTH_LONG);
+            toast.show();
+        }
+
     }
 
 

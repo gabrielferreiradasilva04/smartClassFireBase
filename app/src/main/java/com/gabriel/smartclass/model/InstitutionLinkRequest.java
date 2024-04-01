@@ -10,7 +10,7 @@ import java.util.Objects;
 public class InstitutionLinkRequest implements Parcelable {
     private String id;
     private String title;
-    private DocumentReference appUser_id;
+    private DocumentReference user_id;
     private DocumentReference userType_id;
     private Boolean approved;
 
@@ -32,11 +32,11 @@ public class InstitutionLinkRequest implements Parcelable {
     }
 
     public DocumentReference getAppUser() {
-        return appUser_id;
+        return user_id;
     }
 
     public void setAppUser(DocumentReference appUser) {
-        this.appUser_id = appUser_id;
+        this.user_id = user_id;
     }
 
     public DocumentReference getUserType() {
@@ -55,10 +55,10 @@ public class InstitutionLinkRequest implements Parcelable {
         this.approved = approved;
     }
 
-    public InstitutionLinkRequest(String id, String title, DocumentReference appUser_id, DocumentReference userType_id, Boolean approved) {
+    public InstitutionLinkRequest(String id, String title, DocumentReference user_id, DocumentReference userType_id, Boolean approved) {
         this.id = id;
         this.title = title;
-        this.appUser_id = appUser_id;
+        this.user_id = user_id;
         this.userType_id = userType_id;
         this.approved = approved;
     }
@@ -66,9 +66,9 @@ public class InstitutionLinkRequest implements Parcelable {
     public InstitutionLinkRequest() {
     }
 
-    public InstitutionLinkRequest(String title, DocumentReference appUser_id, DocumentReference userType_id, Boolean approved) {
+    public InstitutionLinkRequest(String title, DocumentReference user_id, DocumentReference userType_id, Boolean approved) {
         this.title = title;
-        this.appUser_id = appUser_id;
+        this.user_id = user_id;
         this.userType_id = userType_id;
         this.approved = approved;
     }
@@ -78,12 +78,12 @@ public class InstitutionLinkRequest implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InstitutionLinkRequest that = (InstitutionLinkRequest) o;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(appUser_id, that.appUser_id) && Objects.equals(userType_id, that.userType_id) && Objects.equals(approved, that.approved);
+        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(user_id, that.user_id) && Objects.equals(userType_id, that.userType_id) && Objects.equals(approved, that.approved);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, appUser_id, userType_id, approved);
+        return Objects.hash(id, title, user_id, userType_id, approved);
     }
 
     /*PARCELABLE IMPLEMENTATION*/

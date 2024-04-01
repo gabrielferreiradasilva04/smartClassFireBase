@@ -10,7 +10,6 @@ import java.util.Objects;
 
 public class InstitutionUser  implements Parcelable {
     private String id;
-    private String userAuth_id;
     private DocumentReference  userType_id;
     private Map<String, Object> identification;
     private boolean active;
@@ -18,13 +17,11 @@ public class InstitutionUser  implements Parcelable {
 
     protected InstitutionUser(Parcel in) {
         id = in.readString();
-        userAuth_id = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeString(userAuth_id);
     }
 
     @Override
@@ -52,13 +49,7 @@ public class InstitutionUser  implements Parcelable {
         this.id = id;
     }
 
-    public String getUserAuth_id() {
-        return userAuth_id;
-    }
 
-    public void setUserAuth_id(String userAuth_id) {
-        this.userAuth_id = userAuth_id;
-    }
 
     public DocumentReference getUserType_id() {
         return userType_id;
@@ -88,15 +79,7 @@ public class InstitutionUser  implements Parcelable {
     }
 
 
-    public InstitutionUser(String userAuth_id, DocumentReference userType_id, Map<String, Object> identification) {
-        this.userAuth_id = userAuth_id;
-        this.userType_id = userType_id;
-        this.identification = identification;
-    }
-
-    public InstitutionUser(String id, String userAuth_id, DocumentReference userType_id, Map<String, Object> identification) {
-        this.id = id;
-        this.userAuth_id = userAuth_id;
+    public InstitutionUser(DocumentReference userType_id, Map<String, Object> identification) {
         this.userType_id = userType_id;
         this.identification = identification;
     }
