@@ -4,10 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +25,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.databinding.FragmentHomeBinding;
 import com.gabriel.smartclass.databinding.FragmentProfileBinding;
 import com.gabriel.smartclass.viewModels.HostStudentActivityViewModel;
-import com.gabriel.smartclass.viewModels.UserProfileViewModel;
-import com.google.firebase.storage.StorageException;
-
-import java.io.IOException;
 
 public class ProfileFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -40,7 +34,6 @@ public class ProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private FragmentProfileBinding binding;
-    private UserProfileViewModel userProfileViewModel;
     private HostStudentActivityViewModel hostStudentActivityViewModel;
     public ProfileFragment() {
         // Required empty public constructor
@@ -68,23 +61,109 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false);
 
-        userProfileViewModel = new UserProfileViewModel();
         hostStudentActivityViewModel = (HostStudentActivityViewModel) requireActivity().getViewModelStore().get("hostStudentActivityViewModel");
         loadUserDetails();
         binding.chooseprofilepicturebutton.setOnClickListener(openChooseProfilePicture());
-        binding.saveChangesProfile.setOnClickListener(saveChanges());
+        binding.saveChangesProfile.setOnClickListener(buttonListenerSaveChanges());
         binding.changePasswordProfile.setOnClickListener(openPasswordDialog());
         binding.excludeProfilePictureButton.setOnClickListener(excludeProfilePictureButton());
         refresh();
         return binding.getRoot();
     }
+    public View.OnClickListener buttonListenerSaveChanges(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap bitmap;
+                if(( binding.profilePicture.getDrawable())!=null){
+                    bitmap = ((BitmapDrawable) binding.profilePicture.getDrawable()).getBitmap();
+                }else{
+                    bitmap = null;
+                }
+                String displayName = binding.edtxtDisplayName.getText().toString();
+                String email = binding.edtxtEmail.getText().toString();
+                Context context = getContext();
+                ProgressBar progressBar = binding.progressBarProfileChanges;
+                View view = binding.viewLoading;
+                hostStudentActivityViewModel.updateProfile(displayName,email,context,bitmap,progressBar,view);
 
+            }
+        };
+    }
+
+    /***
+     * Exclui a foto de perfil do usuário setando como nula no viewModel da host e excluindo do repositório na nuvem através da classe usuarioDAO
+     */
+    public void excludeProfilePicture() {
+        if(binding.profilePicture.getDrawable() != null){
+            String email = binding.edtxtEmail.getText().toString();
+            ProgressBar progressBar = binding.progressBarProfileChanges;
+            View view = binding.viewLoading;
+            hostStudentActivityViewModel.excludeProfilePicture(email,getContext(),progressBar, view);
+            binding.profilePicture.setImageBitmap(null);
+        }else{
+            Toast toast = Toast.makeText(getContext(), "Erro ao deletar foto", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    /***
+     * Carrega os dados do usuário com base no viewModel da tela principal (Host)
+     */
+    public void loadUserDetails(){
+        binding.edtxtDisplayName.setText(hostStudentActivityViewModel.getDisplayName());
+        binding.edtxtEmail.setText(hostStudentActivityViewModel.getEmail());
+        if(hostStudentActivityViewModel.getPictureProfileBitmap() != null){
+            binding.profilePicture.setImageBitmap(hostStudentActivityViewModel.getPictureProfileBitmap());
+        }
+        if(binding.refreshProfileFragment.isRefreshing()){
+            binding.refreshProfileFragment.setRefreshing(false);
+        }
+    }
+
+    /***
+     * Realiza a validação das senhas e a alteração por meio da viweModel da host utilizando a usuarioDAO
+     * @param password senha
+     * @param passwordConfirm confirmação de senha
+     * @param dialog dialog a ser fechado na conclusão do método
+     */
+    public void confirmChangePassword(String password, String passwordConfirm, Dialog dialog){
+        hostStudentActivityViewModel.updatePassword(password, passwordConfirm, getContext(), dialog);
+    }
+
+    /***
+     * realiza o processo de criação e abertura de uma dialog para realizar a troca da senha do usuário através da validação do
+     * metodo confirmChangePassowrd
+     */
+    public void openChangePassword(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        dialogBuilder.setCancelable(false);
+        final View popUp = getLayoutInflater().inflate(R.layout.update_password_layout,null);
+        dialogBuilder.setView(popUp);
+        Button buttonConfirm = popUp.findViewById(R.id.button_confirm);
+        Button buttonDone = popUp.findViewById(R.id.button_done);
+        EditText textPassword = popUp.findViewById(R.id.text_password);
+        EditText textConfirmPassword = popUp.findViewById(R.id.text_confirmPassword);
+        Dialog dialog = dialogBuilder.create();
+        dialog.show();
+        buttonDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        buttonConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmChangePassword(textPassword.getText().toString(), textConfirmPassword.getText().toString(), dialog);
+            }
+        });
+    }
     private View.OnClickListener excludeProfilePictureButton() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    excludeProfilePicture(hostStudentActivityViewModel.getEmail(), binding.progressBarProfileChanges,binding.viewLoading);
-
+                excludeProfilePicture();
             }
         };
     }
@@ -96,26 +175,6 @@ public class ProfileFragment extends Fragment {
                 openChangePassword();
             }
         };
-    }
-
-    public void loadUserDetails(){
-        binding.edtxtDisplayName.setText(hostStudentActivityViewModel.getDisplayName());
-        binding.edtxtEmail.setText(hostStudentActivityViewModel.getEmail());
-        if(hostStudentActivityViewModel.getPictureProfileBitmap() != null){
-            binding.profilePicture.setImageBitmap(hostStudentActivityViewModel.getPictureProfileBitmap());
-        }
-        if(binding.refreshProfileFragment.isRefreshing()){
-            binding.refreshProfileFragment.setRefreshing(false);
-        }
-    }
-    public void refresh(){
-        binding.refreshProfileFragment.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                hostStudentActivityViewModel.loadUserDetails(getContext());
-                loadUserDetails();
-            }
-        });
     }
     public View.OnClickListener openChooseProfilePicture(){
         return new View.OnClickListener() {
@@ -137,69 +196,14 @@ public class ProfileFragment extends Fragment {
             }
         }
     }
-    public View.OnClickListener saveChanges(){
-        return new View.OnClickListener() {
+    public void refresh(){
+        binding.refreshProfileFragment.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
-                Bitmap bitmap = ((BitmapDrawable) binding.profilePicture.getDrawable()).getBitmap();
-                if(binding.edtxtDisplayName.getText().toString().equals(hostStudentActivityViewModel.getDisplayName()) && binding.edtxtEmail.getText().toString().equals(hostStudentActivityViewModel.getEmail()) && bitmap.equals(hostStudentActivityViewModel.getPictureProfileBitmap())){
-                    Toast toast = Toast.makeText(getContext(), "Não detectamos alterações a serem salvas", Toast.LENGTH_SHORT);
-                    toast.show();
-                }else{
-                    if(!bitmap.equals(hostStudentActivityViewModel.getPictureProfileBitmap())){
-                        Bitmap bitmapUpdate = ((BitmapDrawable) binding.profilePicture.getDrawable()).getBitmap();
-                        userProfileViewModel.uploadProfilePicture(binding.edtxtEmail.getText().toString(),bitmapUpdate, getContext(), binding.progressBarProfileChanges, binding.viewLoading);
-                        hostStudentActivityViewModel.setPictureProfileBitmap(bitmapUpdate);
-                    }
-                    hostStudentActivityViewModel.updateProfile(binding.edtxtDisplayName.getText().toString(), binding.edtxtEmail.getText().toString(), getContext());
-                }
-
-            }
-        };
-    }
-
-    public void confirmChangePassword(String password, String passwordConfirm, Dialog dialog){
-        userProfileViewModel.updatePassword(password, passwordConfirm, getContext(), dialog);
-    }
-
-    public void openChangePassword(){
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
-        dialogBuilder.setCancelable(false);
-        final View popUp = getLayoutInflater().inflate(R.layout.update_password_layout,null);
-        dialogBuilder.setView(popUp);
-
-        Button buttonConfirm = popUp.findViewById(R.id.button_confirm);
-        Button buttonDone = popUp.findViewById(R.id.button_done);
-        EditText textPassword = popUp.findViewById(R.id.text_password);
-        EditText textConfirmPassword = popUp.findViewById(R.id.text_confirmPassword);
-
-        Dialog dialog = dialogBuilder.create();
-        dialog.show();
-        buttonDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
+            public void onRefresh() {
+                hostStudentActivityViewModel.loadUserDetails(getContext());
+                loadUserDetails();
             }
         });
-        buttonConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmChangePassword(textPassword.getText().toString(), textConfirmPassword.getText().toString(), dialog);
-            }
-        });
-    }
-    public void excludeProfilePicture(String email,ProgressBar progressBar, View view) {
-        if(binding.profilePicture.getDrawable() != null && hostStudentActivityViewModel.getPictureProfileBitmap() != null){
-            userProfileViewModel.excludeProfilePicture(email,getContext(),progressBar, view);
-            hostStudentActivityViewModel.setPictureProfileBitmap(null);
-            binding.profilePicture.setImageBitmap(null);
-        }else{
-            Toast toast = Toast.makeText(getContext(), "Erro ao deletar foto", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-
-
-
     }
 
 }
