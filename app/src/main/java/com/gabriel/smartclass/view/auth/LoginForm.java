@@ -1,4 +1,4 @@
-package com.gabriel.smartclass.view;
+package com.gabriel.smartclass.view.auth;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +16,7 @@ import com.gabriel.smartclass.viewModels.LoginViewModel;
 public class LoginForm extends AppCompatActivity {
     private Button registerButton;
     private Button loginButton;
+    private Button institutionRegisterButton;
     private EditText edTxtEmail;
     private EditText edTxtPassword;
 
@@ -30,15 +31,19 @@ public class LoginForm extends AppCompatActivity {
         this.registerButton = findViewById(R.id.registerButton_login);
         this.edTxtEmail = findViewById(R.id.edTxtEmail_login);
         this.edTxtPassword = findViewById(R.id.edTxtPassword_login);
+        this.institutionRegisterButton = findViewById(R.id.institutionRegisterButton_login);
         this.loginViewModel = new LoginViewModel();
 
-        this.registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+        this.registerButton.setOnClickListener(view -> {
                 Intent i = new Intent(LoginForm.this, RegisterForm.class);
                 startActivity(i);
                 finish();
-            }
+        });
+        this.institutionRegisterButton.setOnClickListener(view ->{
+            Intent i = new Intent(LoginForm.this, InstitutionRegisterForm.class);
+            startActivity(i);
+            finish();
         });
 
         this.loginButton.setOnClickListener(view ->{

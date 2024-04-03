@@ -4,29 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.LoginForm"
-    android:background="@drawable/background_login_register"
+    tools:context=".view.auth.LoginForm"
+    android:background="@drawable/main_background"
     >
 
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/loginButton_login"
         style="@style/Button_Confirm_Forms"
+        android:layout_marginBottom="12dp"
         android:text="Entrar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/registerButton_login"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/registerButton_login"
         style="@style/Button_Confirm_Forms"
+        android:layout_marginBottom="88dp"
         android:text="Cadastre-se"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/institutionRegisterButton_login"
+        style="@style/Button_Confirm_Forms"
+        android:layout_marginTop="12dp"
+        android:text="Cadastrar-se como Instituição"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="10dp"
-        />
+        app:layout_constraintTop_toBottomOf="@id/registerButton_login" />
 
     <EditText
         android:id="@+id/edTxtEmail_login"

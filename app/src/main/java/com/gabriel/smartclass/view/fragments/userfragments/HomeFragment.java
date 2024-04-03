@@ -20,7 +20,7 @@ import com.gabriel.smartclass.databinding.EmptyRequestBinding;
 import com.gabriel.smartclass.databinding.FragmentHomeBinding;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
-import com.gabriel.smartclass.view.InstitutionsSearch;
+import com.gabriel.smartclass.view.auth.InstitutionsSearch;
 import com.gabriel.smartclass.view.UserInstitutionMenu;
 import com.gabriel.smartclass.viewModels.HostStudentActivityViewModel;
 

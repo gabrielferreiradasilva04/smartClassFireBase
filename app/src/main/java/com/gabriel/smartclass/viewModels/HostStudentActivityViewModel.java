@@ -151,7 +151,6 @@ public class HostStudentActivityViewModel extends ViewModel {
         } else if (!displayName.equals("") && !email.equals("")) {
             if(profilePictureCurrent != this.pictureProfileBitmap && profilePictureCurrent!= null){
                 uploadProfilePicture(email,profilePictureCurrent, progressBar, viewLoading);
-
             }
             userDAO.updateProfile(displayName,new OnSuccessListener() {
                 @Override

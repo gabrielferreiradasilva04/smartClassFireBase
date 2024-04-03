@@ -1,0 +1,59 @@
+package com.gabriel.smartclass.utilities.maskListeners;
+
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
+
+public class MaskListenerCPNJ implements TextWatcher {
+    private final EditText editTextMasked;
+    private String lastCharacter;
+
+    public MaskListenerCPNJ (EditText editTextMasked){
+        this.editTextMasked = editTextMasked;
+    }
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        int editTextSize = editTextMasked.getText().toString().length(); /*--> toda vez que o usuário for digitar ele pega qual o tamanho do editText*/
+        if(editTextSize > 1){
+            lastCharacter = editTextMasked.getText().toString().substring(editTextSize - 1, editTextSize); /*quando  o usuário digitar o segundo caracter ele identifica qual o primeiro*/
+        }
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        int editTextSize = editTextMasked.getText().toString().length(); /*--> toda vez que o usuário for digitar ele pega qual o tamanho do editText*/
+        if(editTextSize == 2){
+            if(!lastCharacter.equals(".")){
+                editTextMasked.append(".");
+            }else{
+                editTextMasked.getText().delete(editTextSize - 1, editTextSize);
+            }
+        } else if (editTextSize == 7) {
+            if(!lastCharacter.equals(".")){
+                editTextMasked.append(".");
+            }else{
+                editTextMasked.getText().delete(editTextSize - 1, editTextSize);
+            }
+
+        } else if (editTextSize == 11) {
+            if(!lastCharacter.equals("/")){
+                editTextMasked.append("/");
+            }else{
+                editTextMasked.getText().delete(editTextSize - 1, editTextSize);
+            }
+            
+        } else if (editTextSize == 16) {
+            if(!lastCharacter.equals(".")){
+                editTextMasked.append(".");
+            }else{
+                editTextMasked.getText().delete(editTextSize - 1, editTextSize);
+            }
+        }
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+}

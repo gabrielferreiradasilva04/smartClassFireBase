@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <application
-
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -12,12 +11,15 @@
         android:roundIcon="@mipmap/ic_smarclassicon"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartClass"
-        tools:targetApi="31">
+        tools:targetApi="31" >
+        <activity
+            android:name=".view.auth.InstitutionRegisterForm"
+            android:exported="false" />
         <activity
             android:name=".view.linkRequests.InstitutionLinkRequestForm"
             android:exported="false" />
         <activity
-            android:name=".view.InstitutionsSearch"
+            android:name=".view.auth.InstitutionsSearch"
             android:exported="false" />
         <activity
             android:name=".view.UserInstitutionMenu"
@@ -26,12 +28,12 @@
             android:name=".view.StudentMainMenu"
             android:exported="false" />
         <activity
-            android:name=".view.RegisterForm"
+            android:name=".view.auth.RegisterForm"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.LoginForm"
-            android:exported="true">
+            android:name=".view.auth.LoginForm"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

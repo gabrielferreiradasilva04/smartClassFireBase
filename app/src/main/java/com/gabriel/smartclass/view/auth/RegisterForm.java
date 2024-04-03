@@ -1,4 +1,4 @@
-package com.gabriel.smartclass.view;
+package com.gabriel.smartclass.view.auth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

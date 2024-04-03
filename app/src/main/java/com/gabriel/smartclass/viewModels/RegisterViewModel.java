@@ -9,12 +9,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.gabriel.smartclass.dao.UserAuthDAO;
 import com.gabriel.smartclass.model.User;
-import com.gabriel.smartclass.view.LoginForm;
+import com.gabriel.smartclass.view.auth.LoginForm;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseNetworkException;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;

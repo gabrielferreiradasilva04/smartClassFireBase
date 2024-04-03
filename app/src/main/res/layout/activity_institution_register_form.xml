@@ -4,20 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.auth.RegisterForm"
-    android:background="@drawable/main_background"
-    >
-
+    tools:context=".view.auth.InstitutionRegisterForm"
+    android:background="@drawable/main_background">
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/registerButton_register"
+
+        android:id="@+id/registerButton_InstitutionRegister"
         style="@style/Button_Confirm_Forms"
         android:text="Finalizar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/loginButton_register"
+        app:layout_constraintBottom_toTopOf="@id/loginButton_InstitutionRegister"
         />
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/loginButton_register"
+        android:id="@+id/loginButton_InstitutionRegister"
         style="@style/Button_Confirm_Forms"
         android:layout_marginTop="10dp"
         android:text="Já Possuo uma Conta"
@@ -40,17 +39,17 @@
         app:srcCompat="@drawable/icone_smarclass_sem_fundo" />
 
     <EditText
-        android:id="@+id/edTxtEmail_register"
+        android:id="@+id/textEmail_InstitutionRegister"
         style="@style/Edit_Text_Forms"
-        android:hint="E-mail"
+        android:hint="E-mail institucional"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintTop_toBottomOf="@id/edTxtName_Register" />
+        app:layout_constraintTop_toBottomOf="@id/textName_InstitutionRegister" />
     <EditText
-        android:id="@+id/edTxtName_Register"
+        android:id="@+id/textName_InstitutionRegister"
         style="@style/Edit_Text_Forms"
-        android:hint="Primeiro e último nome"
+        android:hint="Nome da Instituição"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,14 +57,25 @@
         app:layout_constraintTop_toBottomOf="@id/imgLogo" />
 
     <EditText
-        android:id="@+id/edTxtPassword_register"
+        android:id="@+id/textPassword_InstitutionRegister"
         style="@style/Edit_Text_Forms"
         android:layout_marginTop="10dp"
         android:hint="Senha"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edTxtEmail_register"
+        app:layout_constraintTop_toBottomOf="@id/textCpnj_InstitutionRegister"
+        />
+    <EditText
+        android:id="@+id/textCpnj_InstitutionRegister"
+        android:maxLength="19"
+        style="@style/Edit_Text_Forms"
+        android:layout_marginTop="10dp"
+        android:hint="CPNJ"
+        android:inputType="text|number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textEmail_InstitutionRegister"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
