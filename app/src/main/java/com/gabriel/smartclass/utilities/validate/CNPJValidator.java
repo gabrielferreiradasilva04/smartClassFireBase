@@ -12,7 +12,7 @@ public abstract class CNPJValidator {
             return false;
         } else if (cpnj.equals("00.000.000/0000.00")) {
             return false;
-        } else if (cpnj.equals("11.111.111/1111.00")) {
+        } else if (cpnj.equals("11.111.111/1111.11")) {
             return false;
         } else if (cpnj.equals("22.222.222/2222.22")) {
             return false;
