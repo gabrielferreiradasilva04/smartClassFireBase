@@ -14,8 +14,8 @@ public class MaskListenerCPNJ implements TextWatcher {
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         int editTextSize = editTextMasked.getText().toString().length(); /*--> toda vez que o usuário for digitar ele pega qual o tamanho do editText*/
-        if(editTextSize > 1){
-            lastCharacter = editTextMasked.getText().toString().substring(editTextSize - 1, editTextSize); /*quando  o usuário digitar o segundo caracter ele identifica qual o primeiro*/
+        if(editTextSize >= 1){
+            lastCharacter = editTextMasked.getText().toString().substring(editTextSize - 1); /*quando  o usuário digitar o segundo caracter ele identifica qual o primeiro*/
         }
     }
 
@@ -28,21 +28,21 @@ public class MaskListenerCPNJ implements TextWatcher {
             }else{
                 editTextMasked.getText().delete(editTextSize - 1, editTextSize);
             }
-        } else if (editTextSize == 7) {
+        } else if (editTextSize == 6) {
             if(!lastCharacter.equals(".")){
                 editTextMasked.append(".");
             }else{
                 editTextMasked.getText().delete(editTextSize - 1, editTextSize);
             }
 
-        } else if (editTextSize == 11) {
+        } else if (editTextSize == 10) {
             if(!lastCharacter.equals("/")){
                 editTextMasked.append("/");
             }else{
                 editTextMasked.getText().delete(editTextSize - 1, editTextSize);
             }
             
-        } else if (editTextSize == 16) {
+        } else if (editTextSize == 15) {
             if(!lastCharacter.equals(".")){
                 editTextMasked.append(".");
             }else{

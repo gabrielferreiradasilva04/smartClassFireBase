@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.gabriel.smartclass.databinding.ActivityInstitutionRegisterFormBinding;
 import com.gabriel.smartclass.utilities.maskListeners.MaskListenerCPNJ;
+import com.gabriel.smartclass.utilities.validate.CNPJValidator;
 
 public class InstitutionRegisterForm extends AppCompatActivity {
    private ActivityInstitutionRegisterFormBinding binding;
@@ -19,5 +20,13 @@ public class InstitutionRegisterForm extends AppCompatActivity {
 
         MaskListenerCPNJ listenerCPNJ = new MaskListenerCPNJ(binding.textCpnjInstitutionRegister);
         binding.textCpnjInstitutionRegister.addTextChangedListener(listenerCPNJ);
+
+        binding.registerButtonInstitutionRegister.setOnClickListener( view ->{
+            try {
+                CNPJValidator.validateCNPJ(binding.textCpnjInstitutionRegister.getText().toString());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }

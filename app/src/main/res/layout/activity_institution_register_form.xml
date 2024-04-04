@@ -68,7 +68,7 @@
         />
     <EditText
         android:id="@+id/textCpnj_InstitutionRegister"
-        android:maxLength="19"
+        android:maxLength="18"
         style="@style/Edit_Text_Forms"
         android:layout_marginTop="10dp"
         android:hint="CPNJ"
