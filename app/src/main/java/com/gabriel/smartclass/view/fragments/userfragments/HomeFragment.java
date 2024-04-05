@@ -89,12 +89,14 @@ public class HomeFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void update() {
-            Log.d("TAG", "update: não chamou");
-            hostStudentActivityViewModel.getUserInstitutions(binding.swipeRefreshHomeFragment);
+            hostStudentActivityViewModel.getUserInstitutions();
             hostStudentActivityViewModel.getUserInstitutionsAdapter().setItemClickListener(institutionClickListener());
             hostStudentActivityViewModel.getUserInstitutionsAdapter().notifyDataSetChanged();
             recyclerViewInstitutions.setAdapter(hostStudentActivityViewModel.getUserInstitutionsAdapter());
             recyclerViewInstitutions.getAdapter().registerAdapterDataObserver(observer);
+            if(binding.swipeRefreshHomeFragment.isRefreshing()){
+                binding.swipeRefreshHomeFragment.setRefreshing(false);
+            }
     }
 
     @NonNull

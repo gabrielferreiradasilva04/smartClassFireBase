@@ -10,7 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.gabriel.smartclass.R;
+import com.gabriel.smartclass.dao.UserDAO;
+import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.viewModels.LoginViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class LoginForm extends AppCompatActivity {
@@ -24,9 +28,12 @@ public class LoginForm extends AppCompatActivity {
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        FirebaseUser currentUserApplication = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentUserApplication!=null){
+            FirebaseAuth.getInstance().signOut();
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_form);
-
         this.loginButton = findViewById(R.id.loginButton_login);
         this.registerButton = findViewById(R.id.registerButton_login);
         this.edTxtEmail = findViewById(R.id.edTxtEmail_login);

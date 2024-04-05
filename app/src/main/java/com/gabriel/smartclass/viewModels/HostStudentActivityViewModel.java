@@ -78,13 +78,9 @@ public class HostStudentActivityViewModel extends ViewModel {
 
     /***
      * Realiza a busca das instituições do usuário
-     * @param swipeRefreshLayout somente necessário quando a tela que está chamando o método implementa um
-     *                           refresh layout
+     *
      */
-    public void getUserInstitutions(SwipeRefreshLayout swipeRefreshLayout){
-        if(swipeRefreshLayout!=null){
-            swipeRefreshLayout.setRefreshing(true);
-        }
+    public void getUserInstitutions(){
         List<Institution> institutions = new ArrayList<>();
         userInstitutionsAdapter = new InstitutionsAdapter(institutions);
         userDAO.getUserInstitutions(new OnCompleteListener<DocumentSnapshot>() {
@@ -109,9 +105,6 @@ public class HostStudentActivityViewModel extends ViewModel {
                             }
                         });
                     }
-                    if(swipeRefreshLayout != null){
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
                 }else{
                     userInstitutionsAdapter.notifyDataSetChanged();
                 }
@@ -128,10 +121,11 @@ public class HostStudentActivityViewModel extends ViewModel {
      * @param context
      */
     public void loadUserDetails(Context context){
-        displayName = UserDAO.currentUserAplication.getDisplayName();
-        email = UserDAO.currentUserAplication.getEmail();
-        if(UserDAO.currentUserAplication.getPhotoUrl() != null && !UserDAO.currentUserAplication.getPhotoUrl().equals(Uri.parse(""))){
-            userDAO.downloadImage(UserDAO.currentUserAplication.getEmail(), new OnSuccessListener<byte[]>() {
+        FirebaseUser currentUserApplication = FirebaseAuth.getInstance().getCurrentUser();
+        displayName = currentUserApplication.getDisplayName();
+        email = currentUserApplication.getEmail();
+        if(currentUserApplication.getPhotoUrl() != null && !currentUserApplication.getPhotoUrl().equals(Uri.parse(""))){
+            userDAO.downloadImage(currentUserApplication.getEmail(), new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     pictureProfileBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -185,6 +179,7 @@ public class HostStudentActivityViewModel extends ViewModel {
      * @param view
      */
     public void uploadProfilePicture(String email, Bitmap imageBitmap, ProgressBar progressBar, View view, Context context){
+        FirebaseUser currentUserApplication = FirebaseAuth.getInstance().getCurrentUser();
         if (!email.equals("") && imageBitmap != null && imageBitmap != pictureProfileBitmap){
             view.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.VISIBLE);
@@ -192,7 +187,7 @@ public class HostStudentActivityViewModel extends ViewModel {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     UserProfileChangeRequest changes = new UserProfileChangeRequest.Builder().setPhotoUri(Uri.parse("profilePictures\\" + email)).build();
-                    UserDAO.currentUserAplication.updateProfile(changes);
+                    currentUserApplication.updateProfile(changes);
                     pictureProfileBitmap = imageBitmap;
                     progressBar.setVisibility(View.INVISIBLE);
                     view.setVisibility(View.GONE);

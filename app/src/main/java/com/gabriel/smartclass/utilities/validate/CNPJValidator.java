@@ -35,40 +35,119 @@ public abstract class CNPJValidator {
             return false;
         }else{
             List<Integer> cnpjNumbers = new ArrayList<>();
-            List<Integer> numerals = new ArrayList<>();
-            List<Integer> results = new ArrayList<>();
-            StringBuilder sb = new StringBuilder(cnpj);
-            numerals.add(5);
-            numerals.add(4);
-            numerals.add(3);
-            numerals.add(2);
-            numerals.add(9);
-            numerals.add(8);
-            numerals.add(7);
-            numerals.add(6);
-            numerals.add(5);
-            numerals.add(4);
-            numerals.add(3);
-            numerals.add(2);
+            List<Integer> numerals1 = new ArrayList<>();
+            List<Integer> numerals2 = new ArrayList<>();
+            List<Integer> results1 = new ArrayList<>();
+            List<Integer> results2 = new ArrayList<>();
+            StringBuilder sbCnpj = new StringBuilder(cnpj);
+            StringBuilder sbExpectedCnpj;
+            List<Integer> expectedCnpjNumbers = new ArrayList<>();
+            /*validação do primeiro digito*/
+            numerals1.add(5);
+            numerals1.add(4);
+            numerals1.add(3);
+            numerals1.add(2);
+            numerals1.add(9);
+            numerals1.add(8);
+            numerals1.add(7);
+            numerals1.add(6);
+            numerals1.add(5);
+            numerals1.add(4);
+            numerals1.add(3);
+            numerals1.add(2);
             /*CNPJ numbers*/
             int i = 0;
             while(i < cnpj.length()){
                 if(!Character.isDigit(cnpj.charAt(i))){
-                    sb.deleteCharAt(i); /*Pegar somente os numeros do CNPJ*/
-                    cnpj = sb.toString();
+                    sbCnpj.deleteCharAt(i);
+                    cnpj = sbCnpj.toString();
                 }
                 i++;
             }
-            String cnpjWithoutCharacters = sb.toString(); /*String com somente os numeros do CNPJ*/
-
-            /*Adiciona todos os numeros do cnpj no array*/
+            String cnpjWithoutCharacters = sbCnpj.toString(); /*String com somente os numeros do CNPJ*/
+            sbExpectedCnpj = new StringBuilder(sbCnpj.delete(12,14).toString());
             for(int j = 0 ; j < cnpjWithoutCharacters.length() ; j++ ){
                 cnpjNumbers.add(Integer.parseInt(Character.toString(cnpjWithoutCharacters.charAt(j)))); /*converte os numeros do CNPJ*/
             }
-            for(int j = 0; j <= numerals.size() ; j++){
-
+            for(int j = 0; j < numerals1.size() ; j++){
+                int result = numerals1.get(j) * cnpjNumbers.get(j);
+                results1.add(result);
             }
-            return true;
+            int sumResult1 = 0;
+            for(int j = 0 ; j < results1.size() ; j++){
+                sumResult1 += results1.get(j);
+            }
+
+            int digit1 = cnpjNumbers.get(12);
+            int digit2 = cnpjNumbers.get(13);
+
+            int resultDigit1;
+
+            int restOfDivision1 = (sumResult1 % 11);
+            if(restOfDivision1 < 2){
+                resultDigit1 = 0;
+                String resultDigitStr = Integer.toString(resultDigit1);
+                Character character = resultDigitStr.charAt(0);
+                sbExpectedCnpj.append(character);
+            }else{
+                resultDigit1 = 11 - restOfDivision1;
+                String resultDigitStr = Integer.toString(resultDigit1);
+                Character character = resultDigitStr.charAt(0);
+                sbExpectedCnpj.append(character);
+            }
+            /*Validação do segundo digito*/
+            String cnpjWithFirstValidatorDigit = sbExpectedCnpj.toString();
+            for(int j = 0 ; j < cnpjWithFirstValidatorDigit.length() ; j++ ){
+                expectedCnpjNumbers.add(Integer.parseInt(Character.toString(cnpjWithFirstValidatorDigit.charAt(j))));
+            }
+            numerals2.add(6);
+            numerals2.add(5);
+            numerals2.add(4);
+            numerals2.add(3);
+            numerals2.add(2);
+            numerals2.add(9);
+            numerals2.add(8);
+            numerals2.add(7);
+            numerals2.add(6);
+            numerals2.add(5);
+            numerals2.add(4);
+            numerals2.add(3);
+            numerals2.add(2);
+
+            for(int j = 0; j < numerals2.size() ; j++){
+                int result = numerals2.get(j) * expectedCnpjNumbers.get(j);
+                results2.add(result);
+            }
+
+            int sumResult2 = 0;
+            for(int j = 0 ; j < results2.size() ; j++){
+                sumResult2 += results2.get(j);
+            }
+
+            int resultDigit2;
+            int restOfDivision2 = (sumResult2 % 11);
+
+            if (restOfDivision2 < 2){
+                resultDigit2 = 0;
+                String resultDigitStr = Integer.toString(resultDigit2);
+                Character character = resultDigitStr.charAt(0);
+                sbExpectedCnpj.append(character);
+            }else{
+                resultDigit2 = 11 - restOfDivision2;
+                String resultDigitStr = Integer.toString(resultDigit2);
+                Character character = resultDigitStr.charAt(0);
+                sbExpectedCnpj.append(character);
+            }
+            ;
+            String expectedCnpj = sbExpectedCnpj.toString();
+
+            if(expectedCnpj.equals(cnpjWithoutCharacters)){
+                return true;
+            }
+            else{
+                return false;
+            }
+
         }
     }
 }

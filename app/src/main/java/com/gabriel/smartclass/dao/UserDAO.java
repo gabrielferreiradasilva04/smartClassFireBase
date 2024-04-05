@@ -21,7 +21,7 @@ import java.io.ByteArrayOutputStream;
 
 
 public class UserDAO {
-    public static final FirebaseUser currentUserAplication = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseUser currentUserAplication = FirebaseAuth.getInstance().getCurrentUser();
     private final String COLLECTION = "appUsers";
     private FirebaseFirestore fb = FirebaseFirestore.getInstance();
     private StorageReference storageReference = FirebaseStorage.getInstance().getReference();

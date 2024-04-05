@@ -28,7 +28,7 @@ public class StudentMainMenu extends AppCompatActivity {
         setContentView(binding.getRoot());
         hostStudentActivityViewModel = new ViewModelProvider(this).get(HostStudentActivityViewModel.class);
         getViewModelStore().put("hostStudentActivityViewModel", hostStudentActivityViewModel);
-        hostStudentActivityViewModel.getUserInstitutions(null);
+        hostStudentActivityViewModel.getUserInstitutions();
         hostStudentActivityViewModel.loadUserDetails(this);
         navigation();
     }

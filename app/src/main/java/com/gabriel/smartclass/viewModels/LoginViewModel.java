@@ -9,11 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
 import com.gabriel.smartclass.dao.UserAuthDAO;
+import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.view.StudentMainMenu;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -26,6 +28,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void loginUser(String email, String password, Context context){
+
         if(!email.equals("") && !password.equals("")){
             userAuthDAO.signInwithEmailAndPassword(email, password, new OnCompleteListener() {
                 @Override
@@ -33,7 +36,6 @@ public class LoginViewModel extends ViewModel {
                     if(task.isSuccessful() && UserAuthDAO.auth != null ){
                         Intent i = new Intent(context, StudentMainMenu.class);
                         context.startActivity(i);
-                        Log.d("RETORNO", "onComplete: "+ UserAuthDAO.auth.getCurrentUser().getDisplayName());
                     }
 
                 }
