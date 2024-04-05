@@ -36,6 +36,7 @@ public abstract class CNPJValidator {
         }else{
             List<Integer> cnpjNumbers = new ArrayList<>();
             List<Integer> numerals = new ArrayList<>();
+            List<Integer> results = new ArrayList<>();
             StringBuilder sb = new StringBuilder(cnpj);
             numerals.add(5);
             numerals.add(4);
@@ -60,9 +61,12 @@ public abstract class CNPJValidator {
             }
             String cnpjWithoutCharacters = sb.toString(); /*String com somente os numeros do CNPJ*/
 
-
+            /*Adiciona todos os numeros do cnpj no array*/
             for(int j = 0 ; j < cnpjWithoutCharacters.length() ; j++ ){
                 cnpjNumbers.add(Integer.parseInt(Character.toString(cnpjWithoutCharacters.charAt(j)))); /*converte os numeros do CNPJ*/
+            }
+            for(int j = 0; j <= numerals.size() ; j++){
+
             }
             return true;
         }

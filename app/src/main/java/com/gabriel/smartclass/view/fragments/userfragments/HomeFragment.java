@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,15 +89,12 @@ public class HomeFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void update() {
-        hostStudentActivityViewModel.getUserInstitutions();
-        hostStudentActivityViewModel.getUserInstitutionsAdapter().setItemClickListener(institutionClickListener());
-        hostStudentActivityViewModel.getUserInstitutionsAdapter().notifyDataSetChanged();
-        recyclerViewInstitutions.setAdapter(hostStudentActivityViewModel.getUserInstitutionsAdapter());
-        recyclerViewInstitutions.getAdapter().registerAdapterDataObserver(observer);
-
-        if (binding.swipeRefreshHomeFragment.isRefreshing()){
-            binding.swipeRefreshHomeFragment.setRefreshing(false);
-        }
+            Log.d("TAG", "update: não chamou");
+            hostStudentActivityViewModel.getUserInstitutions(binding.swipeRefreshHomeFragment);
+            hostStudentActivityViewModel.getUserInstitutionsAdapter().setItemClickListener(institutionClickListener());
+            hostStudentActivityViewModel.getUserInstitutionsAdapter().notifyDataSetChanged();
+            recyclerViewInstitutions.setAdapter(hostStudentActivityViewModel.getUserInstitutionsAdapter());
+            recyclerViewInstitutions.getAdapter().registerAdapterDataObserver(observer);
     }
 
     @NonNull

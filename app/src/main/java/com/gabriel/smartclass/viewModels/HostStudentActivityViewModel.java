@@ -12,6 +12,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.gabriel.smartclass.adapter.InstitutionsAdapter;
 import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.model.Institution;
@@ -29,6 +31,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HostStudentActivityViewModel extends ViewModel {
     private InstitutionsAdapter userInstitutionsAdapter;
@@ -74,10 +77,14 @@ public class HostStudentActivityViewModel extends ViewModel {
     }
 
     /***
-     * realiza a busca das instituições do usuário com base na lista presente no mesmo
-     * Ao encontrar a lista ele precisa percorrer ela e tranformar os DocumentReferences em objetos instituição
+     * Realiza a busca das instituições do usuário
+     * @param swipeRefreshLayout somente necessário quando a tela que está chamando o método implementa um
+     *                           refresh layout
      */
-    public void getUserInstitutions(){
+    public void getUserInstitutions(SwipeRefreshLayout swipeRefreshLayout){
+        if(swipeRefreshLayout!=null){
+            swipeRefreshLayout.setRefreshing(true);
+        }
         List<Institution> institutions = new ArrayList<>();
         userInstitutionsAdapter = new InstitutionsAdapter(institutions);
         userDAO.getUserInstitutions(new OnCompleteListener<DocumentSnapshot>() {
@@ -87,6 +94,7 @@ public class HostStudentActivityViewModel extends ViewModel {
                 User user = task.getResult().toObject(User.class);
                 assert user != null;
                 if(user.getInstitutions() != null){
+                    Objects.requireNonNull(userInstitutionsAdapter.getInstitutionsMutableLiveData().getValue()).clear();
                     for (DocumentReference documentReference: user.getInstitutions()) {
                         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @SuppressLint("NotifyDataSetChanged")
@@ -100,6 +108,9 @@ public class HostStudentActivityViewModel extends ViewModel {
                                 }
                             }
                         });
+                    }
+                    if(swipeRefreshLayout != null){
+                        swipeRefreshLayout.setRefreshing(false);
                     }
                 }else{
                     userInstitutionsAdapter.notifyDataSetChanged();
@@ -144,13 +155,13 @@ public class HostStudentActivityViewModel extends ViewModel {
      * @param progressBar barra de progresso para realizar o carregamento
      * @param viewLoading view para escurecer o fundo
      */
-    public void updateProfile(String displayName, String email, Context context, Bitmap profilePictureCurrent, ProgressBar progressBar, View viewLoading){
+    public void updateProfile(@NonNull String displayName,@NonNull String email,@NonNull Context context, @NonNull Bitmap profilePictureCurrent, @NonNull ProgressBar progressBar,@NonNull View viewLoading){
         if(displayName.equals(this.displayName) && email.equals(this.email) && profilePictureCurrent == this.pictureProfileBitmap){
             Toast toast = Toast.makeText(context, "Não detectamos alterações a serem salvas", Toast.LENGTH_SHORT);
             toast.show();
         } else if (!displayName.equals("") && !email.equals("")) {
             if(profilePictureCurrent != this.pictureProfileBitmap && profilePictureCurrent!= null){
-                uploadProfilePicture(email,profilePictureCurrent, progressBar, viewLoading);
+                uploadProfilePicture(email,profilePictureCurrent, progressBar, viewLoading,context);
             }
             userDAO.updateProfile(displayName,new OnSuccessListener() {
                 @Override
@@ -173,18 +184,26 @@ public class HostStudentActivityViewModel extends ViewModel {
      * @param progressBar
      * @param view
      */
-    public void uploadProfilePicture(String email, Bitmap imageBitmap, ProgressBar progressBar, View view){
+    public void uploadProfilePicture(String email, Bitmap imageBitmap, ProgressBar progressBar, View view, Context context){
         if (!email.equals("") && imageBitmap != null && imageBitmap != pictureProfileBitmap){
             view.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.VISIBLE);
             userDAO.uploadProfileImage(email, imageBitmap, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    UserProfileChangeRequest changes = new UserProfileChangeRequest.Builder().setPhotoUri(Uri.parse("profilePictures\\"+email)).build();
+                    UserProfileChangeRequest changes = new UserProfileChangeRequest.Builder().setPhotoUri(Uri.parse("profilePictures\\" + email)).build();
                     UserDAO.currentUserAplication.updateProfile(changes);
                     pictureProfileBitmap = imageBitmap;
                     progressBar.setVisibility(View.INVISIBLE);
                     view.setVisibility(View.GONE);
+                }
+            }, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    view.setVisibility(View.GONE);
+                    Toast toast = Toast.makeText(context, "Erro ao durante o upload", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
             });
         }
@@ -196,7 +215,7 @@ public class HostStudentActivityViewModel extends ViewModel {
      * @param context para exibir as mensagens
      * @param dialog ao final da execução ele fecha o dialog
      */
-    public void updatePassword(String password, String newPassword, Context context, Dialog dialog){
+    public void updatePassword(String password, String newPassword, @NonNull Context context, @NonNull Dialog dialog){
         if(password.equals(newPassword)){
             userDAO.updatePassword(password, new OnCompleteListener<Void>() {
                 @Override
@@ -225,7 +244,7 @@ public class HostStudentActivityViewModel extends ViewModel {
      * @param progressBar
      * @param view
      */
-    public void excludeProfilePicture(String email, Context context, ProgressBar progressBar, View view){
+    public void excludeProfilePicture(String email, Context context, @NonNull ProgressBar progressBar, @NonNull View view){
         if (pictureProfileBitmap!= null){
             view.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.VISIBLE);

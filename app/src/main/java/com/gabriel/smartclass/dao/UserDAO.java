@@ -49,13 +49,13 @@ public class UserDAO {
         UserProfileChangeRequest update = new UserProfileChangeRequest.Builder().setPhotoUri(null).build();
         currentUserAplication.updateProfile(update).addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
-    public void uploadProfileImage(String userEmail, Bitmap imageBitmap, OnSuccessListener<UploadTask.TaskSnapshot> onSuccessListener){
+    public void uploadProfileImage(String userEmail, Bitmap imageBitmap, OnSuccessListener<UploadTask.TaskSnapshot> onSuccessListener, OnFailureListener onFailureListener){
         StorageReference profileStoregeReference = storagePictures.child(userEmail);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] dataBytes = baos.toByteArray();
         UploadTask uploadTask = profileStoregeReference.putBytes(dataBytes);
-        uploadTask.addOnSuccessListener(onSuccessListener);
+        uploadTask.addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
     public void downloadImage(String email, OnSuccessListener<byte[]> onSuccessListener, OnFailureListener onFailureListener){
         StorageReference profilePictureRef = storagePictures.child(email);
