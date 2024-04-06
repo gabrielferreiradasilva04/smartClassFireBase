@@ -1,12 +1,14 @@
 package com.gabriel.smartclass.view.auth;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 
 import com.gabriel.smartclass.databinding.ActivityInstitutionRegisterFormBinding;
 import com.gabriel.smartclass.utilities.maskListeners.MaskListenerCPNJ;
 import com.gabriel.smartclass.utilities.validate.CNPJValidator;
+import com.gabriel.smartclass.viewModels.LoginViewModel;
 
 public class InstitutionRegisterForm extends AppCompatActivity {
    private ActivityInstitutionRegisterFormBinding binding;
@@ -14,6 +16,7 @@ public class InstitutionRegisterForm extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LoginViewModel loginViewModel = new LoginViewModel();
         super.onCreate(savedInstanceState);
         binding = ActivityInstitutionRegisterFormBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -23,7 +26,7 @@ public class InstitutionRegisterForm extends AppCompatActivity {
 
         binding.registerButtonInstitutionRegister.setOnClickListener( view ->{
             try {
-                CNPJValidator.validateCNPJ(binding.textCpnjInstitutionRegister.getText().toString());
+
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

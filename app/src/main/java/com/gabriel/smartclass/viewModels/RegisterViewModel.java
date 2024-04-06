@@ -7,12 +7,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
+import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.dao.UserAuthDAO;
 import com.gabriel.smartclass.model.User;
+import com.gabriel.smartclass.utilities.validate.CNPJValidator;
+import com.gabriel.smartclass.view.auth.InstitutionRegisterForm;
 import com.gabriel.smartclass.view.auth.LoginForm;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
@@ -75,7 +79,14 @@ public class RegisterViewModel extends ViewModel {
         }
 
     }
-
+    public void registerInstitution(InstitutionRegisterForm institutionRegisterForm, String name, String email, String cnpj, String senha){
+        try {
+            CNPJValidator.validateCNPJ(cnpj);
+        } catch (Exception e) {
+            Snackbar snackbar = Snackbar.make(institutionRegisterForm.getApplicationContext(), institutionRegisterForm.getCurrentFocus(),"CNPJ inválido", Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }
+    }
 
 
 

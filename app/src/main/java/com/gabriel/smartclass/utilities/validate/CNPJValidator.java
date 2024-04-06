@@ -141,12 +141,7 @@ public abstract class CNPJValidator {
             ;
             String expectedCnpj = sbExpectedCnpj.toString();
 
-            if(expectedCnpj.equals(cnpjWithoutCharacters)){
-                return true;
-            }
-            else{
-                return false;
-            }
+            return expectedCnpj.equals(cnpjWithoutCharacters);
 
         }
     }
