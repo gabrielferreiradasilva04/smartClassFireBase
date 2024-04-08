@@ -11,10 +11,8 @@ public class InstitutionLinkRequestDAO {
     FirebaseFirestore fb = FirebaseFirestore.getInstance();
     private final String COLLECTION = "LinkRequests";
 
-    public void createNewLinkRequest(InstitutionLinkRequest institutionLinkRequest, Institution institution, OnCompleteListener onCompleteListener, OnFailureListener onFailureListener){
-        DocumentReference documentReference = fb.collection("institution").document(institution.getId());
-        documentReference.collection(COLLECTION).add(institutionLinkRequest).addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
-
+    public void createNewLinkRequest(InstitutionLinkRequest institutionLinkRequest, DocumentReference institutionReference, OnCompleteListener onCompleteListener, OnFailureListener onFailureListener){
+        institutionReference.collection(COLLECTION).add(institutionLinkRequest).addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 
 

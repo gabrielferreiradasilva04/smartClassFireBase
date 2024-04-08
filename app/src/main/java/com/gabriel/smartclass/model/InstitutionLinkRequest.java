@@ -31,11 +31,11 @@ public class InstitutionLinkRequest implements Parcelable {
         this.title = title;
     }
 
-    public DocumentReference getAppUser() {
+    public DocumentReference getUser() {
         return user_id;
     }
 
-    public void setAppUser(DocumentReference appUser) {
+    public void setUser(DocumentReference user_id) {
         this.user_id = user_id;
     }
 
