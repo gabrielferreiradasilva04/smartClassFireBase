@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,7 @@ import com.gabriel.smartclass.databinding.EmptyRequestBinding;
 import com.gabriel.smartclass.databinding.FragmentHomeBinding;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
-import com.gabriel.smartclass.view.auth.InstitutionsSearch;
+import com.gabriel.smartclass.view.InstitutionsSearch;
 import com.gabriel.smartclass.view.UserInstitutionMenu;
 import com.gabriel.smartclass.viewModels.HostStudentActivityViewModel;
 
@@ -68,9 +67,13 @@ public class HomeFragment extends Fragment {
         recyclerViewInstitutions.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewInstitutions.setAdapter(hostStudentActivityViewModel.getUserInstitutionsAdapter());
         binding.buttonAddInstitutionUserInstitutions.setOnClickListener(onInstitutionClick());
+
         refresh();
         return binding.getRoot();
     }
+
+
+
     @SuppressLint({"RestrictedApi", "NotifyDataSetChanged"})
     @Override
     public void onStart() {

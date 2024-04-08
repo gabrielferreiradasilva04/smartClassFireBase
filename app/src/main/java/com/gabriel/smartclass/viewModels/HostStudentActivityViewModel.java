@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -22,7 +23,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
@@ -41,6 +46,7 @@ public class HostStudentActivityViewModel extends ViewModel {
     private  Bitmap pictureProfileBitmap;
     private String email;
     private String displayName;
+    private MutableLiveData<String> snackBarText = new MutableLiveData<>();
     /*User properties*/
 
     public void setPictureProfileBitmap(Bitmap pictureProfileBitmap) {
@@ -90,13 +96,13 @@ public class HostStudentActivityViewModel extends ViewModel {
                 User user = task.getResult().toObject(User.class);
                 assert user != null;
                 if(user.getInstitutions() != null){
-                    Objects.requireNonNull(userInstitutionsAdapter.getInstitutionsMutableLiveData().getValue()).clear();
                     for (DocumentReference documentReference: user.getInstitutions()) {
                         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @SuppressLint("NotifyDataSetChanged")
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 Institution institution = documentSnapshot.toObject(Institution.class);
+                                institution.setId(documentSnapshot.getId());
                                 if(institution != null){
                                     institution.setId(documentSnapshot.getId());
                                     userInstitutionsAdapter.addItem(institution);
@@ -222,7 +228,20 @@ public class HostStudentActivityViewModel extends ViewModel {
             }, new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast toast = Toast.makeText(context, "Erro ao atualziar senha", Toast.LENGTH_SHORT);
+                    String errorMessage = "";
+                    if(e.getClass().equals(FirebaseAuthWeakPasswordException.class)){
+                        errorMessage = "A senha deve conter pelo mesnos 6 caractéres";
+                    }
+                    if(e.getClass().equals(FirebaseAuthInvalidCredentialsException.class)){
+                        errorMessage = "Digite um e-mail válido";
+                    }
+                    if(e.getClass().equals(FirebaseAuthUserCollisionException.class)){
+                        errorMessage = "Já existe um usuário cadastrado com esse e-mail";
+                    }
+                    if(e.getClass().equals(FirebaseNetworkException.class)){
+                        errorMessage = "Sem conexão com a internet, tente novamente mais tarde";
+                    }
+                    Toast toast = Toast.makeText(context, errorMessage, Toast.LENGTH_LONG);
                     toast.show();
                 }
             });

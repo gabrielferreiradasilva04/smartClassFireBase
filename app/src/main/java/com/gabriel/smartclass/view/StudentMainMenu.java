@@ -1,6 +1,7 @@
 package com.gabriel.smartclass.view;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavHost;
@@ -30,15 +31,20 @@ public class StudentMainMenu extends AppCompatActivity {
         getViewModelStore().put("hostStudentActivityViewModel", hostStudentActivityViewModel);
         hostStudentActivityViewModel.getUserInstitutions();
         hostStudentActivityViewModel.loadUserDetails(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("");
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode());
         navigation();
     }
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
     @Override
     protected void onStart() {
         super.onStart();
     }
-
-    /*navegação entre as fragments*/
     private void navigation(){
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container_student);
         navController = navHostFragment.getNavController();

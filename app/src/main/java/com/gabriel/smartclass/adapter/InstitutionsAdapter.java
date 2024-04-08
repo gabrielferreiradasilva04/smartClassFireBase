@@ -9,10 +9,14 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.model.Institution;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 public class InstitutionsAdapter extends RecyclerView.Adapter {
     private MutableLiveData<List<Institution>> institutionsMutableLiveData;
+    private HashSet<String> itemIds;
     private ItemClickListener itemClickListener;
     public MutableLiveData<List<Institution>> getInstitutionsMutableLiveData() {
         return institutionsMutableLiveData;
@@ -30,10 +34,12 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
         institutionsMutableLiveData = new MutableLiveData<>();
         institutionsMutableLiveData.setValue(institutions);
         this.itemClickListener = itemClickListener;
+        itemIds = new HashSet<>();
     }
     public InstitutionsAdapter (List<Institution> institutions){
         this.institutionsMutableLiveData = new MutableLiveData<>();
         this.institutionsMutableLiveData.setValue(institutions);
+        itemIds = new HashSet<>();
     }
 
     @NonNull
@@ -45,23 +51,27 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        holder.itemView.setAlpha(0f);
-        holder.itemView.animate().alpha(1f).setDuration(300).start();
-        String institutionName = institutionsMutableLiveData.getValue().get(position).getName();
-        String cnpj = institutionsMutableLiveData.getValue().get(position).getCnpj();
-        TextView textInstitutionName = holder.itemView.findViewById(R.id.textInstitutionName_adapter);
-        TextView textInstitutionCNPJ = holder.itemView.findViewById(R.id.textInstitutionCNPJ_adapter);
-        textInstitutionName.setText(institutionName);
-        textInstitutionCNPJ.setText(cnpj);
-        if(itemClickListener != null){
-            holder.itemView.setOnClickListener( view ->{
-                itemClickListener.onItemClick(institutionsMutableLiveData.getValue().get(position));
-            });
-        }
+        String itemId = Objects.requireNonNull(institutionsMutableLiveData.getValue()).get(position).getId();
+            holder.itemView.setAlpha(0f);
+            holder.itemView.animate().alpha(1f).setDuration(300).start();
+            String institutionName = institutionsMutableLiveData.getValue().get(position).getName();
+            String cnpj = institutionsMutableLiveData.getValue().get(position).getCnpj();
+            TextView textInstitutionName = holder.itemView.findViewById(R.id.textInstitutionName_adapter);
+            TextView textInstitutionCNPJ = holder.itemView.findViewById(R.id.textInstitutionCNPJ_adapter);
+            textInstitutionName.setText(institutionName);
+            textInstitutionCNPJ.setText(cnpj);
+            if(itemClickListener != null){
+                holder.itemView.setOnClickListener( view ->{
+                    itemClickListener.onItemClick(institutionsMutableLiveData.getValue().get(position));
+                });
+            }
     }
 
     public void addItem(Institution institution){
-        this.institutionsMutableLiveData.getValue().add(institution);
+        if(!itemIds.contains(institution.getId())){
+            itemIds.add(institution.getId());
+            this.institutionsMutableLiveData.getValue().add(institution);
+        }
     }
 
 

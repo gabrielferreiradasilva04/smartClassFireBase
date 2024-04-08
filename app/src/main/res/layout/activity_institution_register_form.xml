@@ -4,25 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.auth.InstitutionRegisterForm"
-    android:background="@drawable/main_background">
+    android:background="@drawable/main_background"
+    tools:context=".view.auth.InstitutionRegisterForm">
+
     <androidx.appcompat.widget.AppCompatButton
 
         android:id="@+id/registerButton_InstitutionRegister"
         style="@style/Button_Confirm_Forms"
         android:text="Finalizar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/loginButton_InstitutionRegister"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/loginButton_InstitutionRegister"
         style="@style/Button_Confirm_Forms"
         android:layout_marginTop="10dp"
         android:text="Já Possuo uma Conta"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
 
 
         />
@@ -46,14 +47,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textName_InstitutionRegister" />
+
     <EditText
         android:id="@+id/textName_InstitutionRegister"
         style="@style/Edit_Text_Forms"
+        android:layout_marginTop="40dp"
         android:hint="Nome da Instituição"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="40dp"
         app:layout_constraintTop_toBottomOf="@id/imgLogo" />
 
     <EditText
@@ -64,18 +66,40 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textCpnj_InstitutionRegister"
-        />
+        app:layout_constraintTop_toBottomOf="@id/textCpnj_InstitutionRegister" />
+    <EditText
+        android:id="@+id/textConfirmPassword_InstitutionRegister"
+        style="@style/Edit_Text_Forms"
+        android:layout_marginTop="10dp"
+        android:hint="Confirme sua senha"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textPassword_InstitutionRegister" />
+
     <EditText
         android:id="@+id/textCpnj_InstitutionRegister"
-        android:maxLength="18"
         style="@style/Edit_Text_Forms"
         android:layout_marginTop="10dp"
         android:hint="CPNJ"
         android:inputType="text|number"
+        android:maxLength="18"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textEmail_InstitutionRegister"
-        />
+        app:layout_constraintTop_toBottomOf="@id/textEmail_InstitutionRegister" />
+
+    <ProgressBar
+        android:id="@+id/progressBar_InstitutionRegister"
+        style="?android:attr/progressBarStyle"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="38dp"
+        app:layout_constraintBottom_toTopOf="@+id/registerButton_InstitutionRegister"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textPassword_InstitutionRegister"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

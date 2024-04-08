@@ -8,6 +8,7 @@
     tools:context=".view.fragments.userfragments.ProfileFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+
         android:id="@+id/refresh_profile_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,17 +23,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/profile_picture"
+                android:scaleType="centerCrop"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_margin="30dp"
-                android:background="@color/white"
+                android:background="@drawable/image_button_cicle"
                 android:clipToOutline="true"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="SpeakableTextPresentCheck" />
 
 
             <EditText
@@ -82,48 +85,6 @@
                 app:layout_constraintBottom_toTopOf="@+id/saveChanges_profile"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/chooseprofilepicturebutton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="128dp"
-                android:backgroundTint="@color/sky_blue"
-                android:clickable="true"
-                android:src="@drawable/ic_edit"
-                app:layout_constraintBottom_toTopOf="@+id/edtxt_display_name"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/excludeProfilePictureButton"
-                app:layout_constraintTop_toTopOf="@+id/profile_picture"
-                app:layout_constraintVertical_bias="0.873"
-                tools:ignore="SpeakableTextPresentCheck" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/excludeProfilePictureButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="132dp"
-                android:layout_marginTop="88dp"
-                android:backgroundTint="@color/sky_blue"
-                android:clickable="true"
-                android:src="@drawable/ic_cancel"
-                app:layout_constraintBottom_toTopOf="@+id/edtxt_display_name"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/profile_picture"
-                app:layout_constraintVertical_bias="0.064"
-                tools:ignore="SpeakableTextPresentCheck" />
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Sua foto de perfil"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

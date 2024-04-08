@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/institution_nav_main"
+    app:startDestination="@id/institution_menu_home">
+
+    <fragment
+        android:id="@+id/institution_menu_home"
+        android:name="com.gabriel.smartclass.view.fragments.institutionfragments.InstitutionHomeFragment"
+        android:label="fragment_institution_home"
+        tools:layout="@layout/fragment_institution_home" />
+    <fragment
+        android:id="@+id/institution_menu_profile"
+        android:name="com.gabriel.smartclass.view.fragments.institutionfragments.InstitutionProfileFragment"
+        android:label="fragment_institution_profile"
+        tools:layout="@layout/fragment_institution_profile" />
+    <fragment
+        android:id="@+id/institution_menu_notifications"
+        android:name="com.gabriel.smartclass.view.fragments.institutionfragments.InstitutionNotifications"
+        android:label="fragment_institution_notifications"
+        tools:layout="@layout/fragment_institution_notifications" />
+</navigation>

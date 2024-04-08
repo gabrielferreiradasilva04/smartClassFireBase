@@ -1,7 +1,8 @@
-package com.gabriel.smartclass.view.auth;
+package com.gabriel.smartclass.view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -27,13 +28,18 @@ public class InstitutionsSearch extends AppCompatActivity {
         binding = ActivityInstitutionsSearchBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         EmptyRecyclerViewObserver emptyRecyclerViewObserver = new EmptyRecyclerViewObserver(binding.recyclerViewInstitutionsFind, findViewById(R.id.empty_container));
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("");
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode());
 
         viewModel = new InstitutionsSearchViewModel(this, emptyRecyclerViewObserver);
         binding.nameToFindInstitutionsSearch.addTextChangedListener(search());
-
-
 }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
 
     @NonNull

@@ -1,5 +1,7 @@
 package com.gabriel.smartclass.view;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -18,6 +20,13 @@ public class UserInstitutionMenu extends AppCompatActivity {
         setContentView(binding.getRoot());
         currentInstitution = getIntent().getParcelableExtra("institution");
         binding.textViewG.setText(currentInstitution.getName());
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("");
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode());
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

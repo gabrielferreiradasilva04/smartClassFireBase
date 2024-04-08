@@ -1,10 +1,16 @@
 package com.gabriel.smartclass.dao;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.gabriel.smartclass.model.Institution;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Map;
@@ -34,6 +40,9 @@ public class InstitutionDAO {
     public void getInstitutionByName(String name, OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
         db.collection(COLLECTION).whereEqualTo("name", name).get().addOnCompleteListener(onCompleteListener);
 
+    }
+    public void getInstitutionByCNPJ(String cnpj,OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
+        db.collection("Institutions").whereEqualTo("cnpj", cnpj).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 
 }

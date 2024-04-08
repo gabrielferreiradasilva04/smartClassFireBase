@@ -1,6 +1,7 @@
 package com.gabriel.smartclass.view.linkRequests;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.os.Bundle;
 import android.widget.Spinner;
@@ -34,10 +35,13 @@ public class InstitutionLinkRequestForm extends AppCompatActivity {
         viewModel = new InstitutionLinkRequestViewModel();
         spinnerUserType = binding.spinnerUserTypeLink;
         viewModel.getUserTypesAndPopulateSpinner(spinnerUserType, this);
-
-
-
-
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("");
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode());
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

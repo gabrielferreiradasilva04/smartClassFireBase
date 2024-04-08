@@ -13,7 +13,6 @@ public class Institution implements Parcelable {
     private String id;
     private String cnpj;
     private String name;
-    private DocumentReference responsable_id;
 
     //getters and setters
     public String getId() {
@@ -40,27 +39,18 @@ public class Institution implements Parcelable {
         this.name = name;
     }
 
-    public DocumentReference getResponsable_id() {
-        return responsable_id;
-    }
-
-    public void setResponsable_id(DocumentReference responsable_id) {
-        this.responsable_id = responsable_id;
-    }
 
 
 
-    public Institution(String cnpj, String name, DocumentReference responsable_id){
+    public Institution(String cnpj, String name){
         this.cnpj = cnpj;
         this.name = name;
-        this.responsable_id = responsable_id;
     }
 
-    public Institution(String id, String cnpj, String name, DocumentReference responsable_id) {
+    public Institution(String id, String cnpj, String name) {
         this.id = id;
         this.cnpj = cnpj;
         this.name = name;
-        this.responsable_id = responsable_id;
     }
 
     public Institution() {
@@ -85,7 +75,6 @@ public class Institution implements Parcelable {
                 "id='" + id + '\'' +
                 ", cnpj='" + cnpj + '\'' +
                 ", name='" + name + '\'' +
-                ", responsable_id=" + responsable_id +
                 '}';
     }
     protected Institution(Parcel in) {
