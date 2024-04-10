@@ -53,6 +53,8 @@ dependencies {
 
     /*image view circular*/
     implementation ("de.hdodenhof:circleimageview:3.0.0")
+    //Glide
+    implementation ("com.github.bumptech.glide:glide:4.14.2")
 
 
 

@@ -29,8 +29,10 @@ public class StudentMainMenu extends AppCompatActivity {
         setContentView(binding.getRoot());
         hostStudentActivityViewModel = new ViewModelProvider(this).get(HostStudentActivityViewModel.class);
         getViewModelStore().put("hostStudentActivityViewModel", hostStudentActivityViewModel);
+
         hostStudentActivityViewModel.getUserInstitutions();
-        hostStudentActivityViewModel.loadUserDetails(this);
+        hostStudentActivityViewModel.loadUserDetails();
+        hostStudentActivityViewModel.listenerSnapshotChanges();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode());
@@ -48,7 +50,6 @@ public class StudentMainMenu extends AppCompatActivity {
     private void navigation(){
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container_student);
         navController = navHostFragment.getNavController();
-
         NavigationUI.setupWithNavController(binding.bottomActionBarStudents, navController);
     }
 }

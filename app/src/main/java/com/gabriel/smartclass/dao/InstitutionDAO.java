@@ -7,7 +7,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -43,6 +45,9 @@ public class InstitutionDAO {
     }
     public void getInstitutionByCNPJ(String cnpj,OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
         db.collection("Institutions").whereEqualTo("cnpj", cnpj).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+    }
+    public void getInstitutionByCurrentUser(OnSuccessListener<DocumentSnapshot> onSuccessListener, OnFailureListener onFailureListener){
+        db.collection(COLLECTION).document(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
 
 }

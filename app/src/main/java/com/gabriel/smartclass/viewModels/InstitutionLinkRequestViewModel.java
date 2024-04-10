@@ -1,6 +1,11 @@
 package com.gabriel.smartclass.viewModels;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -13,6 +18,8 @@ import com.gabriel.smartclass.dao.UserTypeDAO;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
 import com.gabriel.smartclass.model.UserType;
+import com.gabriel.smartclass.view.StudentMainMenu;
+import com.gabriel.smartclass.view.fragments.userfragments.HomeFragment;
 import com.gabriel.smartclass.view.linkRequests.InstitutionLinkRequestForm;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -45,7 +52,7 @@ public class InstitutionLinkRequestViewModel {
     public InstitutionLinkRequestViewModel(InstitutionLinkRequestForm institutionLinkRequestForm){
         userTypeDAO = new UserTypeDAO();
         this.institutionLinkRequestForm = institutionLinkRequestForm;
-        this.linkRequestDAO = new InstitutionLinkRequestDAO();
+        this.linkRequestDAO = new InstitutionLinkRequestDAO(this);
     }
     public void getUserTypesAndPopulateSpinner(){
         this.userTypeList = new ArrayList<>();
@@ -70,7 +77,7 @@ public class InstitutionLinkRequestViewModel {
         });
     }
 
-    public void createNewInstitutionLinkRequest(UserType userType, String title, Institution institution){
+    public void createNewInstitutionLinkRequest(UserType userType, String title, Institution institution,Context context){
         if(userType != null && !title.equals("") && institution != null){
             FirebaseFirestore fb = FirebaseFirestore.getInstance();
             DocumentReference userReference = fb.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -81,23 +88,37 @@ public class InstitutionLinkRequestViewModel {
             institutionLinkRequest.setUser(userReference);
             institutionLinkRequest.setTitle(title);
             institutionLinkRequest.setUserType(userTypeReference);
-
-            linkRequestDAO.createNewLinkRequest(institutionLinkRequest, institutionReference, task -> {
-                if(task.isSuccessful()){
-                    snackbarText.setValue("Sua solicitação voi enviada, aguarde o retorno da instituição");
-                }
-            }, e -> {
-                snackbarText.setValue("Algo deu errado: "+e);
-            });
-
+                linkRequestDAO.createNewLinkRequest(institutionLinkRequest, institutionReference, task -> {
+                    if(task.isSuccessful()){
+                        showSuccessDialog(context);
+                    }
+                }, e -> {
+                    snackbarText.setValue("Algo deu errado: "+e);
+                });
         }else{
             snackbarText.setValue("Preencha todos os campos da solicitação");
         }
+    }
 
-        /*Preciso determinar uma instituição -> documentReference -> Posso passar como parametro da tela de pesquisa para a tela de requisição via intent*/
-        /*o userType eu consigo pegar da combobox e transformar em um document reference*/
-        /*Preciso determinar um appUser -> documentReference também -> Buscar com base no id do usuário logado "fireBaseAtuh.getcurrentUser()"*/
+    public void showSuccessDialog(Context context){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+        dialogBuilder.setCancelable(false);
+        final View popUp = institutionLinkRequestForm.getLayoutInflater().inflate(R.layout.success_link_request_layout,null);
+        dialogBuilder.setView(popUp);
+        Dialog dialog = dialogBuilder.create();
+        dialog.show();
+        Button buttonConfirm = popUp.findViewById(R.id.buttonConfirmLinkRequestSuccessDialog);
+        buttonConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent i = new Intent(context, StudentMainMenu.class);
+                context.startActivity(i);
+
+            }
+        });
 
     }
+
 
 }

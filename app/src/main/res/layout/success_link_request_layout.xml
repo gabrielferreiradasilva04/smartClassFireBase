@@ -41,7 +41,7 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         android:layout_margin="20dp"
-        android:text="Sua solicitação foi enviada com sucesso! Agora basta aguardar o retorno da instituição."
+        android:text="Sua solicitação foi enviada com sucesso! Agora basta aguardar o retorno da instituição. Assim que a solicitação for aprovada a sua nova instituição aparecerá na sua tela principal."
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

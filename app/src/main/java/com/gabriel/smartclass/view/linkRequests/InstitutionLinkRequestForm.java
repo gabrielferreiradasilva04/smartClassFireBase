@@ -5,8 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.Observer;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.gabriel.smartclass.R;
@@ -44,6 +49,7 @@ public class InstitutionLinkRequestForm extends AppCompatActivity {
         viewModel.getSnackbarText().observe(this, snackbarObserve());
     }
 
+
     @NonNull
     private Observer<String> snackbarObserve() {
         return s -> {
@@ -59,7 +65,7 @@ public class InstitutionLinkRequestForm extends AppCompatActivity {
     public void prepareLinkRequest(){
         UserType userType = (UserType) binding.spinnerUserTypeLink.getSelectedItem();
         String title = binding.textLinkTitle.getText().toString();
-        viewModel.createNewInstitutionLinkRequest(userType,title, institutionSelected);
+            viewModel.createNewInstitutionLinkRequest(userType,title, institutionSelected, this);
     }
 
     @Override

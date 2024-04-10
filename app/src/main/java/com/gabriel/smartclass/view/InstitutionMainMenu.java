@@ -4,10 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavHost;
 import androidx.navigation.ui.NavigationUI;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import com.gabriel.smartclass.R;
@@ -21,6 +23,7 @@ public class InstitutionMainMenu extends AppCompatActivity {
     private ActivityInstitutionMainMenuBinding binding;
     private HostInstitutionActivityViewModel viewModel;
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +32,9 @@ public class InstitutionMainMenu extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode());
-        viewModel = new HostInstitutionActivityViewModel(this);
+        viewModel = new ViewModelProvider(this).get(HostInstitutionActivityViewModel.class);
+        getViewModelStore().put("hostInstitutionActivityViewModel", viewModel);
+        viewModel.getInstitutionByCurrentUser();
         navigation();
         viewModel.getNotifications().observe(this, notificationsObserve());
     }
