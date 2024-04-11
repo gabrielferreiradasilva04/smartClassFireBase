@@ -138,8 +138,7 @@ public class HostStudentActivityViewModel extends ViewModel {
                 uploadProfilePicture(email,profilePictureCurrent, progressBar, viewLoading,context);
             }
             userDAO.updateProfile(displayName, o -> {
-                Toast toast = Toast.makeText(context, "Perfil atualizado", Toast.LENGTH_SHORT);
-                toast.show();
+                snackBarText.setValue("Perfil atualizado com sucesso");
             });
         }
         else{
@@ -199,8 +198,7 @@ public class HostStudentActivityViewModel extends ViewModel {
     public void updatePassword(String password, String newPassword, @NonNull Context context, @NonNull Dialog dialog){
         if(password.equals(newPassword)){
             userDAO.updatePassword(password, task -> {
-                Toast toast = Toast.makeText(context, "Senha atualizada", Toast.LENGTH_SHORT);
-                toast.show();
+                snackBarText.setValue("Senha atualizada com sucesso!");
                 dialog.dismiss();
             }, e -> {
                 String errorMessage = "";

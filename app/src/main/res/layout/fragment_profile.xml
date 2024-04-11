@@ -41,6 +41,7 @@
             <EditText
                 android:id="@+id/edtxt_display_name"
                 style="@style/Edit_Text_Forms"
+                android:inputType="textPersonName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
@@ -55,29 +56,26 @@
                 style="@style/Edit_Text_Forms"
                 android:enabled="false"
                 android:hint="E-mail"
-                app:layout_constraintBottom_toTopOf="@+id/changePassword_profile"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edtxt_display_name"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@id/edtxt_display_name" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/saveChanges_profile"
                 style="@style/Button_Confirm_Forms"
+                android:layout_marginTop="16dp"
                 android:text="Salvar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                 />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/changePassword_profile" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/changePassword_profile"
                 style="@style/Button_Confirm_Forms"
                 android:text="Alterar senha"
-                app:layout_constraintBottom_toTopOf="@id/saveChanges_profile"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-            />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edtxt_email" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

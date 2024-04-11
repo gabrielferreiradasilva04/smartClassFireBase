@@ -25,6 +25,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsetsController;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
@@ -50,7 +52,7 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
     }
-    @SuppressLint("RestrictedApi")
+    @SuppressLint({"RestrictedApi", "NewApi", "WrongConstant"})
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,11 +69,21 @@ public class ProfileFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        hostStudentActivityViewModel.getSnackBarText().removeObserver(observeSnackbar());
+        hostStudentActivityViewModel.getSnackBarText().setValue(null);
+    }
+
     @NonNull
     private Observer<String> observeSnackbar() {
         return s-> {
+            if(s != null){
                 Snackbar snackbar = Snackbar.make(binding.saveChangesProfile, s, Snackbar.LENGTH_SHORT);
                 snackbar.show();
+            }
+
         };
     }
 
@@ -220,5 +232,4 @@ public class ProfileFragment extends Fragment {
             binding.refreshProfileFragment.setRefreshing(false);
         }
     }
-
 }
