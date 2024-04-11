@@ -19,6 +19,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.net.URI;
 
 
 public class UserDAO {
@@ -74,6 +75,10 @@ public class UserDAO {
     public void getUserByUserAuthId(OnCompleteListener<DocumentSnapshot> onCompleteListener){
         fb.collection(COLLECTION).document(currentUserAplication.getUid()).get().addOnCompleteListener(onCompleteListener);
     }
+    public void getUserPictureByCloudStorage(String email,OnCompleteListener<Uri> onCompleteListener, OnFailureListener onFailureListener){
+        storagePictures.child(email).getDownloadUrl().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+    }
+
 
 
 }

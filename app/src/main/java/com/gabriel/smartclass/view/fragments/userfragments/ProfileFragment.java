@@ -15,9 +15,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,10 +31,12 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.FragmentProfileBinding;
 import com.gabriel.smartclass.viewModels.HostStudentActivityViewModel;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileFragment extends Fragment {
@@ -57,9 +61,18 @@ public class ProfileFragment extends Fragment {
         hostStudentActivityViewModel.getProfilePictureLiveData().observe(getViewLifecycleOwner(), observeProfilePictureStudentMainMenu());
         binding.profilePicture.setOnClickListener(clickOpenPictureOptions());
         binding.saveChangesProfile.setOnClickListener(buttonListenerSaveChanges());
+        hostStudentActivityViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
         binding.changePasswordProfile.setOnClickListener(openPasswordDialog());
         refresh();
         return binding.getRoot();
+    }
+
+    @NonNull
+    private Observer<String> observeSnackbar() {
+        return s-> {
+                Snackbar snackbar = Snackbar.make(binding.saveChangesProfile, s, Snackbar.LENGTH_SHORT);
+                snackbar.show();
+        };
     }
 
     @NonNull
@@ -77,6 +90,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -21,6 +21,7 @@ import com.gabriel.smartclass.adapter.InstitutionsAdapter;
 import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.User;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -45,6 +46,10 @@ public class HostStudentActivityViewModel extends ViewModel {
     private MutableLiveData<Bitmap> profilePictureLiveData = new MutableLiveData<>();
     private MutableLiveData<String> snackBarText = new MutableLiveData<>();
     /*User properties*/
+
+    public MutableLiveData<String> getSnackBarText() {
+        return snackBarText;
+    }
 
     public MutableLiveData<FirebaseUser> getFirebaseUserLiveData() {
         return firebaseUserLiveData;
@@ -127,20 +132,19 @@ public class HostStudentActivityViewModel extends ViewModel {
      */
     public void updateProfile(@NonNull String displayName,@NonNull String email,@NonNull Context context, @NonNull Bitmap profilePictureCurrent, @NonNull ProgressBar progressBar,@NonNull View viewLoading){
         if(displayName.equals(firebaseUserLiveData.getValue().getDisplayName()) && email.equals(this.getFirebaseUserLiveData().getValue().getEmail()) && profilePictureCurrent == profilePictureLiveData.getValue()){
-            Toast toast = Toast.makeText(context, "Não detectamos alterações a serem salvas", Toast.LENGTH_SHORT);
-            toast.show();
+            snackBarText.setValue("Não detectamos alterações a serem salvas");
         } else if (!displayName.equals("") && !email.equals("")) {
             if(profilePictureCurrent != this.profilePictureLiveData.getValue() && profilePictureCurrent!= null){
                 uploadProfilePicture(email,profilePictureCurrent, progressBar, viewLoading,context);
             }
             userDAO.updateProfile(displayName, o -> {
-                Toast toast = Toast.makeText(context, "Alterações salvas", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(context, "Perfil atualizado", Toast.LENGTH_SHORT);
                 toast.show();
             });
         }
         else{
-            Toast toast = Toast.makeText(context, "Todos os campos são obrigatórios", Toast.LENGTH_SHORT);
-            toast.show();
+            snackBarText.setValue("Todos os campos são obrigatórios");
+
         }
     }
 
@@ -153,20 +157,36 @@ public class HostStudentActivityViewModel extends ViewModel {
     public void uploadProfilePicture(String email, Bitmap imageBitmap, ProgressBar progressBar, View view, Context context){
         FirebaseUser currentUserApplication = FirebaseAuth.getInstance().getCurrentUser();
         if (!email.equals("") && imageBitmap != null && imageBitmap != profilePictureLiveData.getValue()){
+
             view.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.VISIBLE);
             userDAO.uploadProfileImage(email, imageBitmap, taskSnapshot -> {
-                UserProfileChangeRequest changes = new UserProfileChangeRequest.Builder().setPhotoUri(Uri.parse("profilePictures\\" + email)).build();
-                currentUserApplication.updateProfile(changes);
-                profilePictureLiveData.setValue(imageBitmap);
-                progressBar.setVisibility(View.INVISIBLE);
-                view.setVisibility(View.GONE);
+
+                /*Pegar o url da imagem e setar no perfil do usuário para pegar ela posteriormente*/
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                StorageReference storagePictures = storageReference.child("profilePictures");
+                storagePictures.child(email).getDownloadUrl().addOnSuccessListener(uri ->  {
+                    UserProfileChangeRequest changes = new UserProfileChangeRequest.Builder().setPhotoUri(uri).build();
+                    currentUserApplication.updateProfile(changes);
+                    profilePictureLiveData.setValue(imageBitmap);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    view.setVisibility(View.GONE);
+
+                }).addOnFailureListener(e -> {
+
+                    snackBarText.setValue("Ocorreu um erro ao salvar sua foto de perfil");
+                    progressBar.setVisibility(View.INVISIBLE);
+                    view.setVisibility(View.GONE);
+
+                });
+
             }, e -> {
                 progressBar.setVisibility(View.INVISIBLE);
                 view.setVisibility(View.GONE);
-                Toast toast = Toast.makeText(context, "Erro ao durante o upload", Toast.LENGTH_SHORT);
-                toast.show();
+                snackBarText.setValue("Erro no upload");
+
             });
+
         }
     }
     /***
@@ -210,22 +230,27 @@ public class HostStudentActivityViewModel extends ViewModel {
      * @param email foto a ser excluida
      */
     public void excludeProfilePicture(String email, Context context, @NonNull ProgressBar progressBar, @NonNull View view){
-        if (profilePictureLiveData.getValue()!= null){
-            view.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.VISIBLE);
-            userDAO.excludeImageStorage(email, o -> {
-                Toast toast = Toast.makeText(context, "Foto de perfil excluída!", Toast.LENGTH_SHORT);
-                toast.show();
-                profilePictureLiveData.setValue(null);
-                progressBar.setVisibility(View.INVISIBLE);
-                view.setVisibility(View.GONE);
-            }, e -> {
-            });
-            userDAO.excludeProfilePicture(task -> {
-            }, e -> {
+        /*Primeiro ele tem que tentar excluir o caminho do perfil do usuário e depois deletar ela do banco se dar certo*/
 
-            })  ;
-        }
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        UserProfileChangeRequest removeProfilePicture = new UserProfileChangeRequest.Builder().setPhotoUri(null).build();
+        currentUser.updateProfile(removeProfilePicture).addOnSuccessListener(task -> {
+            if (profilePictureLiveData.getValue()!= null){
+                view.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+                userDAO.excludeImageStorage(email, o -> {
+                    snackBarText.setValue("Foto de perfil excluida com sucesso!");
+                    profilePictureLiveData.setValue(null);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    view.setVisibility(View.GONE);
+                }, e -> {
+                    snackBarText.setValue("Erro ao deletar sua foto de perfil");
+                });
+            }
+        }).addOnFailureListener(e->{
+            snackBarText.setValue("Erro ao deletar sua foto de perfil, tente novamente mais tarde!");
+        });
+
     }
 
 

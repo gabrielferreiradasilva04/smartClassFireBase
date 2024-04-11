@@ -17,7 +17,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -25,12 +25,12 @@
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/profile_picture"
-                android:scaleType="centerCrop"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_margin="30dp"
                 android:background="@drawable/image_button_cicle"
                 android:clipToOutline="true"
+                android:scaleType="centerCrop"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,38 +53,31 @@
             <EditText
                 android:id="@+id/edtxt_email"
                 style="@style/Edit_Text_Forms"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:enabled="false"
                 android:hint="E-mail"
                 app:layout_constraintBottom_toTopOf="@+id/changePassword_profile"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.612"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/edtxt_display_name"
-                app:layout_constraintVertical_bias="0.011" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/saveChanges_profile"
                 style="@style/Button_Confirm_Forms"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:text="Salvar"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="@id/profile_picture" />
+                 />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/changePassword_profile"
                 style="@style/Button_Confirm_Forms"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="Alterar senha"
-                app:layout_constraintBottom_toTopOf="@+id/saveChanges_profile"
+                app:layout_constraintBottom_toTopOf="@id/saveChanges_profile"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+            />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -113,6 +106,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteY="360dp" />
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
