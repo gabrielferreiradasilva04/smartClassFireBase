@@ -90,21 +90,21 @@ public class RegisterViewModel extends ViewModel {
                         progressBar.setVisibility(View.GONE);
                     }
                 }, e-> {
-                        if(e.getClass().equals(FirebaseAuthWeakPasswordException.class)){
-                            snackBarText.setValue("A senha deve conter pelo menos 6 caractéres!");
-                            progressBar.setVisibility(View.GONE);
-                        }
-                        else if (e.getClass() == FirebaseAuthEmailException.class){
-                            snackBarText.setValue("Verifique o e-mail informado");
-                            progressBar.setVisibility(View.GONE);
-                        }
-                        else if (e.getClass().equals(FirebaseAuthUserCollisionException.class)) {
-                            snackBarText.setValue("Já existe um usuário com esse e-mail");
-                            progressBar.setVisibility(View.GONE);
-                        } else {
-                            snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde!");
-                            progressBar.setVisibility(View.GONE);
-                        }
+                    if(e.getClass().equals(FirebaseAuthWeakPasswordException.class)){
+                        snackBarText.setValue("A senha deve conter pelo menos 6 caractéres!");
+                        progressBar.setVisibility(View.GONE);
+                    }
+                    else if (e.getClass() == FirebaseAuthEmailException.class){
+                        snackBarText.setValue("Verifique o e-mail informado");
+                        progressBar.setVisibility(View.GONE);
+                    }
+                    else if (e.getClass().equals(FirebaseAuthUserCollisionException.class)) {
+                        snackBarText.setValue("Já existe um usuário com esse e-mail");
+                        progressBar.setVisibility(View.GONE);
+                    } else {
+                        snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde!");
+                        progressBar.setVisibility(View.GONE);
+                    }
                 });
             }else {
                 snackBarText.setValue("As senhas não conferem");
@@ -125,76 +125,76 @@ public class RegisterViewModel extends ViewModel {
         InstitutionDAO institutionDAO = new InstitutionDAO();
         ProgressBar progressBar = registerForm.findViewById(R.id.progressBar_InstitutionRegister);
         progressBar.setVisibility(View.VISIBLE);
-            institutionDAO.getInstitutionByCNPJ(cnpj, task -> {
-                if(!task.getResult().isEmpty()){
-                    snackBarText.setValue("Já existe uma instituição de ensino com esse CNPJ");
-                    progressBar.setVisibility(View.GONE);
-                }else{
-                    if(!finalEmail.equals("") && !finalName.equals("") && !finalPassword.equals("") && !finalCnpj.equals("")){
-                        if(finalPassword.equals(finalConfirmPassword)) {
-                            try {
-                                if (!CNPJValidator.validateCNPJ(finalCnpj)) {
-                                    snackBarText.setValue("CNPJ Inválido, verifique e tente novamente");
-                                    progressBar.setVisibility(View.GONE);
-                                } else {
-                                    userAuthDAO.CreateNewUserByEmailAndPassword(finalEmail, finalPassword, task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                                            UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder().setDisplayName(finalName).build();
-                                            assert currentUser != null;
-                                            currentUser.updateProfile(changeRequest);
-                                            DocumentReference institutionRef = UserAuthDAO.fb.collection("Institutions").document(currentUser.getUid());
-                                            Institution institution;
-                                            institution = new Institution();
-                                            institution.setId(currentUser.getUid());
-                                            institution.setCnpj(finalCnpj);
-                                            institution.setName(finalName);
-                                            institutionRef.set(institution).addOnSuccessListener(unused -> {
-                                                snackBarText.setValue("Cadastro realizado com sucesso!");
-                                                progressBar.setVisibility(View.GONE);
-                                                Intent i = new Intent(registerForm.getApplicationContext(), LoginForm.class);
-                                                registerForm.startActivity(i);
-                                            }).addOnFailureListener(e -> {
-                                                snackBarText.setValue("Erro ao finalizar cadastro");
-                                                currentUser.delete();
-                                                progressBar.setVisibility(View.GONE);
-                                            });
-                                        }
-
-                                    }, e -> {
-                                        if (e.getClass().equals(FirebaseAuthEmailException.class)) {
-                                            snackBarText.setValue("Verifique o e-mail informado");
-                                            progressBar.setVisibility(View.GONE);
-                                        }
-                                        if (e.getClass().equals(FirebaseAuthWeakPasswordException.class)) {
-                                            snackBarText.setValue("A senha deve conter ao menos 6 caractéres");
-                                            progressBar.setVisibility(View.GONE);
-                                        }
-                                        if (e.getClass().equals(FirebaseAuthUserCollisionException.class)) {
-                                            snackBarText.setValue("Já existe uma instituição cadastrada com esse e-mail");
-                                            progressBar.setVisibility(View.GONE);
-                                        }
-                                            snackBarText.setValue("Algo deu errado, tente novamente mais tarde");
-                                            progressBar.setVisibility(View.GONE);
-                                    });
-                                }
-                            } catch (Exception eCNPJ) {
+        institutionDAO.getInstitutionByCNPJ(cnpj, task -> {
+            if(!task.getResult().isEmpty()){
+                snackBarText.setValue("Já existe uma instituição de ensino com esse CNPJ");
+                progressBar.setVisibility(View.GONE);
+            }else{
+                if(!finalEmail.equals("") && !finalName.equals("") && !finalPassword.equals("") && !finalCnpj.equals("")){
+                    if(finalPassword.equals(finalConfirmPassword)) {
+                        try {
+                            if (!CNPJValidator.validateCNPJ(finalCnpj)) {
                                 snackBarText.setValue("CNPJ Inválido, verifique e tente novamente");
                                 progressBar.setVisibility(View.GONE);
+                            } else {
+                                userAuthDAO.CreateNewUserByEmailAndPassword(finalEmail, finalPassword, task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                                        UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder().setDisplayName(finalName).build();
+                                        assert currentUser != null;
+                                        currentUser.updateProfile(changeRequest);
+                                        DocumentReference institutionRef = UserAuthDAO.fb.collection("Institutions").document(currentUser.getUid());
+                                        Institution institution;
+                                        institution = new Institution();
+                                        institution.setId(currentUser.getUid());
+                                        institution.setCnpj(finalCnpj);
+                                        institution.setName(finalName);
+                                        institutionRef.set(institution).addOnSuccessListener(unused -> {
+                                            snackBarText.setValue("Cadastro realizado com sucesso!");
+                                            progressBar.setVisibility(View.GONE);
+                                            Intent i = new Intent(registerForm.getApplicationContext(), LoginForm.class);
+                                            registerForm.startActivity(i);
+                                        }).addOnFailureListener(e -> {
+                                            snackBarText.setValue("Erro ao finalizar cadastro");
+                                            currentUser.delete();
+                                            progressBar.setVisibility(View.GONE);
+                                        });
+                                    }
+
+                                }, e -> {
+                                    if (e.getClass().equals(FirebaseAuthEmailException.class)) {
+                                        snackBarText.setValue("Verifique o e-mail informado");
+                                        progressBar.setVisibility(View.GONE);
+                                    }
+                                    if (e.getClass().equals(FirebaseAuthWeakPasswordException.class)) {
+                                        snackBarText.setValue("A senha deve conter ao menos 6 caractéres");
+                                        progressBar.setVisibility(View.GONE);
+                                    }
+                                    if (e.getClass().equals(FirebaseAuthUserCollisionException.class)) {
+                                        snackBarText.setValue("Já existe uma instituição cadastrada com esse e-mail");
+                                        progressBar.setVisibility(View.GONE);
+                                    }
+                                    snackBarText.setValue("Algo deu errado, tente novamente mais tarde");
+                                    progressBar.setVisibility(View.GONE);
+                                });
                             }
-                        }else{
-                            snackBarText.setValue("As senhas não conferem");
+                        } catch (Exception eCNPJ) {
+                            snackBarText.setValue("CNPJ Inválido, verifique e tente novamente");
                             progressBar.setVisibility(View.GONE);
                         }
                     }else{
-                        snackBarText.setValue("Todos os campos são obrigatórios");
+                        snackBarText.setValue("As senhas não conferem");
                         progressBar.setVisibility(View.GONE);
                     }
+                }else{
+                    snackBarText.setValue("Todos os campos são obrigatórios");
+                    progressBar.setVisibility(View.GONE);
                 }
-            }, e -> {
-                snackBarText.setValue("Algo deu errado, tente novamente mais tarde!");
-                progressBar.setVisibility(View.GONE);
-            });
+            }
+        }, e -> {
+            snackBarText.setValue("Algo deu errado, tente novamente mais tarde!");
+            progressBar.setVisibility(View.GONE);
+        });
 
     }
 }

@@ -50,7 +50,7 @@ public class LoginForm extends AppCompatActivity {
         loginViewModel.getSnackBarText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                Snackbar snackbar = Snackbar.make(findViewById(R.id.loginButton_login), s, Snackbar.LENGTH_SHORT).setBackgroundTint(Color.BLUE);
+                Snackbar snackbar = Snackbar.make(findViewById(R.id.loginButton_login), s, Snackbar.LENGTH_SHORT);
                 snackbar.show();
             }
         });

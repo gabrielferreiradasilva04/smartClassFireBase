@@ -3,6 +3,7 @@ package com.gabriel.smartclass.view.auth;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.gabriel.smartclass.R;
+import com.gabriel.smartclass.viewModels.HostStudentActivityViewModel;
 import com.gabriel.smartclass.viewModels.RegisterViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -36,7 +38,8 @@ public class RegisterForm extends AppCompatActivity {
         this.registerButton = findViewById(R.id.registerButton_register);
         this.edTxtEmail = findViewById(R.id.edTxtEmail_register);
         this.edTxtPassword = findViewById(R.id.edTxtPassword_register);
-        this.registerViewModel = new RegisterViewModel(this);
+        ViewModelProvider viewModelProvider = new ViewModelProvider(this);
+        registerViewModel = viewModelProvider.get(RegisterViewModel.class);;
         this.edTxtFirstAndLastName = findViewById(R.id.edTxtName_Register);
         this.editTextConfirmPassword = findViewById(R.id.edTxtConfirmPassword_register);
         this.loginButton.setOnClickListener(goToLogin());

@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.FragmentProfileBinding;
+import com.gabriel.smartclass.view.StudentMainMenu;
 import com.gabriel.smartclass.viewModels.HostStudentActivityViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,21 +54,27 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
     }
-    @SuppressLint({"RestrictedApi", "NewApi", "WrongConstant"})
+    @SuppressLint({"WrongConstant"})
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false);
-        hostStudentActivityViewModel = (HostStudentActivityViewModel) requireActivity().getViewModelStore().get("hostStudentActivityViewModel");
-        hostStudentActivityViewModel.getFirebaseUserLiveData().observe(getViewLifecycleOwner(), observeFirebaseUserStudentMainMenu());
+        StudentMainMenu main = (StudentMainMenu) getActivity();
+        main.updateTitle("Perfil");
+        ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
+        hostStudentActivityViewModel = viewModelProvider.get(HostStudentActivityViewModel.class);
         hostStudentActivityViewModel.getProfilePictureLiveData().observe(getViewLifecycleOwner(), observeProfilePictureStudentMainMenu());
         binding.profilePicture.setOnClickListener(clickOpenPictureOptions());
         binding.saveChangesProfile.setOnClickListener(buttonListenerSaveChanges());
         hostStudentActivityViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
         binding.changePasswordProfile.setOnClickListener(openPasswordDialog());
-        refresh();
+        setUserDetails();
         return binding.getRoot();
+    }
+    public void setUserDetails(){
+        binding.edtxtEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        binding.edtxtDisplayName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
     }
 
     @Override
@@ -90,14 +98,6 @@ public class ProfileFragment extends Fragment {
     @NonNull
     private Observer<Bitmap> observeProfilePictureStudentMainMenu() {
         return bitmap -> binding.profilePicture.setImageBitmap(bitmap);
-    }
-
-    @NonNull
-    private Observer<FirebaseUser> observeFirebaseUserStudentMainMenu() {
-        return firebaseUser -> {
-            binding.edtxtEmail.setText(firebaseUser.getEmail());
-            binding.edtxtDisplayName.setText(firebaseUser.getDisplayName());
-        };
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -217,19 +217,4 @@ public class ProfileFragment extends Fragment {
         return v -> openChangePassword();
     }
 
-
-    public void refresh(){
-        binding.refreshProfileFragment.setOnRefreshListener(() -> {
-            hostStudentActivityViewModel.loadUserDetails();
-            loadUserDetails();
-        });
-    }
-    public void loadUserDetails(){
-        if(hostStudentActivityViewModel.getProfilePictureLiveData().getValue() != null){
-            binding.profilePicture.setImageBitmap(hostStudentActivityViewModel.getProfilePictureLiveData().getValue());
-        }
-        if(binding.refreshProfileFragment.isRefreshing()){
-            binding.refreshProfileFragment.setRefreshing(false);
-        }
-    }
 }

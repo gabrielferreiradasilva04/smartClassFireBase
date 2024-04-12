@@ -9,12 +9,13 @@
         android:id="@+id/view_container"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_margin="30dp"
+        android:layout_margin="16dp"
         android:layout_marginTop="28dp"
         android:background="@drawable/container_institutions_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/divider"/>
 
     <ImageView
         android:id="@+id/view_container_top"
@@ -22,8 +23,9 @@
         android:background="@drawable/image_view_radius"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_margin="30dp"
+        android:layout_margin="16dp"
         android:layout_marginTop="32dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -39,7 +41,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="@id/view_container"
+        app:layout_constraintEnd_toStartOf="@id/institutionProfilePicture"
         app:layout_constraintStart_toStartOf="@id/view_container"
         app:layout_constraintTop_toTopOf="@+id/view_container" />
 
@@ -50,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="@id/view_container"
+        app:layout_constraintEnd_toStartOf="@id/institutionProfilePicture"
         app:layout_constraintStart_toStartOf="@id/view_container"
         app:layout_constraintTop_toBottomOf="@+id/textInstitutionName_adapter" />
 
@@ -58,15 +60,37 @@
         android:id="@+id/instituition"
         android:layout_width="84dp"
         android:layout_height="17dp"
-        android:layout_marginTop="12dp"
-        android:textStyle="bold"
-        android:layout_marginEnd="28dp"
+        android:layout_marginTop="168dp"
+        android:layout_marginEnd="8dp"
         android:text="Instituição"
         android:textAlignment="center"
         android:textSize="12dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/view_container"
         app:layout_constraintTop_toTopOf="@+id/view_container"
         tools:ignore="TextSizeCheck" />
+
+    <ImageView
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?actionBarDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <ImageButton
+        android:id="@+id/institutionProfilePicture"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/image_button_cicle"
+        app:layout_constraintEnd_toEndOf="@id/view_container"
+        app:layout_constraintTop_toTopOf="@id/view_container_top"
+        tools:ignore="SpeakableTextPresentCheck" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

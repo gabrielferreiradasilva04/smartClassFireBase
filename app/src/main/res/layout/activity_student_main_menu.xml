@@ -6,19 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".view.StudentMainMenu">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_container_student"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@+id/bottomActionBarStudents"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:navGraph="@navigation/student_nav_main" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragment_container_student"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:defaultNavHost="true"
+                app:layout_constraintBottom_toTopOf="@id/bottomActionBarStudents"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:navGraph="@navigation/student_nav_main" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomActionBarStudents"
@@ -29,7 +30,5 @@
         app:menu="@menu/bottom_action_bar_menu_student"
         android:backgroundTint="@color/baby_blue"
         />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

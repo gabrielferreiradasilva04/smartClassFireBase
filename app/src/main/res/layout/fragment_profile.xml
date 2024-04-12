@@ -6,83 +6,65 @@
     android:layout_height="match_parent"
     android:background="@drawable/main_background"
     tools:context=".view.fragments.userfragments.ProfileFragment">
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-
-        android:id="@+id/refresh_profile_fragment"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/profile_picture"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_margin="30dp"
+            android:background="@drawable/image_button_cicle"
+            android:clipToOutline="true"
+            android:scaleType="centerCrop"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+
+        <EditText
+            android:id="@+id/edtxt_display_name"
+            style="@style/Edit_Text_Forms"
+            android:inputType="textPersonName"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:drawableRight="@drawable/ic_edit"
+            android:hint="Nome de Usuário"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profile_picture" />
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/profile_picture"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_margin="30dp"
-                android:background="@drawable/image_button_cicle"
-                android:clipToOutline="true"
-                android:scaleType="centerCrop"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SpeakableTextPresentCheck" />
+        <EditText
+            android:id="@+id/edtxt_email"
+            style="@style/Edit_Text_Forms"
+            android:enabled="false"
+            android:hint="E-mail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edtxt_display_name" />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/saveChanges_profile"
+            style="@style/Button_Confirm_Forms"
+            android:layout_marginTop="16dp"
+            android:text="Salvar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/changePassword_profile" />
 
-            <EditText
-                android:id="@+id/edtxt_display_name"
-                style="@style/Edit_Text_Forms"
-                android:inputType="textPersonName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:drawableRight="@drawable/ic_edit"
-                android:hint="Nome de Usuário"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/profile_picture" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/changePassword_profile"
+            style="@style/Button_Confirm_Forms"
+            android:text="Alterar senha"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edtxt_email" />
 
-            <EditText
-                android:id="@+id/edtxt_email"
-                style="@style/Edit_Text_Forms"
-                android:enabled="false"
-                android:hint="E-mail"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edtxt_display_name" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/saveChanges_profile"
-                style="@style/Button_Confirm_Forms"
-                android:layout_marginTop="16dp"
-                android:text="Salvar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/changePassword_profile" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/changePassword_profile"
-                style="@style/Button_Confirm_Forms"
-                android:text="Alterar senha"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edtxt_email" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <View
         android:id="@+id/viewLoading"
         android:visibility="gone"

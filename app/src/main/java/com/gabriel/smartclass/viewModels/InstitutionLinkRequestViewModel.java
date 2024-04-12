@@ -45,10 +45,6 @@ public class InstitutionLinkRequestViewModel {
         return snackbarText;
     }
 
-    public void setSnackbarText(MutableLiveData<String> snackbarText) {
-        this.snackbarText = snackbarText;
-    }
-
     public InstitutionLinkRequestViewModel(InstitutionLinkRequestForm institutionLinkRequestForm){
         userTypeDAO = new UserTypeDAO();
         this.institutionLinkRequestForm = institutionLinkRequestForm;
@@ -108,14 +104,10 @@ public class InstitutionLinkRequestViewModel {
         Dialog dialog = dialogBuilder.create();
         dialog.show();
         Button buttonConfirm = popUp.findViewById(R.id.buttonConfirmLinkRequestSuccessDialog);
-        buttonConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        buttonConfirm.setOnClickListener(veiw -> {
                 dialog.dismiss();
                 Intent i = new Intent(context, StudentMainMenu.class);
                 context.startActivity(i);
-
-            }
         });
 
     }

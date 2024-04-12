@@ -22,11 +22,11 @@ import java.util.List;
 
 public class InstitutionsSearchViewModel extends ViewModel {
 
-    private InstitutionsAdapter adapter; /*adapter responsável por realizar o controle dos dados no recyclerView*/
-    private List<Institution> institutions; /*Lista de instituições que vão compor os itens dentro do adapter*/
-    private InstitutionDAO dao; /*dao para a pesquisa no banco*/
-    private Context context; /*contexto da aplicação */
-    private EmptyRecyclerViewObserver emptyRecyclerViewObserver; /*observador para mostrar a tela de recycler vazia*/
+    private InstitutionsAdapter adapter;
+    private List<Institution> institutions;
+    private InstitutionDAO dao;
+    private Context context;
+    private EmptyRecyclerViewObserver emptyRecyclerViewObserver;
 
     /*getters and setters*/
     public InstitutionsAdapter getAdapter() {
@@ -46,9 +46,8 @@ public class InstitutionsSearchViewModel extends ViewModel {
     }
     /*constructors*/
 
-    /*método de pesquisa onde se recebe um recyclerview para carregar os dados obtidos através da busca no banco de dados na coleção de instituições, juntamente com um evento de click
-     * para capturar a instituição selecionada e mandar ela para a proxima dela onde vai ser preenchido um formulario para enviar uma solicitação de vínculo*/
     public void search(RecyclerView recyclerView, String institutionName, InstitutionsAdapter.ItemClickListener itemClickListener){
+
         adapter = new InstitutionsAdapter(institutions,itemClickListener);
         adapter.registerAdapterDataObserver(emptyRecyclerViewObserver);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));

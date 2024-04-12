@@ -42,7 +42,6 @@ public class HostStudentActivityViewModel extends ViewModel {
     private Institution selectedInstitution;
     /*User properties*/
     private MutableLiveData<User> userLiveData = new MutableLiveData<>();
-    private MutableLiveData<FirebaseUser> firebaseUserLiveData = new MutableLiveData<>();
     private MutableLiveData<Bitmap> profilePictureLiveData = new MutableLiveData<>();
     private MutableLiveData<String> snackBarText = new MutableLiveData<>();
     /*User properties*/
@@ -51,9 +50,6 @@ public class HostStudentActivityViewModel extends ViewModel {
         return snackBarText;
     }
 
-    public MutableLiveData<FirebaseUser> getFirebaseUserLiveData() {
-        return firebaseUserLiveData;
-    }
     public MutableLiveData<Bitmap> getProfilePictureLiveData() {
         return profilePictureLiveData;
     }
@@ -68,14 +64,7 @@ public class HostStudentActivityViewModel extends ViewModel {
 
     public HostStudentActivityViewModel(){
         userDAO = new UserDAO();
-        firebaseUserLiveData.setValue(FirebaseAuth.getInstance().getCurrentUser());
     }
-
-    /***
-     * Realiza a busca das instituições do usuário
-     *
-     */
-
     public void listenerSnapshotChanges(){
         userDAO.listenerSnapshotChanges((value, error) -> {
             if(error == null){
@@ -85,22 +74,26 @@ public class HostStudentActivityViewModel extends ViewModel {
         });
     }
     public void getUserInstitutions(){
+
         List<Institution> institutions = new ArrayList<>();
         userInstitutionsAdapter = new InstitutionsAdapter(institutions);
         userDAO.getUserInstitutions(task -> {
             User user = task.getResult().toObject(User.class);
             assert user != null;
             if(user.getInstitutions() != null){
+
                 for (DocumentReference documentReference: user.getInstitutions()) {
                     documentReference.get().addOnSuccessListener(documentSnapshot -> {
                         Institution institution = documentSnapshot.toObject(Institution.class);
                         institution.setId(documentSnapshot.getId());
+
                         if(institution != null){
                             institution.setId(documentSnapshot.getId());
                             userInstitutionsAdapter.addItem(institution);
                             userInstitutionsAdapter.notifyDataSetChanged();
                         }
                     });
+
                 }
             }else{
                 userInstitutionsAdapter.notifyDataSetChanged();
@@ -108,30 +101,19 @@ public class HostStudentActivityViewModel extends ViewModel {
         }, e -> {
         });
     }
-
-    /***
-     * Realiza o recarregamento dos dados do usuário, como nome e foto
-     */
     public void loadUserDetails(){
-        if(firebaseUserLiveData.getValue().getPhotoUrl() != null && !firebaseUserLiveData.getValue().getPhotoUrl().equals(Uri.parse(""))){
-            userDAO.downloadImage(firebaseUserLiveData.getValue().getEmail(), bytes -> {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentUser.getPhotoUrl() != null && !currentUser.getPhotoUrl().equals(Uri.parse(""))){
+            userDAO.downloadImage(currentUser.getEmail(), bytes -> {
                 profilePictureLiveData.setValue(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
             }, e -> {
 
             });
         }
     }
-
-    /***
-     * realiza a atualização do perfil do usuário
-     * @param displayName novo nome
-     * @param email novo email
-     * @param profilePictureCurrent nova foto. Se for null ou igual a atual ele não atualiza
-     * @param progressBar barra de progresso para realizar o carregamento
-     * @param viewLoading view para escurecer o fundo
-     */
     public void updateProfile(@NonNull String displayName,@NonNull String email,@NonNull Context context, @NonNull Bitmap profilePictureCurrent, @NonNull ProgressBar progressBar,@NonNull View viewLoading){
-        if(displayName.equals(firebaseUserLiveData.getValue().getDisplayName()) && email.equals(this.getFirebaseUserLiveData().getValue().getEmail()) && profilePictureCurrent == profilePictureLiveData.getValue()){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(displayName.equals(currentUser.getDisplayName()) && email.equals(currentUser.getEmail()) && profilePictureCurrent == profilePictureLiveData.getValue()){
             snackBarText.setValue("Não detectamos alterações a serem salvas");
         } else if (!displayName.equals("") && !email.equals("")) {
             if(profilePictureCurrent != this.profilePictureLiveData.getValue() && profilePictureCurrent!= null){
@@ -146,13 +128,6 @@ public class HostStudentActivityViewModel extends ViewModel {
 
         }
     }
-
-    /***
-     * realiza o upload da nova foto do usuário para a nuvem salvando-a como seu e-mail
-     * @param email nome da foto
-     * @param imageBitmap se for null se o email for "" ele não realiza o upload
-
-     */
     public void uploadProfilePicture(String email, Bitmap imageBitmap, ProgressBar progressBar, View view, Context context){
         FirebaseUser currentUserApplication = FirebaseAuth.getInstance().getCurrentUser();
         if (!email.equals("") && imageBitmap != null && imageBitmap != profilePictureLiveData.getValue()){
@@ -161,7 +136,6 @@ public class HostStudentActivityViewModel extends ViewModel {
             progressBar.setVisibility(View.VISIBLE);
             userDAO.uploadProfileImage(email, imageBitmap, taskSnapshot -> {
 
-                /*Pegar o url da imagem e setar no perfil do usuário para pegar ela posteriormente*/
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                 StorageReference storagePictures = storageReference.child("profilePictures");
                 storagePictures.child(email).getDownloadUrl().addOnSuccessListener(uri ->  {
@@ -188,15 +162,9 @@ public class HostStudentActivityViewModel extends ViewModel {
 
         }
     }
-    /***
-     * atualiza a senha do usuário
-     * @param password senha
-     * @param newPassword confirmação
-     * @param context para exibir as mensagens
-     * @param dialog ao final da execução ele fecha o dialog
-     */
     public void updatePassword(String password, String newPassword, @NonNull Context context, @NonNull Dialog dialog){
         if(password.equals(newPassword)){
+
             userDAO.updatePassword(password, task -> {
                 snackBarText.setValue("Senha atualizada com sucesso!");
                 dialog.dismiss();
@@ -217,23 +185,21 @@ public class HostStudentActivityViewModel extends ViewModel {
                 Toast toast = Toast.makeText(context, errorMessage, Toast.LENGTH_LONG);
                 toast.show();
             });
+
         }else{
+
             Toast toast = Toast.makeText(context, "Senhas não conferem", Toast.LENGTH_SHORT);
             toast.show();
+
         }
     }
-
-    /***
-     * exclui a foto de perfil do usuário, tanto do repositório na nuvem como em tempo de execução
-     * @param email foto a ser excluida
-     */
     public void excludeProfilePicture(String email, Context context, @NonNull ProgressBar progressBar, @NonNull View view){
-        /*Primeiro ele tem que tentar excluir o caminho do perfil do usuário e depois deletar ela do banco se dar certo*/
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         UserProfileChangeRequest removeProfilePicture = new UserProfileChangeRequest.Builder().setPhotoUri(null).build();
         currentUser.updateProfile(removeProfilePicture).addOnSuccessListener(task -> {
             if (profilePictureLiveData.getValue()!= null){
+
                 view.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.VISIBLE);
                 userDAO.excludeImageStorage(email, o -> {
@@ -241,12 +207,18 @@ public class HostStudentActivityViewModel extends ViewModel {
                     profilePictureLiveData.setValue(null);
                     progressBar.setVisibility(View.INVISIBLE);
                     view.setVisibility(View.GONE);
+
                 }, e -> {
+
                     snackBarText.setValue("Erro ao deletar sua foto de perfil");
+
                 });
             }
+
         }).addOnFailureListener(e->{
+
             snackBarText.setValue("Erro ao deletar sua foto de perfil, tente novamente mais tarde!");
+
         });
 
     }

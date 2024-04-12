@@ -10,6 +10,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.Menu;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.ActivityStudentMainMenuBinding;
@@ -21,23 +22,32 @@ public class StudentMainMenu extends AppCompatActivity {
     private NavController navController;
     private HostStudentActivityViewModel hostStudentActivityViewModel;
 
-    @SuppressLint({"RestrictedApi", "NotifyDataSetChanged"})
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityStudentMainMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        hostStudentActivityViewModel = new ViewModelProvider(this).get(HostStudentActivityViewModel.class);
-        getViewModelStore().put("hostStudentActivityViewModel", hostStudentActivityViewModel);
+        ViewModelProvider viewModelProvider = new ViewModelProvider(this);
+        hostStudentActivityViewModel = viewModelProvider.get(HostStudentActivityViewModel.class);
 
         hostStudentActivityViewModel.getUserInstitutions();
         hostStudentActivityViewModel.loadUserDetails();
         hostStudentActivityViewModel.listenerSnapshotChanges();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("");
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode());
         navigation();
     }
+
+    public void updateTitle(String title){
+        getSupportActionBar().setTitle(title);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu_action_bar, menu);
+        return true;
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

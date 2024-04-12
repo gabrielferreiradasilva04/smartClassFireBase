@@ -78,7 +78,4 @@ public class UserDAO {
     public void getUserPictureByCloudStorage(String email,OnCompleteListener<Uri> onCompleteListener, OnFailureListener onFailureListener){
         storagePictures.child(email).getDownloadUrl().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
-
-
-
 }

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.InstitutionsAdapter;
@@ -26,15 +27,20 @@ public class InstitutionsSearch extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityInstitutionsSearchBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        getSupportActionBar().setTitle("Pesquisa");
         EmptyRecyclerViewObserver emptyRecyclerViewObserver = new EmptyRecyclerViewObserver(binding.recyclerViewInstitutionsFind, findViewById(R.id.empty_container));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("");
+        setContentView(binding.getRoot());
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode());
 
         viewModel = new InstitutionsSearchViewModel(this, emptyRecyclerViewObserver);
         binding.nameToFindInstitutionsSearch.addTextChangedListener(search());
-}
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu_action_bar, menu);
+        return true;
+    }
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
