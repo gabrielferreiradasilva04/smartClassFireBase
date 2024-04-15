@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -77,5 +78,8 @@ public class UserDAO {
     }
     public void getUserPictureByCloudStorage(String email,OnCompleteListener<Uri> onCompleteListener, OnFailureListener onFailureListener){
         storagePictures.child(email).getDownloadUrl().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+    }
+    public void getUserById(String id, OnSuccessListener<DocumentSnapshot> onSuccessListener, OnFailureListener onFailureListener){
+        fb.collection(COLLECTION).document(id).get().addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
 }

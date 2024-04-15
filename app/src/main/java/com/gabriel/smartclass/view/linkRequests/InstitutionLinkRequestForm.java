@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +22,7 @@ import com.gabriel.smartclass.databinding.ActivityInstitutionsSearchBinding;
 import com.gabriel.smartclass.databinding.ActivityLinkRequestFormBinding;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.UserType;
+import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 import com.gabriel.smartclass.viewModels.InstitutionLinkRequestViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -42,14 +45,15 @@ public class InstitutionLinkRequestForm extends AppCompatActivity {
         viewModel = new InstitutionLinkRequestViewModel(this);
         viewModel.getUserTypesAndPopulateSpinner();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("");
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode());
-
+        getSupportActionBar().setTitle("Solicitação");
         binding.sendLinkRequest.setOnClickListener(sendLinkRequestToInstitution());
         viewModel.getSnackbarText().observe(this, snackbarObserve());
     }
-
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu_action_bar, menu);
+        return true;
+    }
     @NonNull
     private Observer<String> snackbarObserve() {
         return s -> {

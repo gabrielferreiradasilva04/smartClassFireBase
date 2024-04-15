@@ -11,13 +11,13 @@
         android:label="fragment_institution_home"
         tools:layout="@layout/fragment_institution_home" />
     <fragment
-        android:id="@+id/institution_menu_profile"
-        android:name="com.gabriel.smartclass.view.fragments.institutionfragments.InstitutionProfileFragment"
-        android:label="fragment_institution_profile"
-        tools:layout="@layout/fragment_institution_profile" />
-    <fragment
         android:id="@+id/institution_menu_notifications"
         android:name="com.gabriel.smartclass.view.fragments.institutionfragments.InstitutionNotifications"
         android:label="fragment_institution_notifications"
         tools:layout="@layout/fragment_institution_notifications" />
+    <fragment
+        android:id="@+id/menu_profile"
+        android:name="com.gabriel.smartclass.view.fragments.userfragments.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

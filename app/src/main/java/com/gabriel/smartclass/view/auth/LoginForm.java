@@ -60,12 +60,15 @@ public class LoginForm extends AppCompatActivity {
         this.registerButton.setOnClickListener(view -> {
                 Intent i = new Intent(LoginForm.this, RegisterForm.class);
                 startActivity(i);
-                finish();
+            overridePendingTransition(R.anim.to_left,
+                    R.anim.fade_in
+            );
         });
         this.institutionRegisterButton.setOnClickListener(view ->{
             Intent i = new Intent(LoginForm.this, InstitutionRegisterForm.class);
             startActivity(i);
-            finish();
+            overridePendingTransition(R.anim.to_left,
+                    R.anim.fade_in);
         });
 
         this.loginButton.setOnClickListener(view ->{

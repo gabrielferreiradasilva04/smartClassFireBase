@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -38,19 +39,16 @@ public class InstitutionProfileFragment extends Fragment {
     public InstitutionProfileFragment() {
         // Required empty public constructor
     }
-
-    @SuppressLint("RestrictedApi")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentInstitutionProfileBinding.inflate(inflater, container, false);
-        viewModel = (HostInstitutionActivityViewModel) requireActivity().getViewModelStore().get("hostInstitutionActivityViewModel");
-
-        if (viewModel != null && viewModel.getInstitutionMutableLiveData() != null) {
+        ViewModelProvider viewModelProvider = new ViewModelProvider(this);
+        viewModel = viewModelProvider.get(HostInstitutionActivityViewModel.class);
+        if (viewModel.getInstitutionMutableLiveData() != null) {
             viewModel.getInstitutionMutableLiveData().observe(getViewLifecycleOwner(), observeInstitution());
         }
         binding.institutionProfilePicture.setOnClickListener(clickOpenPictureOptions());
-
         return binding.getRoot();
     }
 

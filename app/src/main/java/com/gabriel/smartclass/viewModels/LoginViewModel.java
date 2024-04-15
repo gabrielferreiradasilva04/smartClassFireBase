@@ -60,10 +60,12 @@ public class LoginViewModel extends ViewModel {
                                     Intent i = new Intent(loginForm.getApplicationContext(), InstitutionMainMenu.class);
                                     loginForm.startActivity(i);
                                     progressBar.setVisibility(View.GONE);
+                                    loginForm.finish();
                                 }else{
                                     progressBar.setVisibility(View.GONE);
                                     Intent i = new Intent(loginForm.getApplicationContext(), StudentMainMenu.class);
                                     loginForm.startActivity(i);
+                                    loginForm.finish();
                                 }
                             }
                         });

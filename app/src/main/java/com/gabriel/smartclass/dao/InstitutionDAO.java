@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class InstitutionDAO {
@@ -28,9 +29,9 @@ public class InstitutionDAO {
     public void insert(Institution institution) throws Exception{
         db.collection(COLLECTION).add(institution);
     }
-    public void update(Map<String, Object> updateData) throws Exception{
-        DocumentReference instRef = db.collection(COLLECTION).document(institution.getId());
-        instRef.update(updateData);
+    public void update(HashMap<String, Object> updateData,String institutionId, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener){
+        DocumentReference instRef = db.collection(COLLECTION).document(institutionId);
+        instRef.update(updateData).addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
     public void listAllInstitutions(OnSuccessListener<QuerySnapshot> onSuccessListener){
         db.collection(COLLECTION).get().addOnSuccessListener(onSuccessListener);

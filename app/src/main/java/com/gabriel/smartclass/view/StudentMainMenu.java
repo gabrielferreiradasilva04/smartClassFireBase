@@ -1,7 +1,6 @@
 package com.gabriel.smartclass.view;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavHost;
@@ -14,13 +13,13 @@ import android.view.Menu;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.ActivityStudentMainMenuBinding;
-import com.gabriel.smartclass.viewModels.HostStudentActivityViewModel;
+import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 
 public class StudentMainMenu extends AppCompatActivity {
     private ActivityStudentMainMenuBinding binding;
     private NavHost navHostFragment;
     private NavController navController;
-    private HostStudentActivityViewModel hostStudentActivityViewModel;
+    private HostUserActivityViewModel hostUserActivityViewModel;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -29,11 +28,10 @@ public class StudentMainMenu extends AppCompatActivity {
         binding = ActivityStudentMainMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         ViewModelProvider viewModelProvider = new ViewModelProvider(this);
-        hostStudentActivityViewModel = viewModelProvider.get(HostStudentActivityViewModel.class);
-
-        hostStudentActivityViewModel.getUserInstitutions();
-        hostStudentActivityViewModel.loadUserDetails();
-        hostStudentActivityViewModel.listenerSnapshotChanges();
+        hostUserActivityViewModel = viewModelProvider.get(HostUserActivityViewModel.class);
+        hostUserActivityViewModel.getUserInstitutions();
+        hostUserActivityViewModel.loadUserPicture();
+        hostUserActivityViewModel.listenerSnapshotChanges();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         navigation();
     }

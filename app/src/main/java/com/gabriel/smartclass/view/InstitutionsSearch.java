@@ -28,11 +28,10 @@ public class InstitutionsSearch extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityInstitutionsSearchBinding.inflate(getLayoutInflater());
         getSupportActionBar().setTitle("Pesquisa");
-        EmptyRecyclerViewObserver emptyRecyclerViewObserver = new EmptyRecyclerViewObserver(binding.recyclerViewInstitutionsFind, findViewById(R.id.empty_container));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(binding.getRoot());
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.getDefaultNightMode());
-
+        EmptyRecyclerViewObserver emptyRecyclerViewObserver = new EmptyRecyclerViewObserver(binding.recyclerViewInstitutionsFind, findViewById(R.id.empty_container));
         viewModel = new InstitutionsSearchViewModel(this, emptyRecyclerViewObserver);
         binding.nameToFindInstitutionsSearch.addTextChangedListener(search());
     }

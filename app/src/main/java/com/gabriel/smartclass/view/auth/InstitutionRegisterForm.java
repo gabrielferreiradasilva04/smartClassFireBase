@@ -1,13 +1,16 @@
 package com.gabriel.smartclass.view.auth;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
+import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.ActivityInstitutionRegisterFormBinding;
 import com.gabriel.smartclass.utilities.maskListeners.MaskListenerCPNJ;
 import com.gabriel.smartclass.utilities.validate.CNPJValidator;
@@ -32,6 +35,7 @@ public class InstitutionRegisterForm extends RegisterForm {
         snackBarObserver();
         cnpjMask();
         binding.registerButtonInstitutionRegister.setOnClickListener(registerListener());
+        binding.loginButtonInstitutionRegister.setOnClickListener(goToLogin());
     }
 
     private void snackBarObserver() {
@@ -60,6 +64,17 @@ public class InstitutionRegisterForm extends RegisterForm {
                 String confirmPassword = binding.textConfirmPasswordInstitutionRegister.getText().toString();
 
                 registerViewModel.registerInstitution(cnpj,name,email,password, confirmPassword);
+            }
+        };
+    }
+    @NonNull
+    private View.OnClickListener goToLogin() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(InstitutionRegisterForm.this, LoginForm.class);
+                startActivity(i);
+                finish();
             }
         };
     }

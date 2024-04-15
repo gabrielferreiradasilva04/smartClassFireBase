@@ -1,51 +1,42 @@
 package com.gabriel.smartclass.view.fragments.userfragments;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowInsetsController;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.FragmentProfileBinding;
+import com.gabriel.smartclass.view.InstitutionMainMenu;
 import com.gabriel.smartclass.view.StudentMainMenu;
-import com.gabriel.smartclass.viewModels.HostStudentActivityViewModel;
+import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
-    private HostStudentActivityViewModel hostStudentActivityViewModel;
+    private HostUserActivityViewModel hostUserActivityViewModel;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -54,34 +45,42 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
     }
-    @SuppressLint({"WrongConstant"})
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
-        StudentMainMenu main = (StudentMainMenu) getActivity();
-        main.updateTitle("Perfil");
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
-        hostStudentActivityViewModel = viewModelProvider.get(HostStudentActivityViewModel.class);
-        hostStudentActivityViewModel.getProfilePictureLiveData().observe(getViewLifecycleOwner(), observeProfilePictureStudentMainMenu());
+        hostUserActivityViewModel = viewModelProvider.get(HostUserActivityViewModel.class);
+        hostUserActivityViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
         binding.profilePicture.setOnClickListener(clickOpenPictureOptions());
-        binding.saveChangesProfile.setOnClickListener(buttonListenerSaveChanges());
-        hostStudentActivityViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
         binding.changePasswordProfile.setOnClickListener(openPasswordDialog());
-        setUserDetails();
+        hostUserActivityViewModel.getProfilePictureLiveData().observe(getViewLifecycleOwner(), observeProfilePicture());
+        if(this.getActivity().getClass().equals(StudentMainMenu.class)){
+            StudentMainMenu main = (StudentMainMenu) getActivity();
+            main.updateTitle("Perfil");
+            loadUserDetails();
+            binding.saveChangesProfile.setOnClickListener(buttonListenerSaveChanges());
+        } else if (this.getActivity().getClass().equals(InstitutionMainMenu.class)) {
+            InstitutionMainMenu main = (InstitutionMainMenu) getActivity();
+            main.updateTitle("Perfil");
+            binding.institutionEdtxtCnpj.setVisibility(View.VISIBLE);
+            binding.saveChangesProfile.setOnClickListener(buttonListenerSaveInstitutionChanges());
+            loadInstitutionDetails();
+        }
+
         return binding.getRoot();
     }
-    public void setUserDetails(){
-        binding.edtxtEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        binding.edtxtDisplayName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+    public void loadUserDetails(){
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            binding.edtxtEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            binding.edtxtDisplayName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        hostStudentActivityViewModel.getSnackBarText().removeObserver(observeSnackbar());
-        hostStudentActivityViewModel.getSnackBarText().setValue(null);
+        hostUserActivityViewModel.getSnackBarText().removeObserver(observeSnackbar());
+        hostUserActivityViewModel.getSnackBarText().setValue(null);
     }
 
     @NonNull
@@ -96,7 +95,7 @@ public class ProfileFragment extends Fragment {
     }
 
     @NonNull
-    private Observer<Bitmap> observeProfilePictureStudentMainMenu() {
+    private Observer<Bitmap> observeProfilePicture() {
         return bitmap -> binding.profilePicture.setImageBitmap(bitmap);
     }
     @Override
@@ -109,8 +108,10 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1000){
             if(resultCode == Activity.RESULT_OK){
-                Uri uriImage = data.getData();
-                binding.profilePicture.setImageURI(uriImage);
+                if(data != null){
+                    Uri uriImage = data.getData();
+                    binding.profilePicture.setImageURI(uriImage);
+                }
             }
         }
     }
@@ -144,10 +145,25 @@ public class ProfileFragment extends Fragment {
             }
             String displayName = binding.edtxtDisplayName.getText().toString();
             String email = binding.edtxtEmail.getText().toString();
+            ProgressBar progressBar = binding.progressBarProfileChanges;
+            View view = binding.viewLoading;
+            hostUserActivityViewModel.updateProfile(displayName,email, bitmap,progressBar,view);
+        };
+    }
+    public View.OnClickListener buttonListenerSaveInstitutionChanges(){
+        return v -> {
+            Bitmap bitmap;
+            if(( binding.profilePicture.getDrawable())!=null){
+                bitmap = ((BitmapDrawable) binding.profilePicture.getDrawable()).getBitmap();
+            }else{
+                bitmap = null;
+            }
+            String displayName = binding.edtxtDisplayName.getText().toString();
+            String email = binding.edtxtEmail.getText().toString();
             Context context = getContext();
             ProgressBar progressBar = binding.progressBarProfileChanges;
             View view = binding.viewLoading;
-            hostStudentActivityViewModel.updateProfile(displayName,email,context,bitmap,progressBar,view);
+            hostUserActivityViewModel.updateProfileInstitutionProfile(displayName,email, bitmap,progressBar,view);
         };
     }
 
@@ -159,7 +175,7 @@ public class ProfileFragment extends Fragment {
             String email = binding.edtxtEmail.getText().toString();
             ProgressBar progressBar = binding.progressBarProfileChanges;
             View view = binding.viewLoading;
-            hostStudentActivityViewModel.excludeProfilePicture(email,getContext(),progressBar, view);
+            hostUserActivityViewModel.excludeProfilePicture(email,progressBar, view);
         }else{
             Toast toast = Toast.makeText(getContext(), "Primeiro adicione uma foto para excluir", Toast.LENGTH_SHORT);
             toast.show();
@@ -169,8 +185,6 @@ public class ProfileFragment extends Fragment {
     /***
      * Carrega os dados do usuário com base no viewModel da tela principal (Host)
      */
-
-
     /***
      * Realiza a validação das senhas e a alteração por meio da viweModel da host utilizando a usuarioDAO
      * @param password senha
@@ -178,7 +192,7 @@ public class ProfileFragment extends Fragment {
      * @param dialog dialog a ser fechado na conclusão do método
      */
     public void confirmChangePassword(String password, String passwordConfirm, Dialog dialog){
-        hostStudentActivityViewModel.updatePassword(password, passwordConfirm, getContext(), dialog);
+        hostUserActivityViewModel.updatePassword(password, passwordConfirm, getContext(), dialog);
     }
 
     /***
@@ -196,7 +210,20 @@ public class ProfileFragment extends Fragment {
         EditText textConfirmPassword = popUp.findViewById(R.id.text_confirmPassword);
         Dialog dialog = dialogBuilder.create();
         dialog.show();
-        buttonDone.setOnClickListener(v -> dialog.dismiss());
+        buttonDone.setOnClickListener(v -> {
+                    dialog.dismiss();
+                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            buttonDone.setOnClickListener(null);
+                            buttonConfirm.setOnClickListener(null);
+                            dialog.cancel();
+                        }
+                    });
+                }
+
+
+        );
         buttonConfirm.setOnClickListener(v -> {
             if(!textPassword.getText().toString().equals("") && !textConfirmPassword.getText().toString().equals("")){
                 confirmChangePassword(textPassword.getText().toString(), textConfirmPassword.getText().toString(), dialog);
@@ -216,5 +243,17 @@ public class ProfileFragment extends Fragment {
     public View.OnClickListener openPasswordDialog() {
         return v -> openChangePassword();
     }
+
+    public void loadInstitutionDetails(){
+        if(FirebaseAuth.getInstance().getCurrentUser() != null && hostUserActivityViewModel.getInstitutionMutableLiveData().getValue() != null){
+            String name = hostUserActivityViewModel.getInstitutionMutableLiveData().getValue().getName();
+            String cnpj = hostUserActivityViewModel.getInstitutionMutableLiveData().getValue().getCnpj();
+            String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            binding.edtxtEmail.setText(email);
+            binding.institutionEdtxtCnpj.setText(cnpj);
+            binding.edtxtDisplayName.setText(name);
+        }
+    }
+
 
 }

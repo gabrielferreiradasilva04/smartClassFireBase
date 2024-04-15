@@ -30,7 +30,6 @@ public class InstitutionHomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentInstitutionHomeBinding.inflate(inflater, container, false);
-        viewModel = (HostInstitutionActivityViewModel) requireActivity().getViewModelStore().get("hostInstitutionActivityViewModel");
 
         return  binding.getRoot();
     }

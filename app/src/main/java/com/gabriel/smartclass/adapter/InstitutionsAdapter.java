@@ -3,12 +3,19 @@ package com.gabriel.smartclass.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.gabriel.smartclass.R;
+import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.model.Institution;
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.HashSet;
 import java.util.List;
@@ -51,6 +58,7 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        UserDAO userDAO = new UserDAO();
         String itemId = Objects.requireNonNull(institutionsMutableLiveData.getValue()).get(position).getId();
             holder.itemView.setAlpha(0f);
             holder.itemView.animate().alpha(1f).setDuration(300).start();
@@ -58,8 +66,10 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
             String cnpj = institutionsMutableLiveData.getValue().get(position).getCnpj();
             TextView textInstitutionName = holder.itemView.findViewById(R.id.textInstitutionName_adapter);
             TextView textInstitutionCNPJ = holder.itemView.findViewById(R.id.textInstitutionCNPJ_adapter);
+            ImageButton institutionProfilePicture = holder.itemView.findViewById(R.id.institutionProfilePicture);
             textInstitutionName.setText(institutionName);
             textInstitutionCNPJ.setText(cnpj);
+//            Glide.with(holder.itemView.getContext()).load(currentUser.getPhotoUrl()).into(institutionProfilePicture);
             if(itemClickListener != null){
                 holder.itemView.setOnClickListener( view ->{
                     itemClickListener.onItemClick(institutionsMutableLiveData.getValue().get(position));
@@ -73,8 +83,6 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
             this.institutionsMutableLiveData.getValue().add(institution);
         }
     }
-
-
     @Override
     public int getItemCount() {
         return institutionsMutableLiveData.getValue().size();

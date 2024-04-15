@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -14,12 +15,13 @@ import androidx.lifecycle.MutableLiveData;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.SpinnerUserTypeAdapter;
 import com.gabriel.smartclass.dao.InstitutionLinkRequestDAO;
+import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.dao.UserTypeDAO;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
+import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.model.UserType;
 import com.gabriel.smartclass.view.StudentMainMenu;
-import com.gabriel.smartclass.view.fragments.userfragments.HomeFragment;
 import com.gabriel.smartclass.view.linkRequests.InstitutionLinkRequestForm;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,12 +34,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class InstitutionLinkRequestViewModel {
     private InstitutionLinkRequestForm institutionLinkRequestForm;
     private SpinnerUserTypeAdapter userTypeAdapter;
     private List<UserType> userTypeList;
     private UserTypeDAO userTypeDAO;
+    private UserDAO userDAO;
     private InstitutionLinkRequestDAO linkRequestDAO;
     private MutableLiveData<String> snackbarText = new MutableLiveData<>();
 
@@ -49,6 +53,7 @@ public class InstitutionLinkRequestViewModel {
         userTypeDAO = new UserTypeDAO();
         this.institutionLinkRequestForm = institutionLinkRequestForm;
         this.linkRequestDAO = new InstitutionLinkRequestDAO(this);
+        userDAO = new UserDAO();
     }
     public void getUserTypesAndPopulateSpinner(){
         this.userTypeList = new ArrayList<>();
@@ -74,26 +79,50 @@ public class InstitutionLinkRequestViewModel {
     }
 
     public void createNewInstitutionLinkRequest(UserType userType, String title, Institution institution,Context context){
-        if(userType != null && !title.equals("") && institution != null){
-            FirebaseFirestore fb = FirebaseFirestore.getInstance();
-            DocumentReference userReference = fb.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            DocumentReference institutionReference = fb.collection("Institutions").document(institution.getId());
-            DocumentReference userTypeReference = fb.collection("userTypes").document(userType.getUuid());
-            InstitutionLinkRequest institutionLinkRequest = new InstitutionLinkRequest();
-            institutionLinkRequest.setApproved(false);
-            institutionLinkRequest.setUser(userReference);
-            institutionLinkRequest.setTitle(title);
-            institutionLinkRequest.setUserType(userTypeReference);
-                linkRequestDAO.createNewLinkRequest(institutionLinkRequest, institutionReference, task -> {
-                    if(task.isSuccessful()){
-                        showSuccessDialog(context);
+        ArrayList<Institution> userInstitutions = new ArrayList<>();
+        AtomicInteger counter = new AtomicInteger();
+        userDAO.getUserByUserAuthId(task -> {
+            User user = task.getResult().toObject(User.class);
+            if(user!=null){
+                if(user.getInstitutions() != null&&!user.getInstitutions().isEmpty()){
+                    for(DocumentReference doc : user.getInstitutions()){
+                        doc.addSnapshotListener((value, error) -> {
+                            if(error == null && value!= null){
+                                Institution userInstitution = value.toObject(Institution.class);
+                                userInstitutions.add(userInstitution);
+                                counter.getAndIncrement();
+                            }
+                            if(counter.get() == user.getInstitutions().size()){
+                                if(!userInstitutions.contains(institution)){
+                                    if(userType != null && !title.equals("") && institution != null){
+                                        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+                                        DocumentReference userReference = fb.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                        DocumentReference institutionReference = fb.collection("Institutions").document(institution.getId());
+                                        DocumentReference userTypeReference = fb.collection("userTypes").document(userType.getUuid());
+                                        InstitutionLinkRequest institutionLinkRequest = new InstitutionLinkRequest();
+                                        institutionLinkRequest.setApproved(false);
+                                        institutionLinkRequest.setUser(userReference);
+                                        institutionLinkRequest.setTitle(title);
+                                        institutionLinkRequest.setUserType(userTypeReference);
+                                        linkRequestDAO.createNewLinkRequest(institutionLinkRequest, institutionReference, task2 -> {
+                                            if(task2.isSuccessful()){
+                                                showSuccessDialog(context);
+                                            }
+                                        }, e -> {
+                                            snackbarText.setValue("Algo deu errado: "+e);
+                                        });
+                                    }else{
+                                        snackbarText.setValue("Preencha todos os campos da solicitação");
+                                    }
+                                }else{
+                                    snackbarText.setValue("Você já está vinculado a esta instituição, desfaça o vinculo e tente novamente!");
+                                }
+                            }
+                        });
                     }
-                }, e -> {
-                    snackbarText.setValue("Algo deu errado: "+e);
-                });
-        }else{
-            snackbarText.setValue("Preencha todos os campos da solicitação");
-        }
+                }
+            }
+        });
     }
 
     public void showSuccessDialog(Context context){

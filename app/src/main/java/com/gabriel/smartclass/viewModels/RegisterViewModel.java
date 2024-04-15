@@ -79,6 +79,7 @@ public class RegisterViewModel extends ViewModel {
                                 snackBarText.setValue("Cadastro realizado com sucesso!");
                                 Intent i = new Intent(registerForm.getApplicationContext(), LoginForm.class);
                                 registerForm.startActivity(i);
+                                registerForm.finish();
                             }).addOnFailureListener(e1 -> {
                                 snackBarText.setValue("Ops.. algo deu errado, tente novamente mais tarde: " + e1.getMessage());
                                 userAuth.delete();
@@ -154,10 +155,12 @@ public class RegisterViewModel extends ViewModel {
                                             progressBar.setVisibility(View.GONE);
                                             Intent i = new Intent(registerForm.getApplicationContext(), LoginForm.class);
                                             registerForm.startActivity(i);
+                                            registerForm.finish();
                                         }).addOnFailureListener(e -> {
                                             snackBarText.setValue("Erro ao finalizar cadastro");
                                             currentUser.delete();
                                             progressBar.setVisibility(View.GONE);
+                                            registerForm.finish();
                                         });
                                     }
 
