@@ -2,7 +2,6 @@ package com.gabriel.smartclass.dao;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.util.Log;
 
 import com.gabriel.smartclass.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -11,7 +10,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,7 +18,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.net.URI;
+import java.util.HashMap;
+import java.util.Objects;
 
 
 public class UserDAO {
@@ -82,4 +81,9 @@ public class UserDAO {
     public void getUserById(String id, OnSuccessListener<DocumentSnapshot> onSuccessListener, OnFailureListener onFailureListener){
         fb.collection(COLLECTION).document(id).get().addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
+    public void updateApplicationUser(HashMap<String, Object> updates, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener){
+        fb.collection(COLLECTION).document(currentUserAplication.getUid()).update(updates).addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
+    }
+
+
 }

@@ -1,5 +1,7 @@
 package com.gabriel.smartclass.dao;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -22,9 +24,10 @@ public class InstitutionLinkRequestDAO {
     public InstitutionLinkRequestDAO(InstitutionLinkRequestViewModel viewModel){
         this.viewModel = viewModel;
     }
-    private final String COLLECTION = "LinkRequests";
+    private final String COLLECTION = "linkRequests";
 
     public void createNewLinkRequest(InstitutionLinkRequest institutionLinkRequest, DocumentReference institutionReference, OnCompleteListener onCompleteListener, OnFailureListener onFailureListener) throws RuntimeException{
+
         institutionReference.collection(COLLECTION).whereEqualTo("user", institutionLinkRequest.getUser()).whereEqualTo("approved", false).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

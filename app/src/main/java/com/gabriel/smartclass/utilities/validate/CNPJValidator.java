@@ -1,14 +1,11 @@
 package com.gabriel.smartclass.utilities.validate;
 
-import android.util.Log;
-
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class CNPJValidator {
 
-    public static boolean validateCNPJ(String cnpj) throws ParseException, RuntimeException, Exception, NumberFormatException, NullPointerException {
+    public static boolean validateCNPJ(String cnpj) throws NumberFormatException, NullPointerException {
         if("".equals(cnpj)){
             return false;
         } else if (cnpj.equals("  .   .   /    .  ")) {
@@ -78,9 +75,6 @@ public abstract class CNPJValidator {
                 sumResult1 += results1.get(j);
             }
 
-            int digit1 = cnpjNumbers.get(12);
-            int digit2 = cnpjNumbers.get(13);
-
             int resultDigit1;
 
             int restOfDivision1 = (sumResult1 % 11);
@@ -138,7 +132,6 @@ public abstract class CNPJValidator {
                 Character character = resultDigitStr.charAt(0);
                 sbExpectedCnpj.append(character);
             }
-            ;
             String expectedCnpj = sbExpectedCnpj.toString();
 
             return expectedCnpj.equals(cnpjWithoutCharacters);

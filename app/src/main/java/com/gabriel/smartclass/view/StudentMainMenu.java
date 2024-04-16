@@ -31,7 +31,6 @@ public class StudentMainMenu extends AppCompatActivity {
         hostUserActivityViewModel = viewModelProvider.get(HostUserActivityViewModel.class);
         hostUserActivityViewModel.getUserInstitutions();
         hostUserActivityViewModel.loadUserPicture();
-        hostUserActivityViewModel.listenerSnapshotChanges();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         navigation();
     }

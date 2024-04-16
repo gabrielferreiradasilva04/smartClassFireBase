@@ -79,50 +79,79 @@ public class InstitutionLinkRequestViewModel {
     }
 
     public void createNewInstitutionLinkRequest(UserType userType, String title, Institution institution,Context context){
-        ArrayList<Institution> userInstitutions = new ArrayList<>();
-        AtomicInteger counter = new AtomicInteger();
-        userDAO.getUserByUserAuthId(task -> {
-            User user = task.getResult().toObject(User.class);
-            if(user!=null){
-                if(user.getInstitutions() != null&&!user.getInstitutions().isEmpty()){
-                    for(DocumentReference doc : user.getInstitutions()){
-                        doc.addSnapshotListener((value, error) -> {
-                            if(error == null && value!= null){
-                                Institution userInstitution = value.toObject(Institution.class);
-                                userInstitutions.add(userInstitution);
-                                counter.getAndIncrement();
-                            }
-                            if(counter.get() == user.getInstitutions().size()){
-                                if(!userInstitutions.contains(institution)){
-                                    if(userType != null && !title.equals("") && institution != null){
-                                        FirebaseFirestore fb = FirebaseFirestore.getInstance();
-                                        DocumentReference userReference = fb.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                        DocumentReference institutionReference = fb.collection("Institutions").document(institution.getId());
-                                        DocumentReference userTypeReference = fb.collection("userTypes").document(userType.getUuid());
-                                        InstitutionLinkRequest institutionLinkRequest = new InstitutionLinkRequest();
-                                        institutionLinkRequest.setApproved(false);
-                                        institutionLinkRequest.setUser(userReference);
-                                        institutionLinkRequest.setTitle(title);
-                                        institutionLinkRequest.setUserType(userTypeReference);
-                                        linkRequestDAO.createNewLinkRequest(institutionLinkRequest, institutionReference, task2 -> {
-                                            if(task2.isSuccessful()){
-                                                showSuccessDialog(context);
+        if(userType == null || title.isEmpty() || institution == null){
+            snackbarText.setValue("Preencha todos os campos");
+        }else{
+            FirebaseFirestore.getInstance().collection("Institutions").document(institution.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Institution institutionFind = task.getResult().toObject(Institution.class);
+
+                    ArrayList<Institution> userInstitutions = new ArrayList<>();
+                    AtomicInteger counter = new AtomicInteger();
+                    userDAO.getUserByUserAuthId(task2 -> {
+                        User user = task2.getResult().toObject(User.class);
+                        if(user!=null){
+                            if(user.getInstitutions() != null && !user.getInstitutions().isEmpty()) {
+                                for(DocumentReference doc : user.getInstitutions()){
+                                    doc.addSnapshotListener((value, error) -> {
+                                        if(error == null && value!= null){
+                                            Institution userInstitution = value.toObject(Institution.class);
+                                            userInstitutions.add(userInstitution);
+                                            counter.getAndIncrement();
+                                        }
+                                        if(counter.get() == user.getInstitutions().size()){
+                                            if(!userInstitutions.contains(institutionFind)){
+                                                FirebaseFirestore fb = FirebaseFirestore.getInstance();
+                                                DocumentReference userReference = fb.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                                DocumentReference institutionReference = fb.collection("Institutions").document(institution.getId());
+                                                DocumentReference userTypeReference = fb.collection("userTypes").document(userType.getUuid());
+                                                InstitutionLinkRequest institutionLinkRequest = new InstitutionLinkRequest();
+                                                institutionLinkRequest.setApproved(false);
+                                                institutionLinkRequest.setUser(userReference);
+                                                institutionLinkRequest.setTitle(title);
+                                                institutionLinkRequest.setUserType(userTypeReference);
+                                                institutionLinkRequest.setInstitution_id(institutionReference);
+                                                linkRequestDAO.createNewLinkRequest(institutionLinkRequest, institutionReference, task3 -> {
+                                                    if(task3.isSuccessful()){
+                                                        showSuccessDialog(context);
+                                                    }
+                                                }, e -> {
+                                                    snackbarText.setValue("Algo deu errado: "+e);
+                                                });
+                                            }else{
+                                                snackbarText.setValue("Você já esta vinculado a esta instituição, desfaça o vinculo e tente novamente");
                                             }
-                                        }, e -> {
-                                            snackbarText.setValue("Algo deu errado: "+e);
-                                        });
-                                    }else{
-                                        snackbarText.setValue("Preencha todos os campos da solicitação");
-                                    }
-                                }else{
-                                    snackbarText.setValue("Você já está vinculado a esta instituição, desfaça o vinculo e tente novamente!");
+
+                                        }
+                                    });
                                 }
+                            }else{
+                                FirebaseFirestore fb = FirebaseFirestore.getInstance();
+                                DocumentReference userReference = fb.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                DocumentReference institutionReference = fb.collection("Institutions").document(institution.getId());
+                                DocumentReference userTypeReference = fb.collection("userTypes").document(userType.getUuid());
+                                InstitutionLinkRequest institutionLinkRequest = new InstitutionLinkRequest();
+                                institutionLinkRequest.setApproved(false);
+                                institutionLinkRequest.setUser(userReference);
+                                institutionLinkRequest.setTitle(title);
+                                institutionLinkRequest.setUserType(userTypeReference);
+                                institutionLinkRequest.setInstitution_id(institutionReference);
+                                linkRequestDAO.createNewLinkRequest(institutionLinkRequest, institutionReference, task4 -> {
+                                    if (task4.isSuccessful()) {
+                                        showSuccessDialog(context);
+                                    }
+                                }, e -> {
+                                    snackbarText.setValue("Algo deu errado: " + e);
+                                });
                             }
-                        });
-                    }
+                        }
+                    });
                 }
-            }
-        });
+            });
+        }
+
+
     }
 
     public void showSuccessDialog(Context context){
@@ -134,9 +163,9 @@ public class InstitutionLinkRequestViewModel {
         dialog.show();
         Button buttonConfirm = popUp.findViewById(R.id.buttonConfirmLinkRequestSuccessDialog);
         buttonConfirm.setOnClickListener(veiw -> {
-                dialog.dismiss();
-                Intent i = new Intent(context, StudentMainMenu.class);
-                context.startActivity(i);
+            dialog.dismiss();
+            Intent i = new Intent(context, StudentMainMenu.class);
+            context.startActivity(i);
         });
 
     }

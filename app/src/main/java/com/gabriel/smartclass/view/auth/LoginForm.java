@@ -2,19 +2,14 @@ package com.gabriel.smartclass.view.auth;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.dao.UserDAO;
-import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.viewModels.LoginViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;

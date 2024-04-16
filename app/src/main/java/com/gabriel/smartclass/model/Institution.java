@@ -9,85 +9,21 @@ import com.google.firebase.firestore.PropertyName;
 
 import java.util.Objects;
 
-public class Institution implements Parcelable {
+public class Institution extends User implements Parcelable {
     private String id;
     private String cnpj;
-    private String name;
-
     //getters and setters
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getCnpj() {
-        return cnpj;
-    }
-
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-
-
-    public Institution(String cnpj, String name){
-        this.cnpj = cnpj;
-        this.name = name;
-    }
-
-    public Institution(String id, String cnpj, String name) {
-        this.id = id;
-        this.cnpj = cnpj;
-        this.name = name;
-    }
-
-    public Institution() {
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Institution institution = (Institution) o;
-        return Objects.equals(id, institution.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Institution{" +
-                "id='" + id + '\'' +
-                ", cnpj='" + cnpj + '\'' +
-                ", name='" + name + '\'' +
-                '}';
-    }
     protected Institution(Parcel in) {
         id = in.readString();
         cnpj = in.readString();
-        name = in.readString();
     }
+
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(cnpj);
-        dest.writeString(name);
     }
 
     @Override
@@ -107,8 +43,56 @@ public class Institution implements Parcelable {
         }
     };
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCnpj() {
+        return cnpj;
+    }
+
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
+    }
 
 
+    public Institution(String cnpj){
+        this.cnpj = cnpj;
+    }
+
+    public Institution(String id, String cnpj) {
+        this.id = id;
+        this.cnpj = cnpj;
+    }
+
+    public Institution() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Institution that = (Institution) o;
+        return Objects.equals(id, that.id) && Objects.equals(cnpj, that.cnpj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), id, cnpj);
+    }
+
+    @Override
+    public String toString() {
+        return "Institution{" +
+                "id='" + id + '\'' +
+                ", cnpj='" + cnpj + '\'' +
+                '}';
+    }
 
 
 }

@@ -9,13 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.model.Institution;
-import com.google.firebase.Firebase;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.HashSet;
 import java.util.List;

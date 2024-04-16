@@ -2,32 +2,19 @@ package com.gabriel.smartclass.view.linkRequests;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.adapter.SpinnerUserTypeAdapter;
-import com.gabriel.smartclass.databinding.ActivityInstitutionsSearchBinding;
 import com.gabriel.smartclass.databinding.ActivityLinkRequestFormBinding;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.UserType;
-import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 import com.gabriel.smartclass.viewModels.InstitutionLinkRequestViewModel;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class InstitutionLinkRequestForm extends AppCompatActivity {
     private ActivityLinkRequestFormBinding binding;
@@ -46,7 +33,7 @@ public class InstitutionLinkRequestForm extends AppCompatActivity {
         viewModel.getUserTypesAndPopulateSpinner();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Solicitação");
-        binding.sendLinkRequest.setOnClickListener(sendLinkRequestToInstitution());
+        binding.sendLinkRequest.setOnClickListener(clickListenerSendRequestToInstitution());
         viewModel.getSnackbarText().observe(this, snackbarObserve());
     }
     @Override
@@ -63,10 +50,10 @@ public class InstitutionLinkRequestForm extends AppCompatActivity {
     }
 
     @NonNull
-    private View.OnClickListener sendLinkRequestToInstitution() {
-        return v -> prepareLinkRequest();
+    private View.OnClickListener clickListenerSendRequestToInstitution() {
+        return v -> sendLinkRequest();
     }
-    public void prepareLinkRequest(){
+    public void sendLinkRequest(){
         UserType userType = (UserType) binding.spinnerUserTypeLink.getSelectedItem();
         String title = binding.textLinkTitle.getText().toString();
             viewModel.createNewInstitutionLinkRequest(userType,title, institutionSelected, this);

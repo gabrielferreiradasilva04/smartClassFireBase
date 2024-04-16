@@ -2,6 +2,7 @@ package com.gabriel.smartclass.viewModels;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -72,6 +73,8 @@ public class RegisterViewModel extends ViewModel {
                             UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder().setDisplayName(finalFirstAndLastName).build();
                             userAuth.updateProfile(profileUpdate);
                             User user = new User();
+                            user.setName(userAuth.getDisplayName());
+                            user.setEmail(userAuth.getEmail());
                             user.setId(userAuth.getUid());
                             user.setInstitutions(new ArrayList<>());
                             FirebaseFirestore.getInstance().collection("users").document(userAuth.getUid()).set(user).addOnSuccessListener(task1 -> {
@@ -143,27 +146,35 @@ public class RegisterViewModel extends ViewModel {
                                         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                                         UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder().setDisplayName(finalName).build();
                                         assert currentUser != null;
-                                        currentUser.updateProfile(changeRequest);
-                                        DocumentReference institutionRef = UserAuthDAO.fb.collection("Institutions").document(currentUser.getUid());
-                                        Institution institution;
-                                        institution = new Institution();
-                                        institution.setId(currentUser.getUid());
-                                        institution.setCnpj(finalCnpj);
-                                        institution.setName(finalName);
-                                        institutionRef.set(institution).addOnSuccessListener(unused -> {
-                                            snackBarText.setValue("Cadastro realizado com sucesso!");
-                                            progressBar.setVisibility(View.GONE);
-                                            Intent i = new Intent(registerForm.getApplicationContext(), LoginForm.class);
-                                            registerForm.startActivity(i);
-                                            registerForm.finish();
-                                        }).addOnFailureListener(e -> {
-                                            snackBarText.setValue("Erro ao finalizar cadastro");
-                                            currentUser.delete();
+                                        currentUser.updateProfile(changeRequest).addOnSuccessListener(unused -> {
+                                            DocumentReference institutionRef = UserAuthDAO.fb.collection("Institutions").document(currentUser.getUid());
+                                            Institution institution;
+                                            institution = new Institution();
+                                            institution.setId(currentUser.getUid());
+                                            institution.setCnpj(finalCnpj);
+                                            institution.setName(currentUser.getDisplayName());
+                                            institution.setPhone("");
+                                            institution.setEmail(currentUser.getEmail());
+                                            institution.setInstitutions(new ArrayList<>());
+                                            institutionRef.set(institution).addOnSuccessListener(unused2 -> {
+                                                snackBarText.setValue("Cadastro realizado com sucesso!");
+                                                progressBar.setVisibility(View.GONE);
+                                                Intent i = new Intent(registerForm.getApplicationContext(), LoginForm.class);
+                                                registerForm.startActivity(i);
+                                                registerForm.finish();
+                                            }).addOnFailureListener(e -> {
+                                                snackBarText.setValue("Erro ao finalizar cadastro");
+                                                currentUser.delete();
+                                                progressBar.setVisibility(View.GONE);
+                                                registerForm.finish();
+                                            });
+                                        }).addOnFailureListener(fail ->{
+                                            snackBarText.setValue("Erro ao Finalizar Cadastro");
                                             progressBar.setVisibility(View.GONE);
                                             registerForm.finish();
                                         });
-                                    }
 
+                                    }
                                 }, e -> {
                                     if (e.getClass().equals(FirebaseAuthEmailException.class)) {
                                         snackBarText.setValue("Verifique o e-mail informado");

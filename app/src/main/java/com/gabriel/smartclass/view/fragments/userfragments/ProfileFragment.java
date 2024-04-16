@@ -3,8 +3,6 @@ package com.gabriel.smartclass.view.fragments.userfragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -51,19 +49,20 @@ public class ProfileFragment extends Fragment {
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
         hostUserActivityViewModel = viewModelProvider.get(HostUserActivityViewModel.class);
         hostUserActivityViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
-        binding.profilePicture.setOnClickListener(clickOpenPictureOptions());
-        binding.changePasswordProfile.setOnClickListener(openPasswordDialog());
+        binding.changePasswordProfile.setOnClickListener(clickListenerOpenPasswordDialog());
         hostUserActivityViewModel.getProfilePictureLiveData().observe(getViewLifecycleOwner(), observeProfilePicture());
         if(this.getActivity().getClass().equals(StudentMainMenu.class)){
             StudentMainMenu main = (StudentMainMenu) getActivity();
             main.updateTitle("Perfil");
             loadUserDetails();
-            binding.saveChangesProfile.setOnClickListener(buttonListenerSaveChanges());
+            binding.saveChangesProfile.setOnClickListener(clickListenerUserSaveChanges());
+            binding.profilePicture.setOnClickListener(clickListenerOpenUserPictureOptions());
         } else if (this.getActivity().getClass().equals(InstitutionMainMenu.class)) {
             InstitutionMainMenu main = (InstitutionMainMenu) getActivity();
             main.updateTitle("Perfil");
             binding.institutionEdtxtCnpj.setVisibility(View.VISIBLE);
-            binding.saveChangesProfile.setOnClickListener(buttonListenerSaveInstitutionChanges());
+            binding.saveChangesProfile.setOnClickListener(clickListenerInstitutionSaveChanges());
+            binding.profilePicture.setOnClickListener(clickListenerOpenInstitutionPictureOptions());
             loadInstitutionDetails();
         }
 
@@ -75,28 +74,21 @@ public class ProfileFragment extends Fragment {
             binding.edtxtDisplayName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         }
     }
-
+    public void loadInstitutionDetails(){
+        if(FirebaseAuth.getInstance().getCurrentUser() != null && hostUserActivityViewModel.getInstitutionMutableLiveData().getValue() != null){
+            String name = hostUserActivityViewModel.getInstitutionMutableLiveData().getValue().getName();
+            String cnpj = hostUserActivityViewModel.getInstitutionMutableLiveData().getValue().getCnpj();
+            String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            binding.edtxtEmail.setText(email);
+            binding.institutionEdtxtCnpj.setText(cnpj);
+            binding.edtxtDisplayName.setText(name);
+        }
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         hostUserActivityViewModel.getSnackBarText().removeObserver(observeSnackbar());
         hostUserActivityViewModel.getSnackBarText().setValue(null);
-    }
-
-    @NonNull
-    private Observer<String> observeSnackbar() {
-        return s-> {
-            if(s != null){
-                Snackbar snackbar = Snackbar.make(binding.saveChangesProfile, s, Snackbar.LENGTH_SHORT);
-                snackbar.show();
-            }
-
-        };
-    }
-
-    @NonNull
-    private Observer<Bitmap> observeProfilePicture() {
-        return bitmap -> binding.profilePicture.setImageBitmap(bitmap);
     }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -115,90 +107,32 @@ public class ProfileFragment extends Fragment {
             }
         }
     }
-    private View.OnClickListener clickOpenPictureOptions() {
-        return v -> {
-            PopupMenu popupMenu = new PopupMenu(getActivity().getApplication(), v);
-            MenuInflater inflater = popupMenu.getMenuInflater();
-            inflater.inflate(R.menu.profile_picture_options, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(item -> {
-                int id = item.getItemId();
-                if(id == R.id.itemExcludePicture){
-                    excludeProfilePicture();
-                }
-                if (id == R.id.itemEditPicture) {
-                    Intent openGalaryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(openGalaryIntent, 1000);
-                }
-                return true;
-            });
-            popupMenu.show();
-        };
-    }
 
-    public View.OnClickListener buttonListenerSaveChanges(){
-        return v -> {
-            Bitmap bitmap;
-            if(( binding.profilePicture.getDrawable())!=null){
-                bitmap = ((BitmapDrawable) binding.profilePicture.getDrawable()).getBitmap();
-            }else{
-                bitmap = null;
-            }
-            String displayName = binding.edtxtDisplayName.getText().toString();
-            String email = binding.edtxtEmail.getText().toString();
-            ProgressBar progressBar = binding.progressBarProfileChanges;
-            View view = binding.viewLoading;
-            hostUserActivityViewModel.updateProfile(displayName,email, bitmap,progressBar,view);
-        };
-    }
-    public View.OnClickListener buttonListenerSaveInstitutionChanges(){
-        return v -> {
-            Bitmap bitmap;
-            if(( binding.profilePicture.getDrawable())!=null){
-                bitmap = ((BitmapDrawable) binding.profilePicture.getDrawable()).getBitmap();
-            }else{
-                bitmap = null;
-            }
-            String displayName = binding.edtxtDisplayName.getText().toString();
-            String email = binding.edtxtEmail.getText().toString();
-            Context context = getContext();
-            ProgressBar progressBar = binding.progressBarProfileChanges;
-            View view = binding.viewLoading;
-            hostUserActivityViewModel.updateProfileInstitutionProfile(displayName,email, bitmap,progressBar,view);
-        };
-    }
-
-    /***
-     * Exclui a foto de perfil do usuário setando como nula no viewModel da host e excluindo do repositório na nuvem através da classe usuarioDAO
-     */
-    public void excludeProfilePicture() {
+    public void excludeUserPhoto() {
         if(binding.profilePicture.getDrawable() != null){
             String email = binding.edtxtEmail.getText().toString();
             ProgressBar progressBar = binding.progressBarProfileChanges;
             View view = binding.viewLoading;
-            hostUserActivityViewModel.excludeProfilePicture(email,progressBar, view);
+            hostUserActivityViewModel.excludeUserPhoto(email,progressBar, view);
         }else{
             Toast toast = Toast.makeText(getContext(), "Primeiro adicione uma foto para excluir", Toast.LENGTH_SHORT);
             toast.show();
         }
     }
-
-    /***
-     * Carrega os dados do usuário com base no viewModel da tela principal (Host)
-     */
-    /***
-     * Realiza a validação das senhas e a alteração por meio da viweModel da host utilizando a usuarioDAO
-     * @param password senha
-     * @param passwordConfirm confirmação de senha
-     * @param dialog dialog a ser fechado na conclusão do método
-     */
+    public void excludeInstitutionPhoto() {
+        if(binding.profilePicture.getDrawable() != null){
+            String email = binding.edtxtEmail.getText().toString();
+            ProgressBar progressBar = binding.progressBarProfileChanges;
+            View view = binding.viewLoading;
+            hostUserActivityViewModel.excludeInstitutionPhoto(email,progressBar, view);
+        }else{
+            Toast toast = Toast.makeText(getContext(), "Primeiro adicione uma foto para excluir", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
     public void confirmChangePassword(String password, String passwordConfirm, Dialog dialog){
         hostUserActivityViewModel.updatePassword(password, passwordConfirm, getContext(), dialog);
     }
-
-    /***
-     * realiza o processo de criação e abertura de uma dialog para realizar a troca da senha do usuário através da validação do
-     * metodo confirmChangePassowrd
-     */
     public void openChangePassword(){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         dialogBuilder.setCancelable(false);
@@ -212,13 +146,10 @@ public class ProfileFragment extends Fragment {
         dialog.show();
         buttonDone.setOnClickListener(v -> {
                     dialog.dismiss();
-                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            buttonDone.setOnClickListener(null);
-                            buttonConfirm.setOnClickListener(null);
-                            dialog.cancel();
-                        }
+                    dialog.setOnDismissListener(dialog1 -> {
+                        buttonDone.setOnClickListener(null);
+                        buttonConfirm.setOnClickListener(null);
+                        dialog1.cancel();
                     });
                 }
 
@@ -236,23 +167,92 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    public View.OnClickListener excludeProfilePictureButton() {
-        return v -> excludeProfilePicture();
-    }
-
-    public View.OnClickListener openPasswordDialog() {
+    public View.OnClickListener clickListenerOpenPasswordDialog() {
         return v -> openChangePassword();
     }
+    private View.OnClickListener clickListenerOpenUserPictureOptions() {
+        return v -> {
+            PopupMenu popupMenu = new PopupMenu(getActivity().getApplication(), v);
+            MenuInflater inflater = popupMenu.getMenuInflater();
+            inflater.inflate(R.menu.profile_picture_options, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+                int id = item.getItemId();
+                if(id == R.id.itemExcludePicture){
+                    excludeUserPhoto();
+                }
+                if (id == R.id.itemEditPicture) {
+                    Intent openGalaryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(openGalaryIntent, 1000);
+                }
+                return true;
+            });
+            popupMenu.show();
+        };
+    }
+    private View.OnClickListener clickListenerOpenInstitutionPictureOptions() {
+        return v -> {
+            PopupMenu popupMenu = new PopupMenu(getActivity().getApplication(), v);
+            MenuInflater inflater = popupMenu.getMenuInflater();
+            inflater.inflate(R.menu.profile_picture_options, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+                int id = item.getItemId();
+                if(id == R.id.itemExcludePicture){
+                    excludeInstitutionPhoto();
+                }
+                if (id == R.id.itemEditPicture) {
+                    Intent openGalaryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(openGalaryIntent, 1000);
+                }
+                return true;
+            });
+            popupMenu.show();
+        };
+    }
 
-    public void loadInstitutionDetails(){
-        if(FirebaseAuth.getInstance().getCurrentUser() != null && hostUserActivityViewModel.getInstitutionMutableLiveData().getValue() != null){
-            String name = hostUserActivityViewModel.getInstitutionMutableLiveData().getValue().getName();
-            String cnpj = hostUserActivityViewModel.getInstitutionMutableLiveData().getValue().getCnpj();
-            String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-            binding.edtxtEmail.setText(email);
-            binding.institutionEdtxtCnpj.setText(cnpj);
-            binding.edtxtDisplayName.setText(name);
-        }
+    public View.OnClickListener clickListenerUserSaveChanges(){
+        return v -> {
+            Bitmap bitmap;
+            if(( binding.profilePicture.getDrawable())!=null){
+                bitmap = ((BitmapDrawable) binding.profilePicture.getDrawable()).getBitmap();
+            }else{
+                bitmap = null;
+            }
+            String displayName = binding.edtxtDisplayName.getText().toString();
+            String email = binding.edtxtEmail.getText().toString();
+            ProgressBar progressBar = binding.progressBarProfileChanges;
+            View view = binding.viewLoading;
+            hostUserActivityViewModel.updateUserProfile(displayName,email, bitmap,progressBar,view);
+        };
+    }
+    public View.OnClickListener clickListenerInstitutionSaveChanges(){
+        return v -> {
+            Bitmap bitmap;
+            if(( binding.profilePicture.getDrawable())!=null){
+                bitmap = ((BitmapDrawable) binding.profilePicture.getDrawable()).getBitmap();
+            }else{
+                bitmap = null;
+            }
+            String displayName = binding.edtxtDisplayName.getText().toString();
+            String email = binding.edtxtEmail.getText().toString();
+            ProgressBar progressBar = binding.progressBarProfileChanges;
+            View view = binding.viewLoading;
+            hostUserActivityViewModel.updateInstitutionProfile(displayName,email, bitmap,progressBar,view);
+        };
+    }
+    @NonNull
+    private Observer<String> observeSnackbar() {
+        return s-> {
+            if(s != null){
+                Snackbar snackbar = Snackbar.make(binding.saveChangesProfile, s, Snackbar.LENGTH_SHORT);
+                snackbar.show();
+            }
+
+        };
+    }
+
+    @NonNull
+    private Observer<Bitmap> observeProfilePicture() {
+        return bitmap -> binding.profilePicture.setImageBitmap(bitmap);
     }
 
 
