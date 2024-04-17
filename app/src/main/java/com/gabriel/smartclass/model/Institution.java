@@ -17,6 +17,14 @@ public class Institution extends User implements Parcelable {
     protected Institution(Parcel in) {
         id = in.readString();
         cnpj = in.readString();
+        String name = in.readString();
+        String email = in.readString();
+        String photoUrl = in.readString();
+        String phone = in.readString();
+        setName(name);
+        setEmail(email);
+        setPhotoUrl(photoUrl);
+        setPhone(phone);
     }
 
 
@@ -24,6 +32,10 @@ public class Institution extends User implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(cnpj);
+        dest.writeString(getName());
+        dest.writeString(getEmail());
+        dest.writeString(getPhotoUrl());
+        dest.writeString(getPhone());
     }
 
     @Override
@@ -34,6 +46,7 @@ public class Institution extends User implements Parcelable {
     public static final Creator<Institution> CREATOR = new Creator<Institution>() {
         @Override
         public Institution createFromParcel(Parcel in) {
+
             return new Institution(in);
         }
 
