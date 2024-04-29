@@ -13,9 +13,10 @@ import android.view.Menu;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.ActivityStudentMainMenuBinding;
+import com.gabriel.smartclass.view.base.BaseActivity;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 
-public class StudentMainMenu extends AppCompatActivity {
+public class StudentMainMenu extends BaseActivity {
     private ActivityStudentMainMenuBinding binding;
     private NavHost navHostFragment;
     private NavController navController;

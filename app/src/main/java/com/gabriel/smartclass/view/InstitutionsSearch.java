@@ -16,10 +16,11 @@ import com.gabriel.smartclass.adapter.InstitutionsAdapter;
 import com.gabriel.smartclass.databinding.ActivityInstitutionsSearchBinding;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
+import com.gabriel.smartclass.view.base.BaseActivity;
 import com.gabriel.smartclass.view.linkRequests.InstitutionLinkRequestForm;
 import com.gabriel.smartclass.viewModels.InstitutionsSearchViewModel;
 
-public class InstitutionsSearch extends AppCompatActivity {
+public class InstitutionsSearch extends BaseActivity {
     private ActivityInstitutionsSearchBinding binding;
     private InstitutionsSearchViewModel viewModel;
 

@@ -1,6 +1,5 @@
 package com.gabriel.smartclass.view.auth;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
 import android.annotation.SuppressLint;
@@ -10,13 +9,14 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.gabriel.smartclass.R;
+import com.gabriel.smartclass.view.base.BaseActivity;
 import com.gabriel.smartclass.viewModels.LoginViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
-public class LoginForm extends AppCompatActivity {
+public class LoginForm extends BaseActivity {
     private Button registerButton;
     private Button loginButton;
     private Button institutionRegisterButton;
@@ -67,6 +67,7 @@ public class LoginForm extends AppCompatActivity {
         });
 
         this.loginButton.setOnClickListener(view ->{
+            hideKeyboard();
             loginViewModel.loginUser(this.edTxtEmail.getText().toString(), this.edTxtPassword.getText().toString());
         });
     }

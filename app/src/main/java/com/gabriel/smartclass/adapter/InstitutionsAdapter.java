@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.model.Institution;
@@ -65,7 +66,7 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
             ImageButton institutionProfilePicture = holder.itemView.findViewById(R.id.institutionProfilePicture);
             textInstitutionName.setText(institutionName);
             textInstitutionCNPJ.setText(cnpj);
-//            Glide.with(holder.itemView.getContext()).load(currentUser.getPhotoUrl()).into(institutionProfilePicture);
+            Glide.with(holder.itemView.getContext()).load(institutionsMutableLiveData.getValue().get(position).getPhotoUrl()).placeholder(R.drawable.icone_smarclass_sem_fundo).into(institutionProfilePicture);
             if(itemClickListener != null){
                 holder.itemView.setOnClickListener( view ->{
                     itemClickListener.onItemClick(institutionsMutableLiveData.getValue().get(position));

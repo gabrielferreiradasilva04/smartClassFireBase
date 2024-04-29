@@ -14,10 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.gabriel.smartclass.R;
+import com.gabriel.smartclass.view.base.BaseActivity;
 import com.gabriel.smartclass.viewModels.RegisterViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
-public class RegisterForm extends AppCompatActivity {
+public class RegisterForm extends BaseActivity {
     private Button loginButton;
     private Button registerButton;
     private RegisterViewModel registerViewModel;
@@ -55,6 +56,7 @@ public class RegisterForm extends AppCompatActivity {
 
     private void register() {
         this.registerButton.setOnClickListener(view ->{
+            hideKeyboard();
             registerViewModel.registerUser(edTxtEmail.getText().toString(), edTxtPassword.getText().toString(), edTxtFirstAndLastName.getText().toString(),editTextConfirmPassword.getText().toString() );
         });
     }

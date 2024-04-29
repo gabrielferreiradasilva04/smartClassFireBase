@@ -89,6 +89,8 @@
         android:background="@drawable/image_button_cicle"
         app:layout_constraintEnd_toEndOf="@id/view_container"
         app:layout_constraintTop_toTopOf="@id/view_container_top"
+        android:scaleType="centerCrop"
+        android:clipToOutline="true"
         tools:ignore="SpeakableTextPresentCheck" />
 
 

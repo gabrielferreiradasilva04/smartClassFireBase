@@ -54,6 +54,7 @@ public class InstitutionRegisterForm extends RegisterForm {
     }
 
     public View.OnClickListener registerListener(){
+        hideKeyboard();
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {

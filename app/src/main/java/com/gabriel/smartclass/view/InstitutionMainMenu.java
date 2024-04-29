@@ -13,13 +13,14 @@ import android.view.Menu;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.ActivityInstitutionMainMenuBinding;
+import com.gabriel.smartclass.view.base.BaseActivity;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 import com.google.android.material.badge.BadgeDrawable;
 
 import java.util.Objects;
 
 /** @noinspection ALL*/
-public class InstitutionMainMenu extends AppCompatActivity {
+public class InstitutionMainMenu extends BaseActivity {
     private  HostUserActivityViewModel viewModel;
     private ActivityInstitutionMainMenuBinding binding;
     @Override

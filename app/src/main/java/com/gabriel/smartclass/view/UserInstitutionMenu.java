@@ -10,8 +10,9 @@ import android.widget.TextView;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.ActivityUserInstitutionMenuBinding;
 import com.gabriel.smartclass.model.Institution;
+import com.gabriel.smartclass.view.base.BaseActivity;
 
-public class UserInstitutionMenu extends AppCompatActivity {
+public class UserInstitutionMenu extends BaseActivity {
     private Institution currentInstitution;
     private ActivityUserInstitutionMenuBinding binding;
     private TextView textView;
