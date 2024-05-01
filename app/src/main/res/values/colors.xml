@@ -12,19 +12,19 @@
 <!--    tons de azul-->
     <color name="azul_celeste">#00BFFF</color>
     <color name="azul_marinho">#000080</color>
-    <color name="azul_cerúleo">#007BA7</color>
-    <color name="azul_bebê">#ADD8E6</color>
+    <color name="azul_ceruleo">#007BA7</color>
+    <color name="azul_bebe">#ADD8E6</color>
     <color name="azul_royal">#4169E1</color>
-    <color name="azul_petróleo">#003366</color>
+    <color name="azul_petroleo">#003366</color>
     <color name="azul_turquesa">#40E0D0</color>
-    <color name="azul_canário">#00FFFF</color>
+    <color name="azul_canario">#00FFFF</color>
     <color name="azul_cravo">#4B0082</color>
-    <color name="azul_ardósia">#6A5ACD</color>
+    <color name="azul_ardosia">#6A5ACD</color>
 <!--   tons de verde-->
     <color name="verde_esmeralda">#00FF00</color>
     <color name="verde_folha">#7CFC00</color>
     <color name="verde_grama">#32CD32</color>
-    <color name="verde_limão">#32CD32</color>
+    <color name="verde_limao">#32CD32</color>
     <color name="verde_oliva">#808000</color>
     <color name="verde_abacate">#556B2F</color>
     <color name="verde_menta">#98FB98</color>
@@ -33,12 +33,12 @@
     <color name="verde_escuro">#006400</color>
 <!--   tons de roxo-->
     <color name="roxo_real">#800080</color>
-    <color name="lilás">#C8A2C8</color>
+    <color name="lilas">#C8A2C8</color>
     <color name="lavanda">#E6E6FA</color>
     <color name="violeta">#EE82EE</color>
     <color name="magenta">#FF00FF</color>
     <color name="ametista">#9966CC</color>
-    <color name="púrpura">#800000</color>
+    <color name="purpura">#800000</color>
     <color name="bordeaux">#800020</color>
     <color name="cinza_roxo">#738678</color>
     <color name="rosa_choque">#FFC0CB</color>

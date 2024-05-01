@@ -3,59 +3,16 @@ package com.gabriel.smartclass.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.PropertyName;
-
 import java.util.Objects;
 
 public class Institution extends User implements Parcelable {
     private String id;
     private String cnpj;
+    private int maxTeachers;
+    private int maxStudents;
+    private int maxCoordinators;
+    private int maxClassrooms;
     //getters and setters
-
-    protected Institution(Parcel in) {
-        id = in.readString();
-        cnpj = in.readString();
-        String name = in.readString();
-        String email = in.readString();
-        String photoUrl = in.readString();
-        String phone = in.readString();
-        setName(name);
-        setEmail(email);
-        setPhotoUrl(photoUrl);
-        setPhone(phone);
-    }
-
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(cnpj);
-        dest.writeString(getName());
-        dest.writeString(getEmail());
-        dest.writeString(getPhotoUrl());
-        dest.writeString(getPhone());
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Institution> CREATOR = new Creator<Institution>() {
-        @Override
-        public Institution createFromParcel(Parcel in) {
-
-            return new Institution(in);
-        }
-
-        @Override
-        public Institution[] newArray(int size) {
-            return new Institution[size];
-        }
-    };
-
     public String getId() {
         return id;
     }
@@ -76,6 +33,7 @@ public class Institution extends User implements Parcelable {
     public Institution(String cnpj){
         this.cnpj = cnpj;
     }
+
 
     public Institution(String id, String cnpj) {
         this.id = id;
@@ -106,6 +64,56 @@ public class Institution extends User implements Parcelable {
                 ", cnpj='" + cnpj + '\'' +
                 '}';
     }
+//parcelable
 
+    protected Institution(Parcel in) {
+        id = in.readString();
+        cnpj = in.readString();
+        maxTeachers = in.readInt();
+        maxStudents = in.readInt();
+        maxCoordinators = in.readInt();
+        maxClassrooms = in.readInt();
+        String name = in.readString();
+        String email = in.readString();
+        String photoUrl = in.readString();
+        String phone = in.readString();
+        setName(name);
+        setEmail(email);
+        setPhotoUrl(photoUrl);
+        setPhone(phone);
+    }
+
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(cnpj);
+        dest.writeInt(maxTeachers);
+        dest.writeInt(maxStudents);
+        dest.writeInt(maxCoordinators);
+        dest.writeInt(maxClassrooms);
+        dest.writeString(getName());
+        dest.writeString(getEmail());
+        dest.writeString(getPhotoUrl());
+        dest.writeString(getPhone());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Institution> CREATOR = new Creator<Institution>() {
+        @Override
+        public Institution createFromParcel(Parcel in) {
+
+            return new Institution(in);
+        }
+
+        @Override
+        public Institution[] newArray(int size) {
+            return new Institution[size];
+        }
+    };
 
 }

@@ -5,4 +5,24 @@
     <string name="menu_news">Notícias</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+<!--    Users menu-->
+    <string name="progressbar_students_title">Alunos matriculados</string>
+    <string name="progressbar_students_textbody1">Capacidade máxima:</string>
+    <string name="progressbar_students_textbody2">Matriculados:</string>
+
+    <string name="progressbar_teachers_title">Professores registrados</string>
+    <string name="progressbar_teachers_textbody1">Capacidade máxima:</string>
+    <string name="progressbar_teachers_textbody2">Registrados:</string>
+
+    <string name="progressbar_coordinators_title">Coordenadores Registrados</string>
+    <string name="progressbar_coordinators_textbody1">Capacidade máxima:</string>
+    <string name="progressbar_coordinators_textbody2">Registrados:</string>
+
+    <string name="progressbar_classrooms_title">Salas Ocupadas</string>
+    <string name="progressbar_classrooms_textbody1">Capacidade máxima:</string>
+    <string name="progressbar_classrooms_textbody2">Ocupadas:</string>
+
+    <string name="courses_institution_mainmenu">Cursos disponíveis</string>
+    <string name="classrooms_institution_mainmenu">Turmas</string>
+
 </resources>

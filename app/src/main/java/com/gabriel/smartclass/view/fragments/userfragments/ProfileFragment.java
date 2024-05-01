@@ -152,8 +152,6 @@ public class ProfileFragment extends Fragment {
                         dialog1.cancel();
                     });
                 }
-
-
         );
         buttonConfirm.setOnClickListener(v -> {
             if(!textPassword.getText().toString().equals("") && !textConfirmPassword.getText().toString().equals("")){

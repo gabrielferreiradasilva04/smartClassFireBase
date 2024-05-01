@@ -5,6 +5,6 @@
 
     <style name="Theme.SmartClass" parent="Base.Theme.SmartClass">
         <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView.Colored</item>
-        <item name="colorPrimary">@color/azul_petróleo</item>
+        <item name="colorPrimary">@color/azul_petroleo</item>
     </style>
 </resources>
