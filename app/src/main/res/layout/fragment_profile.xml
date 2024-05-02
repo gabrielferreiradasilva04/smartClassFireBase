@@ -12,6 +12,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/profile_picture"
                     android:layout_width="150dp"
@@ -25,12 +26,11 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="SpeakableTextPresentCheck" />
-                <EditText
+
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edtxt_display_name"
                     style="@style/Edit_Text_Forms"
                     android:inputType="textPersonName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:layout_marginTop="40dp"
                     android:drawableRight="@drawable/ic_edit"
                     android:hint="Nome de Usuário"
@@ -38,7 +38,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/profile_picture" />
 
-                <EditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edtxt_email"
                     style="@style/Edit_Text_Forms"
                     android:enabled="false"
@@ -46,16 +46,109 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edtxt_display_name" />
-                <EditText
+<!--                Instituição-->
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:enabled="false"
                     android:id="@+id/institution_edtxt_cnpj"
                     style="@style/Edit_Text_Forms"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:hint="CNPJ"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edtxt_email"
                     android:visibility="gone"/>
+
+                <View
+                    android:id="@+id/institution_view_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    style="@style/divider"
+                    app:layout_constraintTop_toBottomOf="@id/institution_edtxt_cnpj"/>
+
+                <TextView
+                    android:id="@+id/institution_txtview_capacity"
+                    style="@style/profile_subtitles"
+                    app:layout_constraintTop_toBottomOf="@id/institution_view_divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:text="Capacidade"
+                    android:visibility="gone"/>
+
+                <HorizontalScrollView
+                    android:id="@+id/scrollbuttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/institution_txtview_capacity"
+                    android:visibility="gone">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/institution_txtsubtitle_teachers"
+                            style="@style/circle_capacity_edtxt_label"
+                            android:text="Professores"
+                            app:layout_constraintEnd_toEndOf="@id/edtxt_teachers_capacity"
+                            app:layout_constraintStart_toStartOf="@id/edtxt_teachers_capacity"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/edtxt_teachers_capacity"
+                            style="@style/circle_capacity_edtxt"
+                            tools:ignore="SpeakableTextPresentCheck"
+                            app:layout_constraintTop_toBottomOf="@id/institution_txtsubtitle_teachers"
+                            app:layout_constraintStart_toStartOf="parent"/>
+
+                        <TextView
+                            android:id="@+id/institution_txtsubtitle_students"
+                            style="@style/circle_capacity_edtxt_label"
+                            android:text="Estudantes"
+                            app:layout_constraintEnd_toEndOf="@id/edtxt_students_capacity"
+                            app:layout_constraintStart_toStartOf="@id/edtxt_students_capacity"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/edtxt_students_capacity"
+                            style="@style/circle_capacity_edtxt"
+                            app:layout_constraintStart_toEndOf="@id/edtxt_teachers_capacity"
+                            app:layout_constraintTop_toBottomOf="@id/institution_txtsubtitle_teachers"
+                            tools:ignore="SpeakableTextPresentCheck,DuplicateClickableBoundsCheck" />
+
+                        <TextView
+                            android:id="@+id/institution_txtsubtitle_coordinators"
+                            style="@style/circle_capacity_edtxt_label"
+                            android:text="Coordenadores"
+                            app:layout_constraintEnd_toEndOf="@+id/edtxt_coordinators_capacity"
+                            app:layout_constraintStart_toStartOf="@id/edtxt_coordinators_capacity"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/edtxt_coordinators_capacity"
+                            style="@style/circle_capacity_edtxt"
+                            tools:ignore="SpeakableTextPresentCheck"
+                            app:layout_constraintTop_toBottomOf="@id/institution_txtsubtitle_teachers"
+                            app:layout_constraintStart_toEndOf="@id/edtxt_students_capacity"/>
+
+                        <TextView
+                            android:id="@+id/institution_txtsubtitle_classrooms"
+                            style="@style/circle_capacity_edtxt_label"
+                            android:text="Salas de aula"
+                            app:layout_constraintEnd_toEndOf="@+id/edtxt_classrooms_capacity"
+                            app:layout_constraintStart_toStartOf="@id/edtxt_classrooms_capacity"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+
+                        <androidx.appcompat.widget.AppCompatEditText
+                            android:id="@+id/edtxt_classrooms_capacity"
+                            style="@style/circle_capacity_edtxt"
+                            tools:ignore="SpeakableTextPresentCheck"
+                            app:layout_constraintTop_toBottomOf="@id/institution_txtsubtitle_teachers"
+                            app:layout_constraintStart_toEndOf="@id/edtxt_coordinators_capacity"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </HorizontalScrollView>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/saveChanges_profile"
@@ -64,7 +157,8 @@
                     android:text="Salvar"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/changePassword_profile" />
+                    app:layout_constraintTop_toBottomOf="@+id/changePassword_profile"
+                    android:visibility="visible"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/changePassword_profile"
@@ -72,7 +166,8 @@
                     android:text="Alterar senha"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/institution_edtxt_cnpj" />
+                    app:layout_constraintTop_toBottomOf="@id/scrollbuttons"
+                    android:visibility="visible"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -13,6 +13,39 @@ public class Institution extends User implements Parcelable {
     private int maxCoordinators;
     private int maxClassrooms;
     //getters and setters
+
+    public int getMaxTeachers() {
+        return maxTeachers;
+    }
+
+    public void setMaxTeachers(int maxTeachers) {
+        this.maxTeachers = maxTeachers;
+    }
+
+    public int getMaxStudents() {
+        return maxStudents;
+    }
+
+    public void setMaxStudents(int maxStudents) {
+        this.maxStudents = maxStudents;
+    }
+
+    public int getMaxCoordinators() {
+        return maxCoordinators;
+    }
+
+    public void setMaxCoordinators(int maxCoordinators) {
+        this.maxCoordinators = maxCoordinators;
+    }
+
+    public int getMaxClassrooms() {
+        return maxClassrooms;
+    }
+
+    public void setMaxClassrooms(int maxClassrooms) {
+        this.maxClassrooms = maxClassrooms;
+    }
+
     public String getId() {
         return id;
     }

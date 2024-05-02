@@ -110,4 +110,35 @@
         <item name="android:layout_marginTop">30dp</item>
         <item name="android:layout_marginLeft">50dp</item>
     </style>
+
+    <style name="profile_subtitles">
+        <item name="android:textSize">16dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">10dp</item>
+    </style>
+
+    <style name="circle_capacity_edtxt">
+        <item name="android:inputType">number</item>
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:background">@drawable/circle_button_capacity</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginLeft">18dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/azul_petroleo</item>
+    </style>
+
+    <style name="circle_capacity_edtxt_label">
+        <item name="android:textSize">12dp</item>
+        <item name="android:textColor">@color/azul_petroleo</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">16dp</item>
+
+    </style>
 </resources>

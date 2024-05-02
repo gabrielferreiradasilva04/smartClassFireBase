@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.FragmentProfileBinding;
+import com.gabriel.smartclass.utilities.listeners.CapacityTextListener;
 import com.gabriel.smartclass.view.InstitutionMainMenu;
 import com.gabriel.smartclass.view.StudentMainMenu;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
@@ -61,9 +62,15 @@ public class ProfileFragment extends Fragment {
             InstitutionMainMenu main = (InstitutionMainMenu) getActivity();
             main.updateTitle("Perfil");
             binding.institutionEdtxtCnpj.setVisibility(View.VISIBLE);
+            binding.institutionTxtviewCapacity.setVisibility(View.VISIBLE);
+            binding.scrollbuttons.setVisibility(View.VISIBLE);
             binding.saveChangesProfile.setOnClickListener(clickListenerInstitutionSaveChanges());
             binding.profilePicture.setOnClickListener(clickListenerOpenInstitutionPictureOptions());
             loadInstitutionDetails();
+            binding.edtxtStudentsCapacity.setOnFocusChangeListener(new CapacityTextListener(binding.edtxtStudentsCapacity));
+            binding.edtxtTeachersCapacity.setOnFocusChangeListener(new CapacityTextListener(binding.edtxtTeachersCapacity));
+            binding.edtxtClassroomsCapacity.setOnFocusChangeListener(new CapacityTextListener(binding.edtxtClassroomsCapacity));
+            binding.edtxtCoordinatorsCapacity.setOnFocusChangeListener(new CapacityTextListener(binding.edtxtCoordinatorsCapacity));
         }
 
         return binding.getRoot();
@@ -82,6 +89,10 @@ public class ProfileFragment extends Fragment {
             binding.edtxtEmail.setText(email);
             binding.institutionEdtxtCnpj.setText(cnpj);
             binding.edtxtDisplayName.setText(name);
+            binding.edtxtClassroomsCapacity.setText(Integer.toString(hostUserActivityViewModel.getInstitutionMutableLiveData().getValue().getMaxClassrooms()));
+            binding.edtxtCoordinatorsCapacity.setText(Integer.toString(hostUserActivityViewModel.getInstitutionMutableLiveData().getValue().getMaxCoordinators()));
+            binding.edtxtStudentsCapacity.setText(Integer.toString(hostUserActivityViewModel.getInstitutionMutableLiveData().getValue().getMaxStudents()));
+            binding.edtxtTeachersCapacity.setText(Integer.toString(hostUserActivityViewModel.getInstitutionMutableLiveData().getValue().getMaxTeachers()));
         }
     }
     @Override
@@ -224,19 +235,65 @@ public class ProfileFragment extends Fragment {
     }
     public View.OnClickListener clickListenerInstitutionSaveChanges(){
         return v -> {
-            Bitmap bitmap;
-            if(( binding.profilePicture.getDrawable())!=null){
-                bitmap = ((BitmapDrawable) binding.profilePicture.getDrawable()).getBitmap();
-            }else{
-                bitmap = null;
-            }
-            String displayName = binding.edtxtDisplayName.getText().toString();
-            String email = binding.edtxtEmail.getText().toString();
-            ProgressBar progressBar = binding.progressBarProfileChanges;
-            View view = binding.viewLoading;
-            hostUserActivityViewModel.updateInstitutionProfile(displayName,email, bitmap,progressBar,view);
+            saveChanges();
         };
     }
+
+    private void saveChanges() {
+        Bitmap bitmap;
+        if(( binding.profilePicture.getDrawable())!=null){
+            bitmap = ((BitmapDrawable) binding.profilePicture.getDrawable()).getBitmap();
+        }else{
+            bitmap = null;
+        }
+        String errorMessage = "";
+        int maxTeachers = 0;
+        int maxStudents = 0;
+        int maxCoordinators = 0;
+        int maxClassrooms = 0;
+        if(binding.edtxtTeachersCapacity.getText().toString().equals("")){
+            maxTeachers = 0;
+        }else{
+            if(binding.edtxtTeachersCapacity!=null){
+                maxTeachers = Integer.parseInt(binding.edtxtTeachersCapacity.getText().toString());
+            }else{
+                errorMessage.concat("Confira o valor inserido na capacidade de professores\n");
+            }
+        }
+        if(binding.edtxtStudentsCapacity.getText().toString().equals("")){
+            maxStudents = 0;
+        }else{
+            if(binding.edtxtStudentsCapacity.getText().toString()!=null){
+                maxStudents = Integer.parseInt(binding.edtxtStudentsCapacity.getText().toString());
+            }else{
+                errorMessage.concat("Confira o valor inserido na capacidade de estudantes\n");
+            }
+        }
+        if(binding.edtxtCoordinatorsCapacity.getText().toString().equals("")){
+            maxCoordinators = 0;
+        }else{
+            if(binding.edtxtCoordinatorsCapacity.getText().toString()!=null){
+                maxCoordinators = Integer.parseInt(binding.edtxtCoordinatorsCapacity.getText().toString());
+            }else{
+                errorMessage.concat("Confira o valor inserido na capacidade de coordenadores\n");
+            }
+        }
+        if(binding.edtxtClassroomsCapacity.getText().toString().equals("")){
+            maxClassrooms = 0;
+        }else{
+            if(binding.edtxtClassroomsCapacity.getText().toString()!=null){
+                maxClassrooms = Integer.parseInt(binding.edtxtClassroomsCapacity.getText().toString());
+            }else{
+                errorMessage.concat("Confira o valor inserido na capacidade de salas de aula\n");
+            }
+        }
+        String displayName = binding.edtxtDisplayName.getText().toString();
+        String email = binding.edtxtEmail.getText().toString();
+        ProgressBar progressBar = binding.progressBarProfileChanges;
+        View view = binding.viewLoading;
+        hostUserActivityViewModel.updateInstitutionProfile(displayName,email, bitmap,progressBar,view, maxTeachers, maxStudents, maxCoordinators, maxClassrooms);
+    }
+
     @NonNull
     private Observer<String> observeSnackbar() {
         return s-> {

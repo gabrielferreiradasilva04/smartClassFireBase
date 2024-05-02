@@ -17,7 +17,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class UserTypeDAO {
     private final String COLLNAME = "userTypes";
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public  final DocumentReference STUDENT_TYPE_REFERENCE = db.collection(this.COLLNAME).document("0kpiVHFO4bp3qvoQa5f8");
+    public final DocumentReference TEACHER_TYPE_REFERENCE = db.collection(this.COLLNAME).document("7d2e9taUjSBFu4CkmfIX");
+    public final DocumentReference COORDINATOR_TYPE_REFERENCE = db.collection(this.COLLNAME).document("VozV7BKIaUn7dyXQN84y");
+
 
     public void insert(UserType userType) {
         db.collection(this.COLLNAME).add(userType).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

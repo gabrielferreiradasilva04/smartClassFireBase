@@ -1,4 +1,6 @@
 package com.gabriel.smartclass.dao;
+import android.media.metrics.Event;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -45,10 +47,22 @@ public class InstitutionDAO {
 
     }
     public void getInstitutionByCNPJ(String cnpj,OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
-        db.collection("Institutions").whereEqualTo("cnpj", cnpj).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+        db.collection(COLLECTION).whereEqualTo("cnpj", cnpj).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
-    public void getInstitutionByCurrentUser(OnSuccessListener<DocumentSnapshot> onSuccessListener, OnFailureListener onFailureListener){
-        db.collection(COLLECTION).document(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
+    public void getInstitutionByCurrentUser(OnCompleteListener<DocumentSnapshot> onCompleteListener, OnFailureListener onFailureListener){
+        db.collection(COLLECTION).document(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+    }
+    public void syncChangesInRealTime(String institutionID, EventListener<DocumentSnapshot> eventListener){
+        DocumentReference institutionRef = db.collection(COLLECTION).document(institutionID);
+        institutionRef.addSnapshotListener(eventListener);
+    }
+    public void getInstitutionUsers(String institutionID, OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
+        DocumentReference institutionRef = db.collection(COLLECTION).document(institutionID);
+        institutionRef.collection("institutionUsers").get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+    }
+    public void getInstitutionCourses(String institutionID, OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
+        DocumentReference institutionRef = db.collection(COLLECTION).document(institutionID);
+        institutionRef.collection("courses").get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 
 }

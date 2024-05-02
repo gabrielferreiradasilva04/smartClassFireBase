@@ -9,7 +9,6 @@ public class UserType implements Parcelable {
     private String id;
     private String description;
 
-
     protected UserType(Parcel in) {
         id = in.readString();
         description = in.readString();
