@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -83,6 +84,9 @@ public class UserDAO {
     }
     public void updateApplicationUser(HashMap<String, Object> updates, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener){
         fb.collection(COLLECTION).document(currentUserAplication.getUid()).update(updates).addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
+    }
+    public void getUserByDocumentReference(DocumentReference userReference, OnCompleteListener<DocumentSnapshot> onCompleteListener, OnFailureListener onFailureListener){
+        fb.collection(COLLECTION).document(userReference.getId()).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 
 

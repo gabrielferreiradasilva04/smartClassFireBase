@@ -8,7 +8,7 @@ public abstract class CNPJValidator {
     public static boolean validateCNPJ(String cnpj) throws NumberFormatException, NullPointerException {
         if("".equals(cnpj)){
             return false;
-        } else if (cnpj.equals("  .   .   /    .  ")) {
+        } else if (cnpj.equals("  .   .   /    -  ")) {
             return false;
         } else if (cnpj.equals("00.000.000/0000.00")) {
             return false;

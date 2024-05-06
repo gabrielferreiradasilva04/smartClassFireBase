@@ -18,6 +18,8 @@ import com.gabriel.smartclass.view.InstitutionsSearch;
 import com.gabriel.smartclass.view.StudentMainMenu;
 import com.gabriel.smartclass.view.UserInstitutionMenu;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
+import com.gabriel.smartclass.adapter.interfaces.OnInstitutionItemClickListener;
+
 
 public class HomeFragment extends Fragment {
     private HostUserActivityViewModel hostUserActivityViewModel;
@@ -64,7 +66,7 @@ public class HomeFragment extends Fragment {
         hostUserActivityViewModel.getUserInstitutionsAdapter().notifyDataSetChanged();
     }
     @NonNull
-    private InstitutionsAdapter.ItemClickListener institutionClickListener() {
+    private OnInstitutionItemClickListener institutionClickListener() {
         return institution -> {
             Intent i = new Intent(requireActivity(), UserInstitutionMenu.class);
             i.putExtra("institution", institution);

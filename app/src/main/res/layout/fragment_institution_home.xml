@@ -7,245 +7,291 @@
     tools:context=".view.fragments.institutionfragments.InstitutionHomeFragment"
     android:background="@drawable/main_background">
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/institution_swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="SpeakableTextPresentCheck">
 
-            <View
-                android:id="@+id/statistics_view"
-                style="@style/SimpleViewContainer"
-                android:layout_marginTop="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-            <!--alunos-->
-            <ProgressBar
-                android:id="@+id/progressbar_students"
-                style="@style/ProgressBar_Institution_menu"
-                app:layout_constraintTop_toTopOf="@id/statistics_view"
-                app:layout_constraintStart_toStartOf="@id/statistics_view"
-                android:progress="75"
-                />
-            <TextView
-                android:id="@+id/students_title"
-                style="@style/ProgressBar_title"
-                app:layout_constraintStart_toEndOf="@id/progressbar_teachers"
-                app:layout_constraintTop_toTopOf="@id/statistics_view"
-                android:text="@string/progressbar_students_title"
-                />
-            <TextView
-                android:id="@+id/students_body1"
-                style="@style/ProgressBar_TextBody"
-                android:text="@string/progressbar_students_textbody1"
-                app:layout_constraintStart_toEndOf="@id/progressbar_teachers"
-                app:layout_constraintTop_toBottomOf="@id/students_title"
-                tools:ignore="TextSizeCheck" />
-            <TextView
-                android:id="@+id/students_body1_number1"
-                style="@style/ProgressBar_bodyNumber"
-                app:layout_constraintStart_toEndOf="@id/students_body1"
-                app:layout_constraintTop_toBottomOf="@id/students_title"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/students_body2"
-                style="@style/ProgressBar_TextBody"
-                android:text="@string/progressbar_students_textbody2"
-                app:layout_constraintStart_toEndOf="@id/progressbar_students"
-                app:layout_constraintTop_toBottomOf="@id/students_body1"
-                tools:ignore="TextSizeCheck" />
-            <TextView
-                android:id="@+id/students_body2_number2"
-                style="@style/ProgressBar_bodyNumber"
-                app:layout_constraintStart_toEndOf="@id/students_body1"
-                app:layout_constraintTop_toBottomOf="@id/students_body1"/>
-            <!--    professores     -->
-            <ImageView
-                android:id="@+id/divider_teachers"
-                style="@style/divider"
-                app:layout_constraintStart_toStartOf="@id/statistics_view"
-                app:layout_constraintEnd_toEndOf="@id/statistics_view"
-                app:layout_constraintTop_toBottomOf="@id/students_body2"
-                />
-            <ProgressBar
-                android:id="@+id/progressbar_teachers"
-                style="@style/ProgressBar_Institution_menu"
-                app:layout_constraintTop_toBottomOf="@id/students_body2"
-                app:layout_constraintStart_toStartOf="@id/statistics_view"
-                android:progress="50"
-                />
-            <TextView
-                android:id="@+id/teachers_title"
-                style="@style/ProgressBar_title"
-                app:layout_constraintStart_toEndOf="@id/progressbar_teachers"
-                app:layout_constraintTop_toBottomOf="@id/students_body2"
-                android:text="@string/progressbar_teachers_title"
-                />
-            <TextView
-                android:id="@+id/teachers_body1"
-                style="@style/ProgressBar_TextBody"
-                android:text="@string/progressbar_teachers_textbody1"
-                app:layout_constraintStart_toEndOf="@id/progressbar_teachers"
-                app:layout_constraintTop_toBottomOf="@id/teachers_title"
-                tools:ignore="TextSizeCheck" />
-            <TextView
-                android:id="@+id/teachers_body1_number1"
-                style="@style/ProgressBar_bodyNumber"
-                app:layout_constraintStart_toEndOf="@id/teachers_body1"
-                app:layout_constraintTop_toBottomOf="@id/teachers_title"/>
-            <TextView
-                android:id="@+id/teachers_body2"
-                style="@style/ProgressBar_TextBody"
-                android:text="@string/progressbar_teachers_textbody2"
-                app:layout_constraintStart_toEndOf="@id/progressbar_teachers"
-                app:layout_constraintTop_toBottomOf="@id/teachers_body1"
-                tools:ignore="TextSizeCheck" />
-            <TextView
-                android:id="@+id/teachers_body2_number2"
-                style="@style/ProgressBar_bodyNumber"
-                app:layout_constraintStart_toEndOf="@id/teachers_body1"
-                app:layout_constraintTop_toBottomOf="@id/teachers_body1"/>
-            <!--Coordenadores-->
-            <ImageView
-                android:id="@+id/divider_coordinators"
-                style="@style/divider"
-                app:layout_constraintStart_toStartOf="@id/statistics_view"
-                app:layout_constraintEnd_toEndOf="@id/statistics_view"
-                app:layout_constraintTop_toBottomOf="@id/teachers_body2"
-                />
-            <ProgressBar
-                android:id="@+id/progressbar_coordinators"
-                style="@style/ProgressBar_Institution_menu"
-                app:layout_constraintTop_toBottomOf="@id/teachers_body2"
-                app:layout_constraintStart_toStartOf="@id/statistics_view"
-                android:progress="50"
-                />
-            <TextView
-                android:id="@+id/coordinators_title"
-                style="@style/ProgressBar_title"
-                app:layout_constraintStart_toEndOf="@id/progressbar_coordinators"
-                app:layout_constraintTop_toBottomOf="@id/teachers_body2"
-                android:text="@string/progressbar_coordinators_title"
-                />
-            <TextView
-                android:id="@+id/coordinators_body1"
-                style="@style/ProgressBar_TextBody"
-                android:text="@string/progressbar_coordinators_textbody1"
-                app:layout_constraintStart_toEndOf="@id/progressbar_coordinators"
-                app:layout_constraintTop_toBottomOf="@id/coordinators_title"
-                tools:ignore="TextSizeCheck" />
-            <TextView
-                android:id="@+id/coordinators_body1_number1"
-                style="@style/ProgressBar_bodyNumber"
-                app:layout_constraintStart_toEndOf="@id/coordinators_body1"
-                app:layout_constraintTop_toBottomOf="@id/coordinators_title"/>
-            <TextView
-                android:id="@+id/coordinators_body2"
-                style="@style/ProgressBar_TextBody"
-                android:text="@string/progressbar_coordinators_textbody2"
-                app:layout_constraintStart_toEndOf="@id/progressbar_coordinators"
-                app:layout_constraintTop_toBottomOf="@id/coordinators_body1"
-                tools:ignore="TextSizeCheck" />
-            <TextView
-                android:id="@+id/coordinators_body2_number2"
-                style="@style/ProgressBar_bodyNumber"
-                app:layout_constraintStart_toEndOf="@id/coordinators_body1"
-                app:layout_constraintTop_toBottomOf="@id/coordinators_body1"/>
-<!--            salas-->
-            <ImageView
-                android:id="@+id/divider_classrooms"
-                style="@style/divider"
-                app:layout_constraintStart_toStartOf="@id/statistics_view"
-                app:layout_constraintEnd_toEndOf="@id/statistics_view"
-                app:layout_constraintTop_toBottomOf="@id/coordinators_body2"
-                />
-            <ProgressBar
-                android:id="@+id/progressbar_classrooms"
-                style="@style/ProgressBar_Institution_menu"
-                app:layout_constraintTop_toBottomOf="@id/coordinators_body2"
-                app:layout_constraintStart_toStartOf="@id/statistics_view"
-                android:progress="50"
-                />
-            <TextView
-                android:id="@+id/classrooms_title"
-                style="@style/ProgressBar_title"
-                app:layout_constraintStart_toEndOf="@id/progressbar_classrooms"
-                app:layout_constraintTop_toBottomOf="@id/coordinators_body2"
-                android:text="@string/progressbar_classrooms_title"
-                />
-            <TextView
-                android:id="@+id/classrooms_body1"
-                style="@style/ProgressBar_TextBody"
-                android:text="@string/progressbar_classrooms_textbody1"
-                app:layout_constraintStart_toEndOf="@id/progressbar_classrooms"
-                app:layout_constraintTop_toBottomOf="@id/classrooms_title"
-                tools:ignore="TextSizeCheck" />
-            <TextView
-                android:id="@+id/classrooms_body1_number1"
-                style="@style/ProgressBar_bodyNumber"
-                app:layout_constraintStart_toEndOf="@id/classrooms_body1"
-                app:layout_constraintTop_toBottomOf="@id/classrooms_title"/>
-            <TextView
-                android:id="@+id/classrooms_body2"
-                style="@style/ProgressBar_TextBody"
-                android:text="@string/progressbar_classrooms_textbody2"
-                app:layout_constraintStart_toEndOf="@id/progressbar_classrooms"
-                app:layout_constraintTop_toBottomOf="@id/classrooms_body1"
-                tools:ignore="TextSizeCheck" />
-            <TextView
-                android:id="@+id/classrooms_body2_number2"
-                style="@style/ProgressBar_bodyNumber"
-                app:layout_constraintStart_toEndOf="@id/classrooms_body1"
-                app:layout_constraintTop_toBottomOf="@id/classrooms_body1"/>
+                    <!--alunos-->
+                    <View
+                        android:id="@+id/statistics_view"
+                        style="@style/SimpleViewContainer"
+                        android:layout_marginTop="4dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/divider_end"
-                style="@style/divider"
-                app:layout_constraintStart_toStartOf="@id/statistics_view"
-                app:layout_constraintEnd_toEndOf="@id/statistics_view"
-                app:layout_constraintTop_toBottomOf="@id/classrooms_body2"
-                android:background="@color/azul_celeste"
-                android:layout_height="2dp"
-                />
-<!--cursos-->
-            <TextView
-                android:id="@+id/courses_title"
-                style="@style/ProgressBar_title"
-                app:layout_constraintStart_toEndOf="@id/progressbar_classrooms"
-                app:layout_constraintTop_toBottomOf="@id/divider_end"
-                android:text="@string/courses_institution_mainmenu"
-                />
-            <TextView
-                android:id="@+id/number_of_courses"
-                style="@style/courses_number"
-                app:layout_constraintTop_toBottomOf="@id/divider_end"
-                app:layout_constraintStart_toStartOf="@id/statistics_view"
-                android:text="50" />
-<!--salas-->
-            <TextView
-                android:id="@+id/classrooms_title_bottom"
-                style="@style/ProgressBar_title"
-                app:layout_constraintStart_toEndOf="@id/progressbar_classrooms"
-                app:layout_constraintTop_toBottomOf="@id/courses_title"
-                android:text="@string/classrooms_institution_mainmenu"
-                />
-            <TextView
-                android:id="@+id/number_of_classrooms"
-                style="@style/courses_number"
-                app:layout_constraintTop_toBottomOf="@id/number_of_courses"
-                app:layout_constraintStart_toStartOf="@id/statistics_view"
-                android:text="50" />
+                    <ProgressBar
+                        android:id="@+id/progressbar_students"
+                        style="@style/ProgressBar_Institution_menu"
+                        app:layout_constraintTop_toTopOf="@id/statistics_view"
+                        app:layout_constraintStart_toStartOf="@id/statistics_view"
+                        />
+                    <TextView
+                        android:id="@+id/students_title"
+                        style="@style/ProgressBar_title"
+                        app:layout_constraintStart_toEndOf="@id/progressbar_teachers"
+                        app:layout_constraintTop_toTopOf="@id/statistics_view"
+                        android:text="@string/progressbar_students_title"
+                        />
+                    <TextView
+                        android:id="@+id/students_body1"
+                        style="@style/ProgressBar_TextBody"
+                        android:text="@string/progressbar_students_textbody1"
+                        app:layout_constraintStart_toEndOf="@id/progressbar_teachers"
+                        app:layout_constraintTop_toBottomOf="@id/students_title"
+                        tools:ignore="TextSizeCheck" />
+                    <TextView
+                        android:id="@+id/students_body1_number1"
+                        style="@style/ProgressBar_bodyNumber"
+                        app:layout_constraintStart_toEndOf="@id/students_body1"
+                        app:layout_constraintTop_toBottomOf="@id/students_title"/>
 
+                    <TextView
+                        android:id="@+id/students_body2"
+                        style="@style/ProgressBar_TextBody"
+                        android:text="@string/progressbar_students_textbody2"
+                        app:layout_constraintStart_toEndOf="@id/progressbar_students"
+                        app:layout_constraintTop_toBottomOf="@id/students_body1"
+                        tools:ignore="TextSizeCheck" />
+                    <TextView
+                        android:id="@+id/students_body2_number2"
+                        style="@style/ProgressBar_bodyNumber"
+                        app:layout_constraintStart_toEndOf="@id/students_body1"
+                        app:layout_constraintTop_toBottomOf="@id/students_body1"/>
+                    <!--    professores     -->
+                    <ImageView
+                        android:id="@+id/divider_teachers"
+                        style="@style/divider"
+                        app:layout_constraintStart_toStartOf="@id/statistics_view"
+                        app:layout_constraintEnd_toEndOf="@id/statistics_view"
+                        app:layout_constraintTop_toBottomOf="@id/students_body2"
+                        />
+                    <ProgressBar
+                        android:id="@+id/progressbar_teachers"
+                        style="@style/ProgressBar_Institution_menu"
+                        app:layout_constraintTop_toBottomOf="@id/students_body2"
+                        app:layout_constraintStart_toStartOf="@id/statistics_view"
+                        />
+                    <TextView
+                        android:id="@+id/teachers_title"
+                        style="@style/ProgressBar_title"
+                        app:layout_constraintStart_toEndOf="@id/progressbar_teachers"
+                        app:layout_constraintTop_toBottomOf="@id/students_body2"
+                        android:text="@string/progressbar_teachers_title"
+                        />
+                    <TextView
+                        android:id="@+id/teachers_body1"
+                        style="@style/ProgressBar_TextBody"
+                        android:text="@string/progressbar_teachers_textbody1"
+                        app:layout_constraintStart_toEndOf="@id/progressbar_teachers"
+                        app:layout_constraintTop_toBottomOf="@id/teachers_title"
+                        tools:ignore="TextSizeCheck" />
+                    <TextView
+                        android:id="@+id/teachers_body1_number1"
+                        style="@style/ProgressBar_bodyNumber"
+                        app:layout_constraintStart_toEndOf="@id/teachers_body1"
+                        app:layout_constraintTop_toBottomOf="@id/teachers_title"/>
+                    <TextView
+                        android:id="@+id/teachers_body2"
+                        style="@style/ProgressBar_TextBody"
+                        android:text="@string/progressbar_teachers_textbody2"
+                        app:layout_constraintStart_toEndOf="@id/progressbar_teachers"
+                        app:layout_constraintTop_toBottomOf="@id/teachers_body1"
+                        tools:ignore="TextSizeCheck" />
+                    <TextView
+                        android:id="@+id/teachers_body2_number2"
+                        style="@style/ProgressBar_bodyNumber"
+                        app:layout_constraintStart_toEndOf="@id/teachers_body1"
+                        app:layout_constraintTop_toBottomOf="@id/teachers_body1"/>
+                    <!--Coordenadores-->
+                    <ImageView
+                        android:id="@+id/divider_coordinators"
+                        style="@style/divider"
+                        app:layout_constraintStart_toStartOf="@id/statistics_view"
+                        app:layout_constraintEnd_toEndOf="@id/statistics_view"
+                        app:layout_constraintTop_toBottomOf="@id/teachers_body2"
+                        />
+                    <ProgressBar
+                        android:id="@+id/progressbar_coordinators"
+                        style="@style/ProgressBar_Institution_menu"
+                        app:layout_constraintTop_toBottomOf="@id/teachers_body2"
+                        app:layout_constraintStart_toStartOf="@id/statistics_view"
+                        />
+                    <TextView
+                        android:id="@+id/coordinators_title"
+                        style="@style/ProgressBar_title"
+                        app:layout_constraintStart_toEndOf="@id/progressbar_coordinators"
+                        app:layout_constraintTop_toBottomOf="@id/teachers_body2"
+                        android:text="@string/progressbar_coordinators_title"
+                        />
+                    <TextView
+                        android:id="@+id/coordinators_body1"
+                        style="@style/ProgressBar_TextBody"
+                        android:text="@string/progressbar_coordinators_textbody1"
+                        app:layout_constraintStart_toEndOf="@id/progressbar_coordinators"
+                        app:layout_constraintTop_toBottomOf="@id/coordinators_title"
+                        tools:ignore="TextSizeCheck" />
+                    <TextView
+                        android:id="@+id/coordinators_body1_number1"
+                        style="@style/ProgressBar_bodyNumber"
+                        app:layout_constraintStart_toEndOf="@id/coordinators_body1"
+                        app:layout_constraintTop_toBottomOf="@id/coordinators_title"/>
+                    <TextView
+                        android:id="@+id/coordinators_body2"
+                        style="@style/ProgressBar_TextBody"
+                        android:text="@string/progressbar_coordinators_textbody2"
+                        app:layout_constraintStart_toEndOf="@id/progressbar_coordinators"
+                        app:layout_constraintTop_toBottomOf="@id/coordinators_body1"
+                        tools:ignore="TextSizeCheck" />
+                    <TextView
+                        android:id="@+id/coordinators_body2_number2"
+                        style="@style/ProgressBar_bodyNumber"
+                        app:layout_constraintStart_toEndOf="@id/coordinators_body1"
+                        app:layout_constraintTop_toBottomOf="@id/coordinators_body1"/>
+                    <!--            salas-->
+                    <ImageView
+                        android:id="@+id/divider_classrooms"
+                        style="@style/divider"
+                        app:layout_constraintStart_toStartOf="@id/statistics_view"
+                        app:layout_constraintEnd_toEndOf="@id/statistics_view"
+                        app:layout_constraintTop_toBottomOf="@id/coordinators_body2"
+                        />
+                    <ProgressBar
+                        android:id="@+id/progressbar_classrooms"
+                        style="@style/ProgressBar_Institution_menu"
+                        app:layout_constraintTop_toBottomOf="@id/coordinators_body2"
+                        app:layout_constraintStart_toStartOf="@id/statistics_view"
+                        />
+                    <TextView
+                        android:id="@+id/classrooms_title"
+                        style="@style/ProgressBar_title"
+                        app:layout_constraintStart_toEndOf="@id/progressbar_classrooms"
+                        app:layout_constraintTop_toBottomOf="@id/coordinators_body2"
+                        android:text="@string/progressbar_classrooms_title"
+                        />
+                    <TextView
+                        android:id="@+id/classrooms_body1"
+                        style="@style/ProgressBar_TextBody"
+                        android:text="@string/progressbar_classrooms_textbody1"
+                        app:layout_constraintStart_toEndOf="@id/progressbar_classrooms"
+                        app:layout_constraintTop_toBottomOf="@id/classrooms_title"
+                        tools:ignore="TextSizeCheck" />
+                    <TextView
+                        android:id="@+id/classrooms_body1_number1"
+                        style="@style/ProgressBar_bodyNumber"
+                        app:layout_constraintStart_toEndOf="@id/classrooms_body1"
+                        app:layout_constraintTop_toBottomOf="@id/classrooms_title"/>
+                    <TextView
+                        android:id="@+id/classrooms_body2"
+                        style="@style/ProgressBar_TextBody"
+                        android:text="@string/progressbar_classrooms_textbody2"
+                        app:layout_constraintStart_toEndOf="@id/progressbar_classrooms"
+                        app:layout_constraintTop_toBottomOf="@id/classrooms_body1"
+                        tools:ignore="TextSizeCheck" />
+                    <TextView
+                        android:id="@+id/classrooms_body2_number2"
+                        style="@style/ProgressBar_bodyNumber"
+                        android:text="0"
+                        app:layout_constraintStart_toEndOf="@id/classrooms_body1"
+                        app:layout_constraintTop_toBottomOf="@id/classrooms_body1"/>
+
+                    <ImageView
+                        android:id="@+id/divider_end"
+                        style="@style/divider"
+                        app:layout_constraintStart_toStartOf="@id/statistics_view"
+                        app:layout_constraintEnd_toEndOf="@id/statistics_view"
+                        app:layout_constraintTop_toBottomOf="@id/classrooms_body2"
+                        android:background="@color/azul_celeste"
+                        android:layout_height="2dp"
+                        />
+                    <!--cursos-->
+                    <TextView
+                        android:id="@+id/courses_title"
+                        style="@style/ProgressBar_title"
+                        app:layout_constraintStart_toEndOf="@id/progressbar_classrooms"
+                        app:layout_constraintTop_toBottomOf="@id/divider_end"
+                        android:text="@string/courses_institution_mainmenu"
+                        />
+                    <TextView
+                        android:id="@+id/number_of_courses"
+                        style="@style/courses_number"
+                        app:layout_constraintTop_toBottomOf="@id/divider_end"
+                        app:layout_constraintStart_toStartOf="@id/statistics_view"
+                        android:text="0" />
+                    <!--salas-->
+                    <TextView
+                        android:id="@+id/classrooms_title_bottom"
+                        style="@style/ProgressBar_title"
+                        app:layout_constraintStart_toEndOf="@id/progressbar_classrooms"
+                        app:layout_constraintTop_toBottomOf="@id/courses_title"
+                        android:text="@string/classrooms_institution_mainmenu"
+                        />
+                    <TextView
+                        android:id="@+id/number_of_classrooms"
+                        style="@style/courses_number"
+                        app:layout_constraintTop_toBottomOf="@id/number_of_courses"
+                        app:layout_constraintStart_toStartOf="@id/statistics_view"
+                        android:text="0" />
+
+                    <ImageView
+                        android:id="@+id/warning_progressBarStudents"
+                        style="@style/warning_icon_progreesbar_institution"
+                        app:layout_constraintStart_toStartOf="@id/progressbar_students"
+                        app:layout_constraintEnd_toEndOf="@id/progressbar_students"
+                        app:layout_constraintTop_toTopOf="@id/progressbar_students"
+                        app:layout_constraintBottom_toBottomOf="@id/progressbar_students"
+                        tools:ignore="ContentDescription" />
+                    <ImageView
+                        android:id="@+id/warning_progressBarTeachers"
+                        style="@style/warning_icon_progreesbar_institution"
+                        app:layout_constraintStart_toStartOf="@id/progressbar_teachers"
+                        app:layout_constraintEnd_toEndOf="@id/progressbar_teachers"
+                        app:layout_constraintTop_toTopOf="@id/progressbar_teachers"
+                        app:layout_constraintBottom_toBottomOf="@id/progressbar_teachers"
+                        tools:ignore="ContentDescription" />
+                    <ImageView
+                        android:id="@+id/warning_progressBarCoordinators"
+                        style="@style/warning_icon_progreesbar_institution"
+                        app:layout_constraintStart_toStartOf="@id/progressbar_coordinators"
+                        app:layout_constraintEnd_toEndOf="@id/progressbar_coordinators"
+                        app:layout_constraintTop_toTopOf="@id/progressbar_coordinators"
+                        app:layout_constraintBottom_toBottomOf="@id/progressbar_coordinators"
+                        tools:ignore="ContentDescription" />
+                    <ImageView
+                        android:id="@+id/warning_progressBarClassrooms"
+                        style="@style/warning_icon_progreesbar_institution"
+                        app:layout_constraintStart_toStartOf="@id/progressbar_classrooms"
+                        app:layout_constraintEnd_toEndOf="@id/progressbar_classrooms"
+                        app:layout_constraintTop_toTopOf="@id/progressbar_classrooms"
+                        app:layout_constraintBottom_toBottomOf="@id/progressbar_classrooms"
+                        tools:ignore="ContentDescription" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </ScrollView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/institution_menu_button"

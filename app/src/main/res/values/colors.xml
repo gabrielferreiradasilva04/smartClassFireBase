@@ -42,4 +42,6 @@
     <color name="bordeaux">#800020</color>
     <color name="cinza_roxo">#738678</color>
     <color name="rosa_choque">#FFC0CB</color>
+<!--    vermelho-->
+    <color name="vermelho">#FF0000</color>
 </resources>

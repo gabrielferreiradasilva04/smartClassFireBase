@@ -9,24 +9,25 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.gabriel.smartclass.R;
+import com.gabriel.smartclass.adapter.InstitutionLinkRequestsAdapter;
 import com.gabriel.smartclass.adapter.InstitutionsAdapter;
 import com.gabriel.smartclass.dao.InstitutionDAO;
+import com.gabriel.smartclass.dao.InstitutionLinkRequestDAO;
 import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.dao.UserTypeDAO;
 import com.gabriel.smartclass.model.Courses;
 import com.gabriel.smartclass.model.Institution;
+import com.gabriel.smartclass.model.InstitutionLinkRequest;
 import com.gabriel.smartclass.model.InstitutionUser;
 import com.gabriel.smartclass.model.User;
-import com.gabriel.smartclass.view.fragments.institutionfragments.InstitutionHomeFragment;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -38,11 +39,15 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class HostUserActivityViewModel extends ViewModel {
@@ -55,17 +60,17 @@ public class HostUserActivityViewModel extends ViewModel {
     /*Institution variables*/
     private InstitutionDAO institutionDAO;
     private MutableLiveData<Institution> institutionMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<HashMap<String, Integer>> institutionStatisticsLiveData = new MutableLiveData<>();
+    private final String teachers = "teachers";
+    private final String students = "students";
+    private final String coordinators = "coordinators";
+    private final String courses = "courses";
 
-    private MutableLiveData<HashMap<String, Long>> institutionStatisticsLiveData = new MutableLiveData<>();
     private InstitutionsAdapter userInstitutionsAdapter;
     private MutableLiveData<Integer> notifications = new MutableLiveData<>();
 
-    public MutableLiveData<HashMap<String, Long>> getInstitutionStatisticsLiveData() {
+    public MutableLiveData<HashMap<String, Integer>> getInstitutionStatisticsLiveData() {
         return institutionStatisticsLiveData;
-    }
-
-    public void setInstitutionStatisticsLiveData(MutableLiveData<HashMap<String, Long>> institutionStatisticsLiveData) {
-        this.institutionStatisticsLiveData = institutionStatisticsLiveData;
     }
 
     public MutableLiveData<Institution> getInstitutionMutableLiveData() {
@@ -93,7 +98,8 @@ public class HostUserActivityViewModel extends ViewModel {
         institutionDAO = new InstitutionDAO();
         userTypeDAO = new UserTypeDAO();
     }
-//metodos dos usuários comuns
+
+    //metodos dos usuários comuns
     @SuppressLint("NotifyDataSetChanged")
     public void getUserInstitutions() {
         List<Institution> institutions = new ArrayList<>();
@@ -118,6 +124,7 @@ public class HostUserActivityViewModel extends ViewModel {
         }, e -> {
         });
     }
+
     public void loadUserPicture() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -127,29 +134,34 @@ public class HostUserActivityViewModel extends ViewModel {
             }
         }
     }
+
     public void updateUserProfile(@NonNull String displayName, @NonNull String email, @NonNull Bitmap profilePictureCurrent, @NonNull ProgressBar progressBar, @NonNull View viewLoading) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
-            if (displayName.equals(currentUser.getDisplayName()) && email.equals(currentUser.getEmail()) && profilePictureCurrent == profilePictureLiveData.getValue()) {
-                snackBarText.setValue("Não detectamos alterações a serem salvas");
-            } else if (!displayName.equals("") && !email.equals("")) {
-                if (profilePictureCurrent != this.profilePictureLiveData.getValue()) {
-                    uploadUserPhoto(email, profilePictureCurrent, progressBar, viewLoading);
-                }
-                userDAO.updateProfile(displayName, o -> {
-                    HashMap<String, Object> updates = new HashMap<>();
-                    updates.put("name", displayName);
-                    userDAO.updateApplicationUser(updates, task -> {
-                        snackBarText.setValue("Perfil de usuário atualizado!");
-                    }, error -> {
-                        snackBarText.setValue("Erro ao atualizar o perfil de usuário, tente novamente mais tarde");
+            if (!displayName.equals(currentUser.getDisplayName()) || !email.equals(currentUser.getEmail()) || !(profilePictureCurrent == profilePictureLiveData.getValue())) {
+                if (!displayName.equals("") || email.equals("")) {
+                    if (profilePictureCurrent != this.profilePictureLiveData.getValue()) {
+                        uploadUserPhoto(email, profilePictureCurrent, progressBar, viewLoading);
+                    }
+                    userDAO.updateProfile(displayName, o -> {
+                        HashMap<String, Object> updates = new HashMap<>();
+                        updates.put("name", displayName);
+                        userDAO.updateApplicationUser(updates, task -> {
+                            snackBarText.setValue("Perfil de usuário atualizado!");
+                        }, error -> {
+                            snackBarText.setValue("Erro ao atualizar o perfil de usuário, tente novamente mais tarde");
+                        });
                     });
-                });
+                } else {
+                    snackBarText.setValue("Todos os campos são obrigatórios");
+                }
             } else {
-                snackBarText.setValue("Todos os campos são obrigatórios");
+                snackBarText.setValue("Não detectamos alterações a serem salvas");
+                progressBar.setVisibility(View.GONE);
             }
         }
     }
+
     public void uploadUserPhoto(String email, Bitmap imageBitmap, ProgressBar progressBar, View view) {
         FirebaseUser currentUserApplication = FirebaseAuth.getInstance().getCurrentUser();
         if (!email.equals("") && imageBitmap != null && imageBitmap != profilePictureLiveData.getValue() && currentUserApplication != null) {
@@ -217,6 +229,7 @@ public class HostUserActivityViewModel extends ViewModel {
 
         }
     }
+
     public void excludeUserPhoto(String email, @NonNull ProgressBar progressBar, @NonNull View view) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         UserProfileChangeRequest removeProfilePicture = new UserProfileChangeRequest.Builder().setPhotoUri(null).build();
@@ -283,6 +296,7 @@ public class HostUserActivityViewModel extends ViewModel {
             });
         }
     }
+
     public void getInstitutionByCurrentUser() {
         institutionDAO.getInstitutionByCurrentUser(task -> {
             if (task.isComplete()) {
@@ -291,6 +305,7 @@ public class HostUserActivityViewModel extends ViewModel {
             }
         }, e -> snackBarText.setValue("Algo deu errado, tente novamente mais tarde"));
     }
+
     public void syncInstitutionInRealTime() {
         institutionDAO.syncChangesInRealTime(FirebaseAuth.getInstance().getCurrentUser().getUid(), new EventListener<DocumentSnapshot>() {
             @Override
@@ -299,21 +314,18 @@ public class HostUserActivityViewModel extends ViewModel {
                     return;
                 }
                 if (value != null && value.exists()) {
-                     institutionMutableLiveData.setValue(value.toObject(Institution.class));
+                    institutionMutableLiveData.setValue(value.toObject(Institution.class));
                 }
             }
         });
     }
+
     public void updateInstitutionProfile(@NonNull String displayName, @NonNull String email, @NonNull Bitmap profilePictureCurrent, @NonNull ProgressBar progressBar, @NonNull View viewLoading, int maxTeachers, int maxStudents, int maxCoordinators, int maxClassrooms) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null && institutionMutableLiveData.getValue() != null) {
-            Log.d("TESTE ATULZIAÇÃO", "updateInstitutionProfile: " + currentUser.getDisplayName() + " " + institutionMutableLiveData.getValue().getMaxClassrooms() + " " + profilePictureLiveData.getValue());
-            if (displayName.equals(currentUser.getDisplayName()) && email.equals(currentUser.getEmail()) && profilePictureCurrent == profilePictureLiveData.getValue() &&
-                    maxTeachers == institutionMutableLiveData.getValue().getMaxTeachers() && maxStudents == institutionMutableLiveData.getValue().getMaxStudents()
-                    && maxCoordinators == institutionMutableLiveData.getValue().getMaxCoordinators() && maxClassrooms == institutionMutableLiveData.getValue().getMaxClassrooms()
-            ) {
-                snackBarText.setValue("Não detectamos alterações a serem salvas");
-            } else if (!displayName.equals("") && !email.equals("")) {
+            if (!displayName.equals(currentUser.getDisplayName()) || !email.equals(currentUser.getEmail()) || !profilePictureCurrent.equals(profilePictureLiveData.getValue()) ||
+                    maxTeachers != institutionMutableLiveData.getValue().getMaxTeachers() || maxStudents != institutionMutableLiveData.getValue().getMaxStudents()
+                    || maxCoordinators != institutionMutableLiveData.getValue().getMaxCoordinators() || maxClassrooms != institutionMutableLiveData.getValue().getMaxClassrooms()) {
                 if (profilePictureCurrent != this.profilePictureLiveData.getValue()) {
                     uploadInstitutionPhoto(email, profilePictureCurrent, progressBar, viewLoading);
                 }
@@ -331,12 +343,14 @@ public class HostUserActivityViewModel extends ViewModel {
                     });
                 });
             } else {
-                snackBarText.setValue("Todos os campos são obrigatórios");
+                snackBarText.setValue("Não detectamos alterações a serem salvas");
+                Log.d("SAPORRA", "updateInstitutionProfile: "+ profilePictureCurrent+"\n"+profilePictureLiveData.getValue());
             }
         } else {
             snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde!");
         }
     }
+
     public void excludeInstitutionPhoto(String email, @NonNull ProgressBar progressBar, @NonNull View view) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         UserProfileChangeRequest removeProfilePicture = new UserProfileChangeRequest.Builder().setPhotoUri(null).build();
@@ -363,30 +377,38 @@ public class HostUserActivityViewModel extends ViewModel {
             }).addOnFailureListener(e -> snackBarText.setValue("Erro ao deletar sua foto de perfil, tente novamente mais tarde!"));
         }
     }
-    public void getInstitutionStatistics(){
-        HashMap<String, Long> statisticsTemp = new HashMap<>();
-        institutionDAO.getInstitutionUsers(FirebaseAuth.getInstance().getCurrentUser().getUid(), taskInstitutionUsers -> {
-            if(taskInstitutionUsers.isComplete() && taskInstitutionUsers.isSuccessful()){
-                List<InstitutionUser> institutionUserList = taskInstitutionUsers.getResult().toObjects(InstitutionUser.class);
+
+    public void getInstitutionStatistics() {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            HashMap<String, Integer> statisticsTemp = new HashMap<>();
+            institutionDAO.getInstitutionUsers(FirebaseAuth.getInstance().getCurrentUser().getUid(), taskInstitutionUsers -> {
+                if (taskInstitutionUsers.isComplete() && taskInstitutionUsers.isSuccessful()) {
+                    List<InstitutionUser> institutionUserList = taskInstitutionUsers.getResult().toObjects(InstitutionUser.class);
                     Stream<InstitutionUser> teachers = institutionUserList.stream().filter(institutionUser -> institutionUser.getUserType_id().equals(userTypeDAO.TEACHER_TYPE_REFERENCE));
                     Stream<InstitutionUser> students = institutionUserList.stream().filter(institutionUser -> institutionUser.getUserType_id().equals(userTypeDAO.STUDENT_TYPE_REFERENCE));
                     Stream<InstitutionUser> coordinators = institutionUserList.stream().filter(institutionUser -> institutionUser.getUserType_id().equals(userTypeDAO.COORDINATOR_TYPE_REFERENCE));
-                    statisticsTemp.put("teachers", teachers.count());
-                    statisticsTemp.put("students", students.count());
-                    statisticsTemp.put("coordinators", coordinators.count());
-            }
-        }, e ->{
-            snackBarText.setValue("Ops... Ocorreu um erro ao buscar algumas informações");
-        });
-        institutionDAO.getInstitutionCourses(FirebaseAuth.getInstance().getCurrentUser().getUid(), taskInstitutionCourses -> {
-            if(taskInstitutionCourses.isComplete() && taskInstitutionCourses.isSuccessful()){
-                List<Courses> institutionCourses = taskInstitutionCourses.getResult().toObjects(Courses.class);
-                statisticsTemp.put("courses", institutionCourses.stream().count());
-                HashMap<String, Long> statistics = new HashMap<>(statisticsTemp);
-                institutionStatisticsLiveData.setValue(statistics);
-            }
-        }, e2->{
-            snackBarText.setValue("Ops... Ocorreu um erro ao buscar algumas informações");
-        });
+                    statisticsTemp.put(this.teachers, teachers.mapToInt(obj -> 1).sum());
+                    statisticsTemp.put(this.students, students.mapToInt(obj -> 1).sum());
+                    statisticsTemp.put(this.coordinators, coordinators.mapToInt(obj -> 1).sum());
+
+                    institutionDAO.getInstitutionCourses(FirebaseAuth.getInstance().getCurrentUser().getUid(), taskInstitutionCourses -> {
+                        if (taskInstitutionCourses.isComplete() && taskInstitutionCourses.isSuccessful()) {
+                            List<Courses> institutionCourses = taskInstitutionCourses.getResult().toObjects(Courses.class);
+                            statisticsTemp.put(courses, institutionCourses.size());
+                            HashMap<String, Integer> finalMap = new HashMap<>();
+                            finalMap.putAll(statisticsTemp);
+                            institutionStatisticsLiveData.setValue(statisticsTemp);
+                        }
+                    }, e2 -> {
+                        snackBarText.setValue("Ops... Ocorreu um erro ao buscar algumas informações");
+                    });
+
+                }
+            }, e -> {
+                snackBarText.setValue("Ops... Ocorreu um erro ao buscar algumas informações");
+            });
+        }
     }
+
+
 }

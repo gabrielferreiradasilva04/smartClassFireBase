@@ -33,8 +33,8 @@ public class InstitutionMainMenu extends BaseActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         ViewModelProvider viewModelProvider = new ViewModelProvider(this);
         viewModel = viewModelProvider.get(HostUserActivityViewModel.class);
+
         viewModel.getInstitutionByCurrentUser();
-        viewModel.getInstitutionStatistics();
         viewModel.loadUserPicture();
         viewModel.getNotifications().observe(this, notificationsObserve());
         viewModel.syncInstitutionInRealTime();

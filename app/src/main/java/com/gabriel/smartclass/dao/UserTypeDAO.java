@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -53,6 +54,10 @@ public class UserTypeDAO {
 
     public void getAllUserTypes(OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
         db.collection("userTypes").get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+    }
+
+    public void getUserTypeByDocumentReference(DocumentReference userTypeReference, OnCompleteListener<DocumentSnapshot> onCompleteListener, OnFailureListener onFailureListener){
+        db.collection(COLLNAME).document(userTypeReference.getId()).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 
 }

@@ -43,8 +43,8 @@ public class MaskListenerCPNJ implements TextWatcher {
             }
             
         } else if (editTextSize == 15) {
-            if(!lastCharacter.equals(".")){
-                editTextMasked.append(".");
+            if(!lastCharacter.equals("-")){
+                editTextMasked.append("-");
             }else{
                 editTextMasked.getText().delete(editTextSize - 1, editTextSize);
             }

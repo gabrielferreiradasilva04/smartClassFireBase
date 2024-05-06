@@ -2,13 +2,13 @@ package com.gabriel.smartclass.viewModels;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.gabriel.smartclass.adapter.InstitutionsAdapter;
+import com.gabriel.smartclass.adapter.interfaces.OnInstitutionItemClickListener;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,9 +46,9 @@ public class InstitutionsSearchViewModel extends ViewModel {
     }
     /*constructors*/
 
-    public void search(RecyclerView recyclerView, String institutionName, InstitutionsAdapter.ItemClickListener itemClickListener){
+    public void search(RecyclerView recyclerView, String institutionName, OnInstitutionItemClickListener onInstitutionItemClickListener){
 
-        adapter = new InstitutionsAdapter(institutions,itemClickListener);
+        adapter = new InstitutionsAdapter(institutions, onInstitutionItemClickListener);
         adapter.registerAdapterDataObserver(emptyRecyclerViewObserver);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setHasFixedSize(true);

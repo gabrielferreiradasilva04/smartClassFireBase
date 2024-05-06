@@ -15,6 +15,10 @@ public class InstitutionLinkRequest implements Parcelable {
     private DocumentReference institution_id ;
     private Boolean approved;
 
+    public DocumentReference getInstitution_id() {
+        return institution_id;
+    }
+
     protected InstitutionLinkRequest(Parcel in) {
         id = in.readString();
         title = in.readString();
@@ -45,26 +49,6 @@ public class InstitutionLinkRequest implements Parcelable {
             return new InstitutionLinkRequest[size];
         }
     };
-
-    public DocumentReference getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(DocumentReference user_id) {
-        this.user_id = user_id;
-    }
-
-    public DocumentReference getUserType_id() {
-        return userType_id;
-    }
-
-    public void setUserType_id(DocumentReference userType_id) {
-        this.userType_id = userType_id;
-    }
-
-    public DocumentReference getInstitution_id() {
-        return institution_id;
-    }
 
     public void setInstitution_id(DocumentReference institution_id) {
         this.institution_id = institution_id;

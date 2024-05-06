@@ -1,7 +1,6 @@
 package com.gabriel.smartclass.view;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import android.annotation.SuppressLint;
@@ -13,6 +12,7 @@ import android.view.Menu;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.InstitutionsAdapter;
+import com.gabriel.smartclass.adapter.interfaces.OnInstitutionItemClickListener;
 import com.gabriel.smartclass.databinding.ActivityInstitutionsSearchBinding;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
@@ -58,7 +58,7 @@ public class InstitutionsSearch extends BaseActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void afterTextChanged(Editable s) {
-                viewModel.search(binding.recyclerViewInstitutionsFind, s.toString(), new InstitutionsAdapter.ItemClickListener() {
+                viewModel.search(binding.recyclerViewInstitutionsFind, s.toString(), new OnInstitutionItemClickListener() {
                     @Override
                     public void onItemClick(Institution institution) {
                         Intent i = new Intent(getApplicationContext(), InstitutionLinkRequestForm.class);

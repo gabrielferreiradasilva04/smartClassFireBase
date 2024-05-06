@@ -9,35 +9,33 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.bumptech.glide.Glide;
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.dao.UserDAO;
+
 import com.gabriel.smartclass.model.Institution;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import com.gabriel.smartclass.adapter.interfaces.OnInstitutionItemClickListener;
 
 public class InstitutionsAdapter extends RecyclerView.Adapter {
-    private MutableLiveData<List<Institution>> institutionsMutableLiveData;
-    private HashSet<String> itemIds;
-    private ItemClickListener itemClickListener;
+    private final MutableLiveData<List<Institution>> institutionsMutableLiveData;
+    private final HashSet<String> itemIds;
+    private OnInstitutionItemClickListener itemClickListener;
     public MutableLiveData<List<Institution>> getInstitutionsMutableLiveData() {
         return institutionsMutableLiveData;
     }
 
-    public ItemClickListener getItemClickListener() {
-        return itemClickListener;
+    public void setItemClickListener(OnInstitutionItemClickListener onInstitutionItemClickListener) {
+        this.itemClickListener = onInstitutionItemClickListener;
     }
 
-    public void setItemClickListener(ItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
-    }
-
-    public InstitutionsAdapter(List<Institution> institutions, ItemClickListener itemClickListener){
+    public InstitutionsAdapter(List<Institution> institutions, OnInstitutionItemClickListener onInstitutionItemClickListener){
         institutionsMutableLiveData = new MutableLiveData<>();
         institutionsMutableLiveData.setValue(institutions);
-        this.itemClickListener = itemClickListener;
+        this.itemClickListener = onInstitutionItemClickListener;
         itemIds = new HashSet<>();
     }
     public InstitutionsAdapter (List<Institution> institutions){
@@ -55,11 +53,9 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        UserDAO userDAO = new UserDAO();
-        String itemId = Objects.requireNonNull(institutionsMutableLiveData.getValue()).get(position).getId();
             holder.itemView.setAlpha(0f);
             holder.itemView.animate().alpha(1f).setDuration(300).start();
-            String institutionName = institutionsMutableLiveData.getValue().get(position).getName();
+            String institutionName = Objects.requireNonNull(institutionsMutableLiveData.getValue()).get(position).getName();
             String cnpj = institutionsMutableLiveData.getValue().get(position).getCnpj();
             TextView textInstitutionName = holder.itemView.findViewById(R.id.textInstitutionName_adapter);
             TextView textInstitutionCNPJ = holder.itemView.findViewById(R.id.textInstitutionCNPJ_adapter);
@@ -77,29 +73,19 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
     public void addItem(Institution institution){
         if(!itemIds.contains(institution.getId())){
             itemIds.add(institution.getId());
-            this.institutionsMutableLiveData.getValue().add(institution);
+            Objects.requireNonNull(this.institutionsMutableLiveData.getValue()).add(institution);
         }
     }
     @Override
     public int getItemCount() {
-        return institutionsMutableLiveData.getValue().size();
+        return Objects.requireNonNull(institutionsMutableLiveData.getValue()).size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
         }
-        TextView textInstitutionName = itemView.findViewById(R.id.textInstitutionName_adapter);
-        public TextView getTextInstitutionName() {
-            return textInstitutionName;
-        }
-        public void setTextInstitutionName(TextView textInstitutionName) {
-            this.textInstitutionName = textInstitutionName;
-        }
     }
-    public interface ItemClickListener{
-        void onItemClick(Institution institution);
-    }
+
 }

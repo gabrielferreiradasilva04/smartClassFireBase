@@ -19,10 +19,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class InstitutionLinkRequestDAO {
     FirebaseFirestore fb = FirebaseFirestore.getInstance();
+    private final String institutionsCollection = "Institutions";
+
     InstitutionLinkRequestViewModel viewModel;
 
     public InstitutionLinkRequestDAO(InstitutionLinkRequestViewModel viewModel){
         this.viewModel = viewModel;
+    }
+    public InstitutionLinkRequestDAO(){
+
     }
     private final String COLLECTION = "linkRequests";
 
@@ -38,6 +43,10 @@ public class InstitutionLinkRequestDAO {
                 }
             }
         });
+    }
+    public void getAllLinkRequestsByInstitution(String institutionID, OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
+        DocumentReference institutionRef = fb.collection(institutionsCollection).document(institutionID);
+        institutionRef.collection(COLLECTION).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 
 
