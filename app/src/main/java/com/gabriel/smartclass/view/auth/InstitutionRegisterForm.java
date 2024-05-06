@@ -50,7 +50,7 @@ public class InstitutionRegisterForm extends RegisterForm {
 
     private void cnpjMask() {
         MaskListenerCPNJ listenerCPNJ = new MaskListenerCPNJ(binding.textCpnjInstitutionRegister);
-        binding.textCpnjInstitutionRegister.addTextChangedListener(listenerCPNJ);
+            binding.textCpnjInstitutionRegister.addTextChangedListener(listenerCPNJ);
     }
 
     public View.OnClickListener registerListener(){

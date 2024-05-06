@@ -200,14 +200,15 @@ public class HostUserActivityViewModel extends ViewModel {
 
     public void updatePassword(String password, String newPassword, @NonNull Context context, @NonNull Dialog dialog) {
         if (password.equals(newPassword)) {
-
             userDAO.updatePassword(password, task -> {
-                snackBarText.setValue("Senha atualizada com sucesso!");
-                dialog.dismiss();
+                if(task.isComplete() && task.isSuccessful()){
+                    snackBarText.setValue("Senha atualizada com sucesso!");
+                    dialog.dismiss();
+                }
             }, e -> {
                 String errorMessage = "";
                 if (e.getClass().equals(FirebaseAuthWeakPasswordException.class)) {
-                    errorMessage = "A senha deve conter pelo mesnos 6 caractéres";
+                    errorMessage = "A senha deve conter pelo menos 6 caractéres";
                 }
                 if (e.getClass().equals(FirebaseAuthInvalidCredentialsException.class)) {
                     errorMessage = "Digite um e-mail válido";
@@ -323,7 +324,7 @@ public class HostUserActivityViewModel extends ViewModel {
     public void updateInstitutionProfile(@NonNull String displayName, @NonNull String email, @NonNull Bitmap profilePictureCurrent, @NonNull ProgressBar progressBar, @NonNull View viewLoading, int maxTeachers, int maxStudents, int maxCoordinators, int maxClassrooms) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null && institutionMutableLiveData.getValue() != null) {
-            if (!displayName.equals(currentUser.getDisplayName()) || !email.equals(currentUser.getEmail()) || !profilePictureCurrent.equals(profilePictureLiveData.getValue()) ||
+            if (!displayName.equals(currentUser.getDisplayName()) || !email.equals(currentUser.getEmail()) || profilePictureCurrent != profilePictureLiveData.getValue() ||
                     maxTeachers != institutionMutableLiveData.getValue().getMaxTeachers() || maxStudents != institutionMutableLiveData.getValue().getMaxStudents()
                     || maxCoordinators != institutionMutableLiveData.getValue().getMaxCoordinators() || maxClassrooms != institutionMutableLiveData.getValue().getMaxClassrooms()) {
                 if (profilePictureCurrent != this.profilePictureLiveData.getValue()) {
@@ -344,7 +345,6 @@ public class HostUserActivityViewModel extends ViewModel {
                 });
             } else {
                 snackBarText.setValue("Não detectamos alterações a serem salvas");
-                Log.d("SAPORRA", "updateInstitutionProfile: "+ profilePictureCurrent+"\n"+profilePictureLiveData.getValue());
             }
         } else {
             snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde!");
