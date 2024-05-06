@@ -68,27 +68,29 @@ public class RegisterViewModel extends ViewModel {
             if(password.equals(confirmPassword)){
                 this.userAuthDAO.CreateNewUserByEmailAndPassword(email, password, task -> {
                     if (task.isSuccessful()) {
-                        FirebaseUser userAuth = UserAuthDAO.auth.getCurrentUser();
+                        FirebaseUser userAuth = FirebaseAuth.getInstance().getCurrentUser();
                         if (userAuth != null) {
                             UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder().setDisplayName(finalFirstAndLastName).build();
-                            userAuth.updateProfile(profileUpdate);
-                            User user = new User();
-                            user.setName(userAuth.getDisplayName());
-                            user.setEmail(userAuth.getEmail());
-                            user.setId(userAuth.getUid());
-                            user.setInstitutions(new ArrayList<>());
-                            FirebaseFirestore.getInstance().collection("users").document(userAuth.getUid()).set(user).addOnSuccessListener(task1 -> {
-                                progressBar.setVisibility(View.GONE);
-                                snackBarText.setValue("Cadastro realizado com sucesso!");
-                                Intent i = new Intent(registerForm.getApplicationContext(), LoginForm.class);
-                                registerForm.startActivity(i);
-                                registerForm.finish();
-                            }).addOnFailureListener(e1 -> {
-                                snackBarText.setValue("Ops.. algo deu errado, tente novamente mais tarde: " + e1.getMessage());
-                                userAuth.delete();
-                                progressBar.setVisibility(View.GONE);
+                            userAuth.updateProfile(profileUpdate).addOnCompleteListener(task2 -> {
+                                User user = new User();
+                                user.setName(userAuth.getDisplayName());
+                                user.setEmail(userAuth.getEmail());
+                                user.setId(userAuth.getUid());
+                                user.setInstitutions(new ArrayList<>());
+                                FirebaseFirestore.getInstance().collection("users").document(userAuth.getUid()).set(user).addOnSuccessListener(task1 -> {
+                                    progressBar.setVisibility(View.GONE);
+                                    snackBarText.setValue("Cadastro realizado com sucesso!");
+                                    Intent i = new Intent(registerForm.getApplicationContext(), LoginForm.class);
+                                    registerForm.startActivity(i);
+                                    registerForm.finish();
+                                }).addOnFailureListener(e1 -> {
+                                    snackBarText.setValue("Ops.. algo deu errado, tente novamente mais tarde: " + e1.getMessage());
+                                    userAuth.delete();
+                                    progressBar.setVisibility(View.GONE);
+                                });
                             });
-                        }
+
+                        }else snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde");
                     }else{
                         snackBarText.setValue("Ops.. algo deu errado, tente novamente mais tarde");
                         progressBar.setVisibility(View.GONE);

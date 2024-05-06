@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
@@ -13,12 +12,12 @@ import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.ActivityLinkRequestFormBinding;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.UserType;
-import com.gabriel.smartclass.viewModels.InstitutionLinkRequestViewModel;
+import com.gabriel.smartclass.viewModels.InstitutionLinkRequestFormViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
 public class InstitutionLinkRequestForm extends AppCompatActivity {
     private ActivityLinkRequestFormBinding binding;
-    private InstitutionLinkRequestViewModel viewModel;
+    private InstitutionLinkRequestFormViewModel viewModel;
     private Institution institutionSelected;
 
     @Override
@@ -29,7 +28,7 @@ public class InstitutionLinkRequestForm extends AppCompatActivity {
 
         this.institutionSelected = getIntent().getParcelableExtra("institution");
         binding.textLinkInstitutionName.setText("Solicitação para: "+institutionSelected.getName());
-        viewModel = new InstitutionLinkRequestViewModel(this);
+        viewModel = new InstitutionLinkRequestFormViewModel(this);
         viewModel.getUserTypesAndPopulateSpinner();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Solicitação");

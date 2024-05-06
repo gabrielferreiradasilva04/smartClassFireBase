@@ -20,12 +20,8 @@ import java.util.List;
 public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
     private final InstitutionLinkRequestDAO institutionLinkRequestDAO;
     private final InstitutionUserDAO institutionUserDAO;
-    private InstitutionLinkRequestsAdapter institutionLinkRequestsAdapter;
     public MutableLiveData<String> snackBarText = new MutableLiveData<>();
 
-    public InstitutionLinkRequestsAdapter getInstitutionLinkRequestsAdapter() {
-        return institutionLinkRequestsAdapter;
-    }
     public MutableLiveData<String> getSnackBarText() {
         return snackBarText;
     }
@@ -35,22 +31,6 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
     public InstitutionLinkRequestsFragmentViewModel(){
         institutionLinkRequestDAO = new InstitutionLinkRequestDAO();
         institutionUserDAO = new InstitutionUserDAO();
-    }
-    @SuppressLint("NotifyDataSetChanged")
-    public void loadInstitutionLinkRequests(){
-        List<InstitutionLinkRequest> institutionLinkRequests = new ArrayList<>();
-        institutionLinkRequestsAdapter= new InstitutionLinkRequestsAdapter(institutionLinkRequests);
-        institutionLinkRequestDAO.getAllLinkRequestsByInstitution(FirebaseAuth.getInstance().getCurrentUser().getUid(), task ->{
-            if(task.isComplete() && task.isSuccessful()){
-                for(QueryDocumentSnapshot snapshots : task.getResult()){
-                    InstitutionLinkRequest linkRequest = snapshots.toObject(InstitutionLinkRequest.class);
-                    institutionLinkRequestsAdapter.addItem(linkRequest);
-                    institutionLinkRequestsAdapter.notifyDataSetChanged();
-                }
-            }else institutionLinkRequestsAdapter.notifyDataSetChanged();
-        }, e->{
-            snackBarText.setValue("Ocorreu um erro ao buscar as solicitações de vinculo: "+ e.getMessage());
-        });
     }
     public void approveInstitutionLinkRequest(InstitutionLinkRequest linkRequest){
         InstitutionUser institutionUser = new InstitutionUser();
@@ -64,7 +44,6 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
             snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: "+e.getMessage());
 
         });
-
     }
 
 

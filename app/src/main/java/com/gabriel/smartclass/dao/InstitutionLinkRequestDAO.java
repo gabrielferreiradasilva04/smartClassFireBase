@@ -1,29 +1,23 @@
 package com.gabriel.smartclass.dao;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
-import com.gabriel.smartclass.viewModels.InstitutionLinkRequestViewModel;
+import com.gabriel.smartclass.viewModels.InstitutionLinkRequestFormViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class InstitutionLinkRequestDAO {
     FirebaseFirestore fb = FirebaseFirestore.getInstance();
     private final String institutionsCollection = "Institutions";
 
-    InstitutionLinkRequestViewModel viewModel;
+    InstitutionLinkRequestFormViewModel viewModel;
 
-    public InstitutionLinkRequestDAO(InstitutionLinkRequestViewModel viewModel){
+    public InstitutionLinkRequestDAO(InstitutionLinkRequestFormViewModel viewModel){
         this.viewModel = viewModel;
     }
     public InstitutionLinkRequestDAO(){

@@ -67,7 +67,8 @@ public class HostUserActivityViewModel extends ViewModel {
     private final String courses = "courses";
 
     private InstitutionsAdapter userInstitutionsAdapter;
-    private MutableLiveData<Integer> notifications = new MutableLiveData<>();
+    private InstitutionLinkRequestsAdapter institutionLinkRequestsAdapter;
+    public static MutableLiveData<Integer> numberOfNotifications = new MutableLiveData<>(0);
 
     public MutableLiveData<HashMap<String, Integer>> getInstitutionStatisticsLiveData() {
         return institutionStatisticsLiveData;
@@ -75,10 +76,6 @@ public class HostUserActivityViewModel extends ViewModel {
 
     public MutableLiveData<Institution> getInstitutionMutableLiveData() {
         return institutionMutableLiveData;
-    }
-
-    public MutableLiveData<Integer> getNotifications() {
-        return notifications;
     }
 
     public MutableLiveData<String> getSnackBarText() {
@@ -91,6 +88,10 @@ public class HostUserActivityViewModel extends ViewModel {
 
     public InstitutionsAdapter getUserInstitutionsAdapter() {
         return userInstitutionsAdapter;
+    }
+
+    public InstitutionLinkRequestsAdapter getInstitutionLinkRequestsAdapter() {
+        return institutionLinkRequestsAdapter;
     }
 
     public HostUserActivityViewModel() {
@@ -408,6 +409,29 @@ public class HostUserActivityViewModel extends ViewModel {
                 snackBarText.setValue("Ops... Ocorreu um erro ao buscar algumas informações");
             });
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void loadInstitutionLinkRequests(){
+        InstitutionLinkRequestDAO institutionLinkRequestDAO = new InstitutionLinkRequestDAO();
+        List<InstitutionLinkRequest> institutionLinkRequests = new ArrayList<>();
+        institutionLinkRequestsAdapter= new InstitutionLinkRequestsAdapter(institutionLinkRequests);
+        institutionLinkRequestDAO.getAllLinkRequestsByInstitution(FirebaseAuth.getInstance().getCurrentUser().getUid(), task ->{
+            int i = 0;
+            if(task.isComplete() && task.isSuccessful()){
+                for(QueryDocumentSnapshot snapshots : task.getResult()){
+                    InstitutionLinkRequest linkRequest = snapshots.toObject(InstitutionLinkRequest.class);
+                    Log.d("TESTE", "loadInstitutionLinkRequests: "+linkRequest.getTitle());
+                    linkRequest.setId(snapshots.getId());
+                    institutionLinkRequestsAdapter.addItem(linkRequest);
+                    institutionLinkRequestsAdapter.notifyDataSetChanged();
+                    i++;
+                    numberOfNotifications.setValue(i);
+                }
+            }else institutionLinkRequestsAdapter.notifyDataSetChanged();
+        }, e->{
+            snackBarText.setValue("Ocorreu um erro ao buscar as solicitações de vinculo: "+ e.getMessage());
+        });
     }
 
 

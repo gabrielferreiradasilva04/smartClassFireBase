@@ -16,12 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.gabriel.smartclass.databinding.EmptyRequestBinding;
 import com.gabriel.smartclass.databinding.FragmentInstitutionNotificationsBinding;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
+import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 import com.gabriel.smartclass.viewModels.InstitutionLinkRequestsFragmentViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
 public class InstitutionNotifications extends Fragment {
     private FragmentInstitutionNotificationsBinding binding;
-    private InstitutionLinkRequestsFragmentViewModel viewModel;
+    private InstitutionLinkRequestsFragmentViewModel primaryViewModel;
+    private HostUserActivityViewModel secondaryViewModel;
     private RecyclerView recyclerView;
     public InstitutionNotifications() {
         // Required empty public constructor
@@ -32,9 +34,9 @@ public class InstitutionNotifications extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentInstitutionNotificationsBinding.inflate(inflater, container, false);
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
-        viewModel = viewModelProvider.get(InstitutionLinkRequestsFragmentViewModel.class);
-        viewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
-        viewModel.loadInstitutionLinkRequests();
+        primaryViewModel = viewModelProvider.get(InstitutionLinkRequestsFragmentViewModel.class);
+        secondaryViewModel = viewModelProvider.get(HostUserActivityViewModel.class);
+        primaryViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
         loadLinkRequests();
         return binding.getRoot();
     }
@@ -44,15 +46,15 @@ public class InstitutionNotifications extends Fragment {
         super.onStart();
         EmptyRequestBinding viewEmpty = binding.emptyContainerHome;
         EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(recyclerView, viewEmpty.getRoot());
-        viewModel.getInstitutionLinkRequestsAdapter().registerAdapterDataObserver(observer);
-        viewModel.getInstitutionLinkRequestsAdapter().notifyDataSetChanged();
+        secondaryViewModel.getInstitutionLinkRequestsAdapter().registerAdapterDataObserver(observer);
+        secondaryViewModel.getInstitutionLinkRequestsAdapter().notifyDataSetChanged();
     }
 
     public void loadLinkRequests(){
         recyclerView = binding.institutionNotificationsRecyclerView;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(viewModel.getInstitutionLinkRequestsAdapter());
+        recyclerView.setAdapter(secondaryViewModel.getInstitutionLinkRequestsAdapter());
     }
 
     @NonNull

@@ -15,6 +15,7 @@ import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.ActivityInstitutionMainMenuBinding;
 import com.gabriel.smartclass.view.base.BaseActivity;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
+import com.gabriel.smartclass.viewModels.InstitutionLinkRequestsFragmentViewModel;
 import com.google.android.material.badge.BadgeDrawable;
 
 import java.util.Objects;
@@ -33,10 +34,10 @@ public class InstitutionMainMenu extends BaseActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         ViewModelProvider viewModelProvider = new ViewModelProvider(this);
         viewModel = viewModelProvider.get(HostUserActivityViewModel.class);
-
         viewModel.getInstitutionByCurrentUser();
         viewModel.loadUserPicture();
-        viewModel.getNotifications().observe(this, notificationsObserve());
+        viewModel.loadInstitutionLinkRequests();
+        viewModel.numberOfNotifications.observe(this, notificationsObserve());
         viewModel.syncInstitutionInRealTime();
     }
 
