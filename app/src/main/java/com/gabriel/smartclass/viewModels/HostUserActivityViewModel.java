@@ -421,7 +421,6 @@ public class HostUserActivityViewModel extends ViewModel {
             if(task.isComplete() && task.isSuccessful()){
                 for(QueryDocumentSnapshot snapshots : task.getResult()){
                     InstitutionLinkRequest linkRequest = snapshots.toObject(InstitutionLinkRequest.class);
-                    Log.d("TESTE", "loadInstitutionLinkRequests: "+linkRequest.getTitle());
                     linkRequest.setId(snapshots.getId());
                     institutionLinkRequestsAdapter.addItem(linkRequest);
                     institutionLinkRequestsAdapter.notifyDataSetChanged();

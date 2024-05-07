@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_institution_home" />
     <fragment
         android:id="@+id/institution_menu_notifications"
-        android:name="com.gabriel.smartclass.view.fragments.institutionfragments.InstitutionNotifications"
+        android:name="com.gabriel.smartclass.view.fragments.institutionfragments.InstitutionLinkRequestFragment"
         android:label="fragment_institution_notifications"
         tools:layout="@layout/fragment_institution_notifications" />
     <fragment

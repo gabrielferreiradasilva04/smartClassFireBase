@@ -6,10 +6,13 @@ import com.gabriel.smartclass.model.InstitutionLinkRequest;
 import com.gabriel.smartclass.viewModels.InstitutionLinkRequestFormViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
 
 public class InstitutionLinkRequestDAO {
     FirebaseFirestore fb = FirebaseFirestore.getInstance();
@@ -41,6 +44,11 @@ public class InstitutionLinkRequestDAO {
     public void getAllLinkRequestsByInstitution(String institutionID, OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
         DocumentReference institutionRef = fb.collection(institutionsCollection).document(institutionID);
         institutionRef.collection(COLLECTION).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+    }
+    public void updateInstitutionLinkRequest(String linkRequestID, String institutionID, HashMap<String, Object> updates, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener){
+        DocumentReference institutionReference = fb.collection(institutionsCollection).document(institutionID);
+        DocumentReference linkRequestReference = institutionReference.collection(COLLECTION).document(linkRequestID);
+        linkRequestReference.update(updates).addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
 
 

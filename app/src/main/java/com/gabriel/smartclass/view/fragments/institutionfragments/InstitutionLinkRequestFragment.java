@@ -2,6 +2,7 @@ package com.gabriel.smartclass.view.fragments.institutionfragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gabriel.smartclass.adapter.interfaces.ApproveLinkRequestClickListener;
+import com.gabriel.smartclass.adapter.interfaces.RejectLinkRequestClickListener;
 import com.gabriel.smartclass.databinding.EmptyRequestBinding;
 import com.gabriel.smartclass.databinding.FragmentInstitutionNotificationsBinding;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
@@ -20,18 +23,18 @@ import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 import com.gabriel.smartclass.viewModels.InstitutionLinkRequestsFragmentViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
-public class InstitutionNotifications extends Fragment {
+import java.util.Objects;
+
+public class InstitutionLinkRequestFragment extends Fragment {
     private FragmentInstitutionNotificationsBinding binding;
     private InstitutionLinkRequestsFragmentViewModel primaryViewModel;
     private HostUserActivityViewModel secondaryViewModel;
     private RecyclerView recyclerView;
-    public InstitutionNotifications() {
-        // Required empty public constructor
+    public InstitutionLinkRequestFragment() {
     }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragmentInstitutionNotificationsBinding.inflate(inflater, container, false);
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
         primaryViewModel = viewModelProvider.get(InstitutionLinkRequestsFragmentViewModel.class);
@@ -51,6 +54,8 @@ public class InstitutionNotifications extends Fragment {
     }
 
     public void loadLinkRequests(){
+        secondaryViewModel.getInstitutionLinkRequestsAdapter().setApproveLinkRequestClickListener(approveLinkRequestClickListener());
+        secondaryViewModel.getInstitutionLinkRequestsAdapter().setRejectLinkRequestClickListener(rejectLinkRequestClickListener());
         recyclerView = binding.institutionNotificationsRecyclerView;
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -67,5 +72,20 @@ public class InstitutionNotifications extends Fragment {
 
         };
     }
+    @SuppressLint("NotifyDataSetChanged")
+    @NonNull
+    public ApproveLinkRequestClickListener approveLinkRequestClickListener(){
+        return institutionLinkRequest -> {
+            primaryViewModel.approveInstitutionLinkRequest(institutionLinkRequest);
+            Objects.requireNonNull(secondaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue()).removeIf(institutionSelected -> institutionSelected.getId().equals(institutionLinkRequest.getId()));
+            secondaryViewModel.getInstitutionLinkRequestsAdapter().notifyDataSetChanged();
+        };
+    }
+    @NonNull
+    public RejectLinkRequestClickListener rejectLinkRequestClickListener(){
+        return v->{
+        };
+    }
+
 
 }

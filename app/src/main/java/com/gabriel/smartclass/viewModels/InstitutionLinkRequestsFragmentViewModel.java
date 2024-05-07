@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
@@ -38,12 +39,22 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
         institutionUser.setUserType_id(linkRequest.getUserType());
         institutionUser.setActive(true);
         institutionUser.setId(linkRequest.getUser().getId());
-        institutionUserDAO.saveNewInstitutionUser(institutionUser, linkRequest.getInstitution_id(), task ->{
-            snackBarText.setValue("Solicitação aprovada! Agora essa pessoa é um membro da sua instituição!");
-        }, e->{
-            snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: "+e.getMessage());
+
+        HashMap<String, Object> updateLinkRequest = new HashMap<>();
+        updateLinkRequest.put("approved", true);
+        institutionLinkRequestDAO.updateInstitutionLinkRequest(linkRequest.getId(), linkRequest.getInstitution_id().getId(), updateLinkRequest, unused -> {
+
+            institutionUserDAO.saveNewInstitutionUser(institutionUser, linkRequest.getInstitution_id(), task ->{
+                snackBarText.setValue("Solicitação aprovada! Agora essa pessoa é um membro da sua instituição!");
+
+            }, e->{
+                snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: "+e.getMessage());
+
+            });
+        }, e -> {
 
         });
+
     }
 
 
