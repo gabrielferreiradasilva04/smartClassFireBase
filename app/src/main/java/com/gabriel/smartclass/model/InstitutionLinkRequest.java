@@ -13,24 +13,18 @@ public class InstitutionLinkRequest implements Parcelable {
     private DocumentReference user_id;
     private DocumentReference userType_id;
     private DocumentReference institution_id ;
-    private Boolean approved;
-
-    public DocumentReference getInstitution_id() {
-        return institution_id;
-    }
+    private DocumentReference linkRequestStatus_id;
 
     protected InstitutionLinkRequest(Parcel in) {
         id = in.readString();
         title = in.readString();
         byte tmpApproved = in.readByte();
-        approved = tmpApproved == 0 ? null : tmpApproved == 1;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(title);
-        dest.writeByte((byte) (approved == null ? 0 : approved ? 1 : 2));
     }
 
     @Override
@@ -86,20 +80,25 @@ public class InstitutionLinkRequest implements Parcelable {
         this.userType_id = userType;
     }
 
-    public Boolean getApproved() {
-        return approved;
+    public DocumentReference getLinkRequestStatus_id() {
+        return linkRequestStatus_id;
     }
 
-    public void setApproved(Boolean approved) {
-        this.approved = approved;
+    public void setLinkRequestStatus_id(DocumentReference linkRequestStatus_id) {
+        this.linkRequestStatus_id = linkRequestStatus_id;
     }
 
-    public InstitutionLinkRequest(String id, String title, DocumentReference user_id, DocumentReference userType_id, Boolean approved) {
+    public DocumentReference getInstitution_id() {
+        return institution_id;
+    }
+
+
+
+    public InstitutionLinkRequest(String id, String title, DocumentReference user_id, DocumentReference userType_id ) {
         this.id = id;
         this.title = title;
         this.user_id = user_id;
         this.userType_id = userType_id;
-        this.approved = approved;
     }
 
     @Override
@@ -107,22 +106,21 @@ public class InstitutionLinkRequest implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InstitutionLinkRequest that = (InstitutionLinkRequest) o;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(user_id, that.user_id) && Objects.equals(userType_id, that.userType_id) && Objects.equals(institution_id, that.institution_id) && Objects.equals(approved, that.approved);
+        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(user_id, that.user_id) && Objects.equals(userType_id, that.userType_id) && Objects.equals(institution_id, that.institution_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, user_id, userType_id, institution_id, approved);
+        return Objects.hash(id, title, user_id, userType_id, institution_id);
     }
 
     public InstitutionLinkRequest() {
     }
 
-    public InstitutionLinkRequest(String title, DocumentReference user_id, DocumentReference userType_id, Boolean approved) {
+    public InstitutionLinkRequest(String title, DocumentReference user_id, DocumentReference userType_id) {
         this.title = title;
         this.user_id = user_id;
         this.userType_id = userType_id;
-        this.approved = approved;
     }
 
     /*PARCELABLE IMPLEMENTATION*/

@@ -32,6 +32,19 @@
                 android:layout_height="match_parent"
                 />
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/institution_noitifications_filter_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:layout_margin="16dp"
+                android:backgroundTint="@color/azul_celeste"
+                android:src="@drawable/baseline_filter_alt_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                 />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -14,6 +14,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.SpinnerUserTypeAdapter;
 import com.gabriel.smartclass.dao.InstitutionLinkRequestDAO;
+import com.gabriel.smartclass.dao.LinkRequestStatusDAO;
 import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.dao.UserTypeDAO;
 import com.gabriel.smartclass.model.Institution;
@@ -101,23 +102,7 @@ public class InstitutionLinkRequestFormViewModel {
                                         }
                                         if(counter.get() == user.getInstitutions().size()){
                                             if(!userInstitutions.contains(institutionFind)){
-                                                FirebaseFirestore fb = FirebaseFirestore.getInstance();
-                                                DocumentReference userReference = fb.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                                DocumentReference institutionReference = fb.collection("Institutions").document(institution.getId());
-                                                DocumentReference userTypeReference = fb.collection("userTypes").document(userType.getUuid());
-                                                InstitutionLinkRequest institutionLinkRequest = new InstitutionLinkRequest();
-                                                institutionLinkRequest.setApproved(false);
-                                                institutionLinkRequest.setUser(userReference);
-                                                institutionLinkRequest.setTitle(title);
-                                                institutionLinkRequest.setUserType(userTypeReference);
-                                                institutionLinkRequest.setInstitution_id(institutionReference);
-                                                linkRequestDAO.createNewLinkRequest(institutionLinkRequest, institutionReference, task3 -> {
-                                                    if(task3.isSuccessful()){
-                                                        showSuccessDialog(context);
-                                                    }
-                                                }, e -> {
-                                                    snackbarText.setValue("Algo deu errado: "+e);
-                                                });
+                                                createNewInstitutionLinkRequest(institution, userType, title, context);
                                             }else{
                                                 snackbarText.setValue("Você já esta vinculado a esta instituição, desfaça o vinculo e tente novamente");
                                             }
@@ -126,23 +111,7 @@ public class InstitutionLinkRequestFormViewModel {
                                     });
                                 }
                             }else{
-                                FirebaseFirestore fb = FirebaseFirestore.getInstance();
-                                DocumentReference userReference = fb.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                DocumentReference institutionReference = fb.collection("Institutions").document(institution.getId());
-                                DocumentReference userTypeReference = fb.collection("userTypes").document(userType.getUuid());
-                                InstitutionLinkRequest institutionLinkRequest = new InstitutionLinkRequest();
-                                institutionLinkRequest.setApproved(false);
-                                institutionLinkRequest.setUser(userReference);
-                                institutionLinkRequest.setTitle(title);
-                                institutionLinkRequest.setUserType(userTypeReference);
-                                institutionLinkRequest.setInstitution_id(institutionReference);
-                                linkRequestDAO.createNewLinkRequest(institutionLinkRequest, institutionReference, task4 -> {
-                                    if (task4.isSuccessful()) {
-                                        showSuccessDialog(context);
-                                    }
-                                }, e -> {
-                                    snackbarText.setValue("Algo deu errado: " + e);
-                                });
+                                createNewInstitutionLinkRequest(institution, userType, title, context);
                             }
                         }
                     });
@@ -151,6 +120,27 @@ public class InstitutionLinkRequestFormViewModel {
         }
 
 
+    }
+
+    private void createNewInstitutionLinkRequest(Institution institution, UserType userType, String title, Context context) {
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        DocumentReference userReference = fb.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        DocumentReference institutionReference = fb.collection("Institutions").document(institution.getId());
+        DocumentReference userTypeReference = fb.collection("userTypes").document(userType.getUuid());
+        DocumentReference linkRequestStatus = fb.collection("linkRequestStatus").document(LinkRequestStatusDAO.PENDING_REFERENCE);
+        InstitutionLinkRequest institutionLinkRequest = new InstitutionLinkRequest();
+        institutionLinkRequest.setLinkRequestStatus_id(linkRequestStatus);
+        institutionLinkRequest.setUser(userReference);
+        institutionLinkRequest.setTitle(title);
+        institutionLinkRequest.setUserType(userTypeReference);
+        institutionLinkRequest.setInstitution_id(institutionReference);
+        linkRequestDAO.createNewLinkRequest(institutionLinkRequest, institutionReference, task3 -> {
+            if(task3.isSuccessful()){
+                showSuccessDialog(context);
+            }
+        }, e -> {
+            snackbarText.setValue("Algo deu errado: "+e);
+        });
     }
 
     public void showSuccessDialog(Context context){

@@ -3,8 +3,10 @@ package com.gabriel.smartclass.view.fragments.institutionfragments;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -13,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.interfaces.ApproveLinkRequestClickListener;
 import com.gabriel.smartclass.adapter.interfaces.RejectLinkRequestClickListener;
 import com.gabriel.smartclass.databinding.EmptyRequestBinding;
@@ -41,6 +44,7 @@ public class InstitutionLinkRequestFragment extends Fragment {
         secondaryViewModel = viewModelProvider.get(HostUserActivityViewModel.class);
         primaryViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
         loadLinkRequests();
+        binding.institutionNoitificationsFilterButton.setOnClickListener(filterButtonClickListener());
         return binding.getRoot();
     }
     @SuppressLint("NotifyDataSetChanged")
@@ -91,6 +95,19 @@ public class InstitutionLinkRequestFragment extends Fragment {
     public void removeInstitutionAfterApproveOrReject(InstitutionLinkRequest institutionLinkRequest){
         Objects.requireNonNull(secondaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue()).removeIf(institutionSelected -> institutionSelected.getId().equals(institutionLinkRequest.getId()));
         secondaryViewModel.getInstitutionLinkRequestsAdapter().notifyDataSetChanged();
+    }
+    public View.OnClickListener filterButtonClickListener(){
+        return this::openFilterOptions;
+    }
+    private void openFilterOptions(View v) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), v);
+        MenuInflater inflater = popupMenu.getMenuInflater();
+        inflater.inflate(R.menu.link_requests_menu_filter, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            return true;
+        });
+        popupMenu.show();
     }
 
 

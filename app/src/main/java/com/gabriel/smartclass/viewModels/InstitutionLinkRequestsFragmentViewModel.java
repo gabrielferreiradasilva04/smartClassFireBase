@@ -8,10 +8,13 @@ import androidx.lifecycle.ViewModel;
 import com.gabriel.smartclass.adapter.InstitutionLinkRequestsAdapter;
 import com.gabriel.smartclass.dao.InstitutionLinkRequestDAO;
 import com.gabriel.smartclass.dao.InstitutionUserDAO;
+import com.gabriel.smartclass.dao.LinkRequestStatusDAO;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
 
 import com.gabriel.smartclass.model.InstitutionUser;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -41,8 +44,9 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
         institutionUser.setActive(true);
         institutionUser.setId(linkRequest.getUser().getId());
 
+        DocumentReference linkRequestStatusReference = FirebaseFirestore.getInstance().collection("linkRequestStatus").document(LinkRequestStatusDAO.APPROVED_REFERENCE);
         HashMap<String, Object> updateLinkRequest = new HashMap<>();
-        updateLinkRequest.put("approved", true);
+        updateLinkRequest.put("linkRequestStatus_id", linkRequestStatusReference);
         institutionLinkRequestDAO.updateInstitutionLinkRequest(linkRequest.getId(), linkRequest.getInstitution_id().getId(), updateLinkRequest, unused -> {
 
             institutionUserDAO.saveNewInstitutionUser(institutionUser, linkRequest.getInstitution_id(), task ->{
@@ -59,8 +63,9 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
     }
 
     public void rejectInstitutionLinkRequest(InstitutionLinkRequest linkRequest){
+        DocumentReference linkRequestStatusReference = FirebaseFirestore.getInstance().collection("linkRequestStatus").document(LinkRequestStatusDAO.REJECTED_REFERENCE);
         HashMap<String, Object> updateLinkRequest = new HashMap<>();
-        updateLinkRequest.put("approved", false);
+        updateLinkRequest.put("linkRequestStatus", linkRequestStatusReference);
         institutionLinkRequestDAO.updateInstitutionLinkRequest(linkRequest.getId(), linkRequest.getInstitution_id().getId(), updateLinkRequest, task ->{
             snackBarText.setValue("Solicitação recusada, essa pessoa não faz parte da sua instituição");
         }, e -> {

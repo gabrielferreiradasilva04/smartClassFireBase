@@ -7,7 +7,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -40,14 +39,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class HostUserActivityViewModel extends ViewModel {
@@ -416,7 +413,7 @@ public class HostUserActivityViewModel extends ViewModel {
         InstitutionLinkRequestDAO institutionLinkRequestDAO = new InstitutionLinkRequestDAO();
         List<InstitutionLinkRequest> institutionLinkRequests = new ArrayList<>();
         institutionLinkRequestsAdapter= new InstitutionLinkRequestsAdapter(institutionLinkRequests);
-        institutionLinkRequestDAO.getAllLinkRequestsByInstitution(FirebaseAuth.getInstance().getCurrentUser().getUid(), task ->{
+        institutionLinkRequestDAO.getInstitutionLinkRequests(FirebaseAuth.getInstance().getCurrentUser().getUid(), task ->{
             int i = 0;
             if(task.isComplete() && task.isSuccessful()){
                 for(QueryDocumentSnapshot snapshots : task.getResult()){
