@@ -35,6 +35,7 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
     }
     public void approveInstitutionLinkRequest(InstitutionLinkRequest linkRequest){
         InstitutionUser institutionUser = new InstitutionUser();
+        institutionUser.setId(linkRequest.getUser().getId());
         institutionUser.setUser_id(linkRequest.getUser());
         institutionUser.setUserType_id(linkRequest.getUserType());
         institutionUser.setActive(true);
@@ -52,8 +53,20 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
 
             });
         }, e -> {
+            snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: "+e.getMessage());
 
         });
+    }
+
+    public void rejectInstitutionLinkRequest(InstitutionLinkRequest linkRequest){
+        HashMap<String, Object> updateLinkRequest = new HashMap<>();
+        updateLinkRequest.put("approved", false);
+        institutionLinkRequestDAO.updateInstitutionLinkRequest(linkRequest.getId(), linkRequest.getInstitution_id().getId(), updateLinkRequest, task ->{
+            snackBarText.setValue("Solicitação recusada, essa pessoa não faz parte da sua instituição");
+        }, e -> {
+            snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: "+e.getMessage());
+        });
+
 
     }
 

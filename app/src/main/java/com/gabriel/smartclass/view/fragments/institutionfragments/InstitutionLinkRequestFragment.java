@@ -2,7 +2,6 @@ package com.gabriel.smartclass.view.fragments.institutionfragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import com.gabriel.smartclass.adapter.interfaces.ApproveLinkRequestClickListener
 import com.gabriel.smartclass.adapter.interfaces.RejectLinkRequestClickListener;
 import com.gabriel.smartclass.databinding.EmptyRequestBinding;
 import com.gabriel.smartclass.databinding.FragmentInstitutionNotificationsBinding;
+import com.gabriel.smartclass.model.InstitutionLinkRequest;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 import com.gabriel.smartclass.viewModels.InstitutionLinkRequestsFragmentViewModel;
@@ -77,15 +77,22 @@ public class InstitutionLinkRequestFragment extends Fragment {
     public ApproveLinkRequestClickListener approveLinkRequestClickListener(){
         return institutionLinkRequest -> {
             primaryViewModel.approveInstitutionLinkRequest(institutionLinkRequest);
-            Objects.requireNonNull(secondaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue()).removeIf(institutionSelected -> institutionSelected.getId().equals(institutionLinkRequest.getId()));
-            secondaryViewModel.getInstitutionLinkRequestsAdapter().notifyDataSetChanged();
+            removeInstitutionAfterApproveOrReject(institutionLinkRequest);
         };
     }
     @NonNull
     public RejectLinkRequestClickListener rejectLinkRequestClickListener(){
-        return v->{
+        return institutionLinkRequest->{
+            primaryViewModel.rejectInstitutionLinkRequest(institutionLinkRequest);
+            removeInstitutionAfterApproveOrReject(institutionLinkRequest);
         };
     }
+    @SuppressLint("NotifyDataSetChanged")
+    public void removeInstitutionAfterApproveOrReject(InstitutionLinkRequest institutionLinkRequest){
+        Objects.requireNonNull(secondaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue()).removeIf(institutionSelected -> institutionSelected.getId().equals(institutionLinkRequest.getId()));
+        secondaryViewModel.getInstitutionLinkRequestsAdapter().notifyDataSetChanged();
+    }
+
 
 
 }
