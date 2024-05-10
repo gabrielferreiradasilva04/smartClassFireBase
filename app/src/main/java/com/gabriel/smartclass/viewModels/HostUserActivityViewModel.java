@@ -103,6 +103,7 @@ public class HostUserActivityViewModel extends ViewModel {
         userInstitutionsAdapter = new InstitutionsAdapter(institutions);
         userDAO.getUserInstitutions(task -> {
             User user = task.getResult().toObject(User.class);
+            assert user != null;
             if (user.getInstitutions() != null) {
                 for (DocumentReference documentReference : user.getInstitutions()) {
                     documentReference.get().addOnSuccessListener(documentSnapshot -> {

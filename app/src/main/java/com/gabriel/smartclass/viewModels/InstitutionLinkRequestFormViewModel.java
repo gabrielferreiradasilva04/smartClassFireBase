@@ -151,6 +151,8 @@ public class InstitutionLinkRequestFormViewModel {
             dialog.dismiss();
             Intent i = new Intent(context, StudentMainMenu.class);
             context.startActivity(i);
+            institutionLinkRequestForm.finish();
+
         });
 
     }

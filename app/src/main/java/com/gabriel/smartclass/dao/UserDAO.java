@@ -37,7 +37,7 @@ public class UserDAO {
     }
     public void getUserInstitutions(OnCompleteListener<DocumentSnapshot> onCompleteListener, OnFailureListener onFailureListener){
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        fb.collection("users").document(auth.getCurrentUser().getUid()).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+        fb.collection(User.class.getSimpleName()).document(auth.getCurrentUser().getUid()).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 
     public void updateProfile(String displayName, OnSuccessListener onSuccessListener){
