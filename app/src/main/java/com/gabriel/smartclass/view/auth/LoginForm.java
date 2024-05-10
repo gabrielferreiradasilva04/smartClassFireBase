@@ -42,12 +42,9 @@ public class LoginForm extends BaseActivity {
         this.edTxtPassword = findViewById(R.id.edTxtPassword_login);
         this.institutionRegisterButton = findViewById(R.id.institutionRegisterButton_login);
         this.loginViewModel = new LoginViewModel(this);
-        loginViewModel.getSnackBarText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                Snackbar snackbar = Snackbar.make(findViewById(R.id.loginButton_login), s, Snackbar.LENGTH_SHORT);
-                snackbar.show();
-            }
+        loginViewModel.getSnackBarText().observe(this, s -> {
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.loginButton_login), s, Snackbar.LENGTH_SHORT);
+            snackbar.show();
         });
 
 

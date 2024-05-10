@@ -17,16 +17,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 
 public class UserTypeDAO {
-    private final String COLLNAME = "userTypes";
+    private final String COLLECTION = UserType.class.getSimpleName();
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public  final DocumentReference STUDENT_TYPE_REFERENCE = db.collection(this.COLLNAME).document("0kpiVHFO4bp3qvoQa5f8");
-    public final DocumentReference TEACHER_TYPE_REFERENCE = db.collection(this.COLLNAME).document("7d2e9taUjSBFu4CkmfIX");
-    public final DocumentReference COORDINATOR_TYPE_REFERENCE = db.collection(this.COLLNAME).document("VozV7BKIaUn7dyXQN84y");
+    public  final DocumentReference STUDENT_TYPE_REFERENCE = db.collection(this.COLLECTION).document("0kpiVHFO4bp3qvoQa5f8");
+    public final DocumentReference TEACHER_TYPE_REFERENCE = db.collection(this.COLLECTION).document("7d2e9taUjSBFu4CkmfIX");
+    public final DocumentReference COORDINATOR_TYPE_REFERENCE = db.collection(this.COLLECTION).document("VozV7BKIaUn7dyXQN84y");
 
 
     public void insert(UserType userType) {
-        db.collection(this.COLLNAME).add(userType).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        db.collection(this.COLLECTION).add(userType).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Log.d("Sucesso!", "Document save with success! - " + documentReference.getId());
@@ -40,7 +40,7 @@ public class UserTypeDAO {
     }
 
     public void findById(String id) {
-        db.collection(this.COLLNAME).whereEqualTo("description", "Student").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection(this.COLLECTION).whereEqualTo("description", "Student").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -53,11 +53,11 @@ public class UserTypeDAO {
     }
 
     public void getAllUserTypes(OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
-        db.collection("userTypes").get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+        db.collection(COLLECTION).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 
     public void getUserTypeByDocumentReference(DocumentReference userTypeReference, OnCompleteListener<DocumentSnapshot> onCompleteListener, OnFailureListener onFailureListener){
-        db.collection(COLLNAME).document(userTypeReference.getId()).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+        db.collection(COLLECTION).document(userTypeReference.getId()).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 
 }

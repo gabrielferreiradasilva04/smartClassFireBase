@@ -2,6 +2,7 @@ package com.gabriel.smartclass.dao;
 
 import androidx.annotation.NonNull;
 
+import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
 import com.gabriel.smartclass.viewModels.InstitutionLinkRequestFormViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -16,7 +17,8 @@ import java.util.HashMap;
 
 public class InstitutionLinkRequestDAO {
     FirebaseFirestore fb = FirebaseFirestore.getInstance();
-    private final String institutionsCollection = "Institutions";
+    private final String institutionsCollection = Institution.class.getSimpleName();
+    private final String COLLECTION = InstitutionLinkRequest.class.getSimpleName();
 
     InstitutionLinkRequestFormViewModel viewModel;
 
@@ -26,7 +28,7 @@ public class InstitutionLinkRequestDAO {
     public InstitutionLinkRequestDAO(){
 
     }
-    private final String COLLECTION = "linkRequests";
+
 
     public void createNewLinkRequest(InstitutionLinkRequest institutionLinkRequest, DocumentReference institutionReference, OnCompleteListener onCompleteListener, OnFailureListener onFailureListener) throws RuntimeException{
 

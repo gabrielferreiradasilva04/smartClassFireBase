@@ -55,14 +55,13 @@ public class HostUserActivityViewModel extends ViewModel {
     private final UserTypeDAO userTypeDAO;
     private MutableLiveData<Bitmap> profilePictureLiveData = new MutableLiveData<>();
     /*Institution variables*/
-    private InstitutionDAO institutionDAO;
-    private MutableLiveData<Institution> institutionMutableLiveData = new MutableLiveData<>();
-    private MutableLiveData<HashMap<String, Integer>> institutionStatisticsLiveData = new MutableLiveData<>();
+    private final InstitutionDAO institutionDAO;
+    private final MutableLiveData<Institution> institutionMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<String, Integer>> institutionStatisticsLiveData = new MutableLiveData<>();
     private final String teachers = "teachers";
     private final String students = "students";
     private final String coordinators = "coordinators";
     private final String courses = "courses";
-
     private InstitutionsAdapter userInstitutionsAdapter;
     private InstitutionLinkRequestsAdapter institutionLinkRequestsAdapter;
     public static MutableLiveData<Integer> numberOfNotifications = new MutableLiveData<>(0);

@@ -25,7 +25,7 @@ import java.util.Objects;
 
 public class UserDAO {
     private FirebaseUser currentUserAplication = FirebaseAuth.getInstance().getCurrentUser();
-    private final String COLLECTION = "users";
+    private final String COLLECTION = User.class.getSimpleName();
     private FirebaseFirestore fb = FirebaseFirestore.getInstance();
     private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     private StorageReference storagePictures = storageReference.child("profilePictures");

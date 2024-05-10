@@ -4,7 +4,9 @@ import android.media.metrics.Event;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.gabriel.smartclass.model.Courses;
 import com.gabriel.smartclass.model.Institution;
+import com.gabriel.smartclass.model.InstitutionUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,12 +23,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InstitutionDAO {
-    private FirebaseFirestore db ;
+    private final FirebaseFirestore db ;
     private Institution institution;
     public InstitutionDAO(){
         db = FirebaseFirestore.getInstance();
     }
-    private final String COLLECTION = "Institutions";
+    private final String COLLECTION = Institution.class.getSimpleName();
 
     public void insert(Institution institution) throws Exception{
         db.collection(COLLECTION).add(institution);
@@ -58,11 +60,11 @@ public class InstitutionDAO {
     }
     public void getInstitutionUsers(String institutionID, OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
         DocumentReference institutionRef = db.collection(COLLECTION).document(institutionID);
-        institutionRef.collection("institutionUsers").get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+        institutionRef.collection(InstitutionUser.class.getSimpleName()).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
     public void getInstitutionCourses(String institutionID, OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
         DocumentReference institutionRef = db.collection(COLLECTION).document(institutionID);
-        institutionRef.collection("courses").get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+        institutionRef.collection(Courses.class.getSimpleName()).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 
 }

@@ -1,4 +1,5 @@
 package com.gabriel.smartclass.dao;
+import com.gabriel.smartclass.model.Institution;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 
@@ -19,7 +20,7 @@ public class UserAuthDAO {
     }
     public void identifyUserOrInstitution(OnCompleteListener<DocumentSnapshot> onCompleteListenerInstitution){
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        fb.collection("Institutions").document(auth.getCurrentUser().getUid()).get().addOnCompleteListener(onCompleteListenerInstitution);
+        fb.collection(Institution.class.getSimpleName()).document(auth.getCurrentUser().getUid()).get().addOnCompleteListener(onCompleteListenerInstitution);
     }
 
 

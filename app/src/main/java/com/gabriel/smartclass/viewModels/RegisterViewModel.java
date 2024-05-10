@@ -77,7 +77,7 @@ public class RegisterViewModel extends ViewModel {
                                 user.setEmail(userAuth.getEmail());
                                 user.setId(userAuth.getUid());
                                 user.setInstitutions(new ArrayList<>());
-                                FirebaseFirestore.getInstance().collection("users").document(userAuth.getUid()).set(user).addOnSuccessListener(task1 -> {
+                                FirebaseFirestore.getInstance().collection(User.class.getSimpleName()).document(userAuth.getUid()).set(user).addOnSuccessListener(task1 -> {
                                     progressBar.setVisibility(View.GONE);
                                     snackBarText.setValue("Cadastro realizado com sucesso!");
                                     Intent i = new Intent(registerForm.getApplicationContext(), LoginForm.class);
@@ -149,7 +149,7 @@ public class RegisterViewModel extends ViewModel {
                                         UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder().setDisplayName(finalName).build();
                                         assert currentUser != null;
                                         currentUser.updateProfile(changeRequest).addOnSuccessListener(unused -> {
-                                            DocumentReference institutionRef = UserAuthDAO.fb.collection("Institutions").document(currentUser.getUid());
+                                            DocumentReference institutionRef = UserAuthDAO.fb.collection(Institution.class.getSimpleName()).document(currentUser.getUid());
                                             Institution institution;
                                             institution = new Institution();
                                             institution.setId(currentUser.getUid());

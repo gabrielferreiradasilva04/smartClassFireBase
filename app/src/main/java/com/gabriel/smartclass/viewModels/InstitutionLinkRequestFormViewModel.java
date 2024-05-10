@@ -19,6 +19,7 @@ import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.dao.UserTypeDAO;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
+import com.gabriel.smartclass.model.LinkRequestStatus;
 import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.model.UserType;
 import com.gabriel.smartclass.view.StudentMainMenu;
@@ -70,19 +71,14 @@ public class InstitutionLinkRequestFormViewModel {
                     userTypeAdapter.notifyDataSetChanged();
                 }
             }
-        }, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                snackbarText.setValue("Erro ao carregar tipos de usuário!");
-            }
-        });
+        }, e -> snackbarText.setValue("Erro ao carregar tipos de usuário!"));
     }
 
     public void createNewInstitutionLinkRequest(UserType userType, String title, Institution institution,Context context){
         if(userType == null || title.isEmpty() || institution == null){
             snackbarText.setValue("Preencha todos os campos");
         }else{
-            FirebaseFirestore.getInstance().collection("Institutions").document(institution.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            FirebaseFirestore.getInstance().collection(Institution.class.getSimpleName()).document(institution.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     Institution institutionFind = task.getResult().toObject(Institution.class);
@@ -124,10 +120,10 @@ public class InstitutionLinkRequestFormViewModel {
 
     private void createNewInstitutionLinkRequest(Institution institution, UserType userType, String title, Context context) {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
-        DocumentReference userReference = fb.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        DocumentReference institutionReference = fb.collection("Institutions").document(institution.getId());
-        DocumentReference userTypeReference = fb.collection("userTypes").document(userType.getUuid());
-        DocumentReference linkRequestStatus = fb.collection("linkRequestStatus").document(LinkRequestStatusDAO.PENDING_REFERENCE);
+        DocumentReference userReference = fb.collection(User.class.getSimpleName()).document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        DocumentReference institutionReference = fb.collection(Institution.class.getSimpleName()).document(institution.getId());
+        DocumentReference userTypeReference = fb.collection(UserType.class.getSimpleName()).document(userType.getUuid());
+        DocumentReference linkRequestStatus = fb.collection(LinkRequestStatus.class.getSimpleName()).document(LinkRequestStatusDAO.PENDING_REFERENCE);
         InstitutionLinkRequest institutionLinkRequest = new InstitutionLinkRequest();
         institutionLinkRequest.setLinkRequestStatus_id(linkRequestStatus);
         institutionLinkRequest.setUser(userReference);

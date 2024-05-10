@@ -12,6 +12,7 @@ import com.gabriel.smartclass.dao.LinkRequestStatusDAO;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
 
 import com.gabriel.smartclass.model.InstitutionUser;
+import com.gabriel.smartclass.model.LinkRequestStatus;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,7 +45,7 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
         institutionUser.setActive(true);
         institutionUser.setId(linkRequest.getUser().getId());
 
-        DocumentReference linkRequestStatusReference = FirebaseFirestore.getInstance().collection("linkRequestStatus").document(LinkRequestStatusDAO.APPROVED_REFERENCE);
+        DocumentReference linkRequestStatusReference = FirebaseFirestore.getInstance().collection(LinkRequestStatus.class.getSimpleName()).document(LinkRequestStatusDAO.APPROVED_REFERENCE);
         HashMap<String, Object> updateLinkRequest = new HashMap<>();
         updateLinkRequest.put("linkRequestStatus_id", linkRequestStatusReference);
         institutionLinkRequestDAO.updateInstitutionLinkRequest(linkRequest.getId(), linkRequest.getInstitution_id().getId(), updateLinkRequest, unused -> {
@@ -63,7 +64,7 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
     }
 
     public void rejectInstitutionLinkRequest(InstitutionLinkRequest linkRequest){
-        DocumentReference linkRequestStatusReference = FirebaseFirestore.getInstance().collection("linkRequestStatus").document(LinkRequestStatusDAO.REJECTED_REFERENCE);
+        DocumentReference linkRequestStatusReference = FirebaseFirestore.getInstance().collection(LinkRequestStatus.class.getSimpleName()).document(LinkRequestStatusDAO.REJECTED_REFERENCE);
         HashMap<String, Object> updateLinkRequest = new HashMap<>();
         updateLinkRequest.put("linkRequestStatus", linkRequestStatusReference);
         institutionLinkRequestDAO.updateInstitutionLinkRequest(linkRequest.getId(), linkRequest.getInstitution_id().getId(), updateLinkRequest, task ->{

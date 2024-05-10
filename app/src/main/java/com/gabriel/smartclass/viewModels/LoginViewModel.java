@@ -1,5 +1,6 @@
 package com.gabriel.smartclass.viewModels;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -52,7 +53,6 @@ public class LoginViewModel extends ViewModel {
                     });
                 }
             }, e -> {
-                String errorMessage = "";
                 if(e.getClass().equals(FirebaseAuthInvalidCredentialsException.class)){
                     snackBarText.setValue("Credenciais inválidas");
                     progressBar.setVisibility(View.GONE);
