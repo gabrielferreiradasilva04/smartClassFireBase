@@ -2,6 +2,7 @@ package com.gabriel.smartclass.viewModels;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -27,16 +28,13 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
     private final InstitutionLinkRequestDAO institutionLinkRequestDAO;
     private final InstitutionUserDAO institutionUserDAO;
     public MutableLiveData<String> snackBarText = new MutableLiveData<>();
-    private InstitutionLinkRequestsAdapter institutionLinkRequestsAdapter;
+    private final InstitutionLinkRequestsAdapter institutionLinkRequestsAdapter;
 
 
     public MutableLiveData<String> getSnackBarText() {
         return snackBarText;
     }
 
-    public InstitutionUserDAO getInstitutionUserDAO() {
-        return institutionUserDAO;
-    }
 
     public InstitutionLinkRequestsAdapter getInstitutionLinkRequestsAdapter() {
         return institutionLinkRequestsAdapter;
@@ -47,6 +45,22 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
         institutionUserDAO = new InstitutionUserDAO();
         institutionLinkRequestsAdapter = new InstitutionLinkRequestsAdapter();
     }
+
+    public void getLinkRequests(DocumentReference statusReference){
+        if(FirebaseAuth.getInstance().getCurrentUser() != null){
+            institutionLinkRequestDAO.getInstitutionLinkRequests(FirebaseAuth.getInstance().getCurrentUser().getUid(), statusReference, task ->{
+                if(task.isComplete() && !task.getResult().isEmpty()){
+                    institutionLinkRequestsAdapter.getInstitutionLinkRequestMutableLiveData().setValue(task.getResult().toObjects(InstitutionLinkRequest.class));
+                    institutionLinkRequestsAdapter.notifyDataSetChanged();
+                }else{
+                    institutionLinkRequestsAdapter.getInstitutionLinkRequestMutableLiveData().setValue(new ArrayList<>());
+                }
+            }, e->{
+                institutionLinkRequestsAdapter.getInstitutionLinkRequestMutableLiveData().setValue(new ArrayList<>());
+            });
+        }
+    }
+
 
     public void approveInstitutionLinkRequest(InstitutionLinkRequest linkRequest) {
         InstitutionUser institutionUser = new InstitutionUser();
@@ -83,59 +97,9 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
         });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void loadInstitutionLinkRequests(DocumentReference linkRequestStatusReference) {
-        InstitutionLinkRequestDAO institutionLinkRequestDAO = new InstitutionLinkRequestDAO();
-        institutionLinkRequestsAdapter = new InstitutionLinkRequestsAdapter();
-        institutionLinkRequestsAdapter.setInstitutionLinkRequestMutableLiveData(new MutableLiveData<>(new ArrayList<>()));
-        institutionLinkRequestDAO.getInstitutionLinkRequests(FirebaseAuth.getInstance().getCurrentUser().getUid(), linkRequestStatusReference, task -> {
-            if (task.isComplete()) {
-                if (task.getResult().isEmpty()) {
-                    institutionLinkRequestsAdapter.notifyDataSetChanged();
-                } else {
-                    for (QueryDocumentSnapshot snapshots : task.getResult()) {
-                        InstitutionLinkRequest linkRequest = snapshots.toObject(InstitutionLinkRequest.class);
-                        linkRequest.setId(snapshots.getId());
-                        institutionLinkRequestsAdapter.addItem(linkRequest);
-                        institutionLinkRequestsAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        }, e -> {
-            snackBarText.setValue("Ocorreu um erro ao buscar as solicitações de vinculo: " + e.getMessage());
-        });
-    }
-    
-    public void newInstitutionLinkRequestRecieve(){
-        institutionLinkRequestDAO.syncNewLinkRequestInRealTime(FirebaseAuth.getInstance().getCurrentUser().getUid(), LinkRequestStatusDAO.PENDING_REFERENCE, ((value, error) -> {
-            if(error !=null){
-                return;
-            } else if (value != null && !value.isEmpty()) {
-                List<InstitutionLinkRequest> institutionLinkRequests = value.toObjects(InstitutionLinkRequest.class);
-                this.institutionLinkRequestsAdapter.getInstitutionLinkRequestMutableLiveData().setValue(institutionLinkRequests);
-                this.institutionLinkRequestsAdapter.notifyDataSetChanged();
-            }
-        }));
-    }
 
-    public static void notificationIndex(@NonNull MutableLiveData<AtomicInteger> notificationNumber){
-        AtomicInteger i = new AtomicInteger(0);
-        notificationNumber.setValue(new AtomicInteger(0));
-        new InstitutionLinkRequestDAO().syncNewLinkRequestInRealTime(FirebaseAuth.getInstance().getCurrentUser().getUid(), LinkRequestStatusDAO.PENDING_REFERENCE, (value, error) -> {
-            if(error != null){
-                return;
-            }
-            if(value != null && !value.isEmpty()){
-                List<InstitutionLinkRequest> institutionLinkRequests = value.toObjects(InstitutionLinkRequest.class);
-                for (InstitutionLinkRequest linkrequest: institutionLinkRequests) {
-                    if(linkrequest.getLinkRequestStatus_id().equals(LinkRequestStatusDAO.PENDING_REFERENCE)) {
-                        i.getAndIncrement();
-                    }
-                }
-                notificationNumber.setValue(i);
-            }
-        });
-    }
+
+
 
 
 }

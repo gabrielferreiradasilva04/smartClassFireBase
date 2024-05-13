@@ -34,7 +34,6 @@ import java.util.Objects;
 public class InstitutionLinkRequestFragment extends Fragment {
     private FragmentInstitutionNotificationsBinding binding;
     private InstitutionLinkRequestsFragmentViewModel primaryViewModel;
-    private RecyclerView recyclerView;
     public InstitutionLinkRequestFragment() {
     }
     @Override
@@ -49,10 +48,16 @@ public class InstitutionLinkRequestFragment extends Fragment {
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
         primaryViewModel = viewModelProvider.get(InstitutionLinkRequestsFragmentViewModel.class);
         primaryViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
-        primaryViewModel.loadInstitutionLinkRequests(LinkRequestStatusDAO.PENDING_REFERENCE);
+        primaryViewModel.getLinkRequests(LinkRequestStatusDAO.PENDING_REFERENCE);
+        initializeRecyclerView();
+
         binding.institutionNoitificationsFilterButton.setOnClickListener(filterButtonClickListener());
-        loadLinkRequests(null);
-        refresh();
+    }
+
+    public void initializeRecyclerView(){
+        binding.institutionNotificationsRecyclerView.setHasFixedSize(true);
+        binding.institutionNotificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.institutionNotificationsRecyclerView.setAdapter(primaryViewModel.getInstitutionLinkRequestsAdapter());
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -71,22 +76,9 @@ public class InstitutionLinkRequestFragment extends Fragment {
 
     private void emptyRequestView() {
         EmptyRequestBinding viewEmpty = binding.emptyContainerHome;
-        EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(recyclerView, viewEmpty.getRoot());
+        EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(binding.institutionNotificationsRecyclerView, viewEmpty.getRoot());
         primaryViewModel.getInstitutionLinkRequestsAdapter().registerAdapterDataObserver(observer);
         primaryViewModel.getInstitutionLinkRequestsAdapter().notifyDataSetChanged();
-    }
-
-    public void loadLinkRequests(SwipeRefreshLayout refreshLayout){
-        primaryViewModel.getInstitutionLinkRequestsAdapter().setApproveLinkRequestClickListener(approveLinkRequestClickListener());
-        primaryViewModel.getInstitutionLinkRequestsAdapter().setRejectLinkRequestClickListener(rejectLinkRequestClickListener());
-        recyclerView = binding.institutionNotificationsRecyclerView;
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(primaryViewModel.getInstitutionLinkRequestsAdapter());
-        emptyRequestView();
-        if(refreshLayout!= null && refreshLayout.isRefreshing()){
-            refreshLayout.setRefreshing(false);
-        }
     }
 
     @NonNull
@@ -99,26 +91,6 @@ public class InstitutionLinkRequestFragment extends Fragment {
 
         };
     }
-    @SuppressLint("NotifyDataSetChanged")
-    @NonNull
-    public ApproveLinkRequestClickListener approveLinkRequestClickListener(){
-        return institutionLinkRequest -> {
-            primaryViewModel.approveInstitutionLinkRequest(institutionLinkRequest);
-            removeInstitutionAfterApproveOrReject(institutionLinkRequest);
-        };
-    }
-    @NonNull
-    public RejectLinkRequestClickListener rejectLinkRequestClickListener(){
-        return institutionLinkRequest->{
-            primaryViewModel.rejectInstitutionLinkRequest(institutionLinkRequest);
-            removeInstitutionAfterApproveOrReject(institutionLinkRequest);
-        };
-    }
-    @SuppressLint("NotifyDataSetChanged")
-    public void removeInstitutionAfterApproveOrReject(InstitutionLinkRequest institutionLinkRequest){
-        Objects.requireNonNull(primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue()).removeIf(institutionSelected -> institutionSelected.getId().equals(institutionLinkRequest.getId()));
-        primaryViewModel.getInstitutionLinkRequestsAdapter().notifyDataSetChanged();
-    }
     public View.OnClickListener filterButtonClickListener(){
         return this::openFilterOptions;
     }
@@ -130,19 +102,17 @@ public class InstitutionLinkRequestFragment extends Fragment {
         popupMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
             if(id == R.id.pendingFilter){
-                primaryViewModel.loadInstitutionLinkRequests(LinkRequestStatusDAO.PENDING_REFERENCE);
+                primaryViewModel.getLinkRequests(LinkRequestStatusDAO.PENDING_REFERENCE);
             } else if (id == R.id.approveFilter) {
-                primaryViewModel.loadInstitutionLinkRequests(LinkRequestStatusDAO.APPROVED_REFERENCE);
+                primaryViewModel.getLinkRequests(LinkRequestStatusDAO.APPROVED_REFERENCE);
             } else if (id == R.id.rejectFilter) {
-                primaryViewModel.loadInstitutionLinkRequests(LinkRequestStatusDAO.REJECTED_REFERENCE);
+                primaryViewModel.getLinkRequests(LinkRequestStatusDAO.REJECTED_REFERENCE);
             }
-            loadLinkRequests(null);
             return true;
         });
     }
     public void refresh(){
         binding.institutionNotificationsSwiperefresh.setOnRefreshListener(() -> {
-            loadLinkRequests(binding.institutionNotificationsSwiperefresh);
         });
 
     }
