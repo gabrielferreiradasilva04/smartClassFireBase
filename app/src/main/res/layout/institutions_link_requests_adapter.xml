@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:visibility="gone">
 
     <View
         android:id="@+id/institution_link_request_adapter_main_container"
@@ -27,7 +28,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:text="Nome do Solicitante"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -38,7 +38,6 @@
     <TextView
         android:id="@+id/institution_link_request_adapter_type_request"
         style="@style/institution_link_requests_subtitles"
-        android:text="Professor"
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="@id/institution_link_request_adapter_main_container"
         app:layout_constraintTop_toBottomOf="@id/institution_link_request_adapter_title"
@@ -57,7 +56,6 @@
         android:id="@+id/institution_link_request_adapter_type_request_status"
         style="@style/institution_link_requests_subtitles"
         android:layout_marginTop="10dp"
-        android:text="Pendente"
         app:layout_constraintEnd_toEndOf="@id/institution_link_request_adapter_main_container"
         app:layout_constraintTop_toBottomOf="@id/institution_link_request_adapter_type_request_label"
         tools:ignore="HardcodedText,RtlHardcoded,TextSizeCheck" />
@@ -80,7 +78,8 @@
         app:layout_constraintEnd_toEndOf="@id/institution_link_request_adapter_profile_picture"
         app:layout_constraintStart_toStartOf="@id/institution_link_request_adapter_profile_picture"
         app:layout_constraintTop_toBottomOf="@id/institution_link_request_adapter_profile_picture"
-        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck"
+        android:visibility="invisible"/>
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/reject_link_request"
@@ -91,6 +90,7 @@
         app:layout_constraintBottom_toBottomOf="@id/institution_link_request_adapter_main_container"
         app:layout_constraintEnd_toEndOf="@id/institution_link_request_adapter_main_container"
         app:layout_constraintTop_toBottomOf="@id/institution_link_request_adapter_profile_picture"
-        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck"
+        android:visibility="invisible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

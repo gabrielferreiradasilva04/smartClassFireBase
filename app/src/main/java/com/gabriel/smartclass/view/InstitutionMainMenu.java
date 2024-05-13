@@ -1,8 +1,6 @@
 package com.gabriel.smartclass.view;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -19,11 +17,12 @@ import com.gabriel.smartclass.viewModels.InstitutionLinkRequestsFragmentViewMode
 import com.google.android.material.badge.BadgeDrawable;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
-/** @noinspection ALL*/
 public class InstitutionMainMenu extends BaseActivity {
     private  HostUserActivityViewModel viewModel;
     private ActivityInstitutionMainMenuBinding binding;
+    public MutableLiveData<AtomicInteger> notificationsNumber = new MutableLiveData<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,12 +32,16 @@ public class InstitutionMainMenu extends BaseActivity {
         navigation();
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         ViewModelProvider viewModelProvider = new ViewModelProvider(this);
+        notificationsNumber.observe(this, notificationsObserve());
         viewModel = viewModelProvider.get(HostUserActivityViewModel.class);
         viewModel.getInstitutionByCurrentUser();
         viewModel.loadUserPicture();
-        viewModel.loadInstitutionLinkRequests();
-        viewModel.numberOfNotifications.observe(this, notificationsObserve());
         viewModel.syncInstitutionInRealTime();
+
+    }
+
+    private Observer<? super AtomicInteger> notificationsObserve() {
+        return (Observer<AtomicInteger>) atomicInteger -> updateNotificationsNumber(atomicInteger.get());
     }
 
     private void navigation(){
@@ -63,16 +66,6 @@ public class InstitutionMainMenu extends BaseActivity {
         badgeDrawable.setNumber(number);
 
     }
-    @NonNull
-    private Observer<Integer> notificationsObserve() {
-        return new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                updateNotificationsNumber(integer);
-            }
-        };
-    }
-
     public void updateTitle(String title) {
         getSupportActionBar().setTitle(title);
     }

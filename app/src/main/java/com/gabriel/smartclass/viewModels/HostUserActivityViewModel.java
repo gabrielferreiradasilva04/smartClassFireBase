@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.gabriel.smartclass.adapter.InstitutionLinkRequestsAdapter;
 import com.gabriel.smartclass.adapter.InstitutionsAdapter;
 import com.gabriel.smartclass.dao.InstitutionDAO;
 import com.gabriel.smartclass.dao.InstitutionLinkRequestDAO;
+import com.gabriel.smartclass.dao.LinkRequestStatusDAO;
 import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.dao.UserTypeDAO;
 import com.gabriel.smartclass.model.Courses;
@@ -407,28 +409,4 @@ public class HostUserActivityViewModel extends ViewModel {
             });
         }
     }
-
-    @SuppressLint("NotifyDataSetChanged")
-    public void loadInstitutionLinkRequests(){
-        InstitutionLinkRequestDAO institutionLinkRequestDAO = new InstitutionLinkRequestDAO();
-        List<InstitutionLinkRequest> institutionLinkRequests = new ArrayList<>();
-        institutionLinkRequestsAdapter= new InstitutionLinkRequestsAdapter(institutionLinkRequests);
-        institutionLinkRequestDAO.getInstitutionLinkRequests(FirebaseAuth.getInstance().getCurrentUser().getUid(), task ->{
-            int i = 0;
-            if(task.isComplete() && task.isSuccessful()){
-                for(QueryDocumentSnapshot snapshots : task.getResult()){
-                    InstitutionLinkRequest linkRequest = snapshots.toObject(InstitutionLinkRequest.class);
-                    linkRequest.setId(snapshots.getId());
-                    institutionLinkRequestsAdapter.addItem(linkRequest);
-                    institutionLinkRequestsAdapter.notifyDataSetChanged();
-                    i++;
-                    numberOfNotifications.setValue(i);
-                }
-            }else institutionLinkRequestsAdapter.notifyDataSetChanged();
-        }, e->{
-            snackBarText.setValue("Ocorreu um erro ao buscar as solicitações de vinculo: "+ e.getMessage());
-        });
-    }
-
-
 }

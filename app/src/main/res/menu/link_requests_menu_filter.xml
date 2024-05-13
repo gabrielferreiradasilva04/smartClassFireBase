@@ -2,7 +2,7 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Somente pendentes" />
-    <item android:title="Somente aprovadas" />
-    <item android:title="Somente rejeitadas"/>
+    <item android:title="Somente pendentes"  android:id="@+id/pendingFilter"/>
+    <item android:title="Somente aprovadas" android:id="@+id/approveFilter"/>
+    <item android:title="Somente rejeitadas" android:id="@+id/rejectFilter"/>
 </menu>

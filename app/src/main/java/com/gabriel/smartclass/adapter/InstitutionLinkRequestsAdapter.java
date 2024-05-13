@@ -1,5 +1,6 @@
 package com.gabriel.smartclass.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,20 +25,17 @@ import com.gabriel.smartclass.model.LinkRequestStatus;
 import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.model.UserType;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class InstitutionLinkRequestsAdapter extends RecyclerView.Adapter {
-    private MutableLiveData<List<InstitutionLinkRequest>> institutionLinkRequestMutableLiveData;
+    private MutableLiveData<List<InstitutionLinkRequest>> institutionLinkRequestMutableLiveData = new MutableLiveData<>(new ArrayList<>());
     private HashSet<String> linkRequestsId;
     private ApproveLinkRequestClickListener approveLinkRequestClickListener;
     private RejectLinkRequestClickListener rejectLinkRequestClickListener;
-
-    public RejectLinkRequestClickListener getRejectLinkRequestClickListener() {
-        return rejectLinkRequestClickListener;
-    }
 
     public void setRejectLinkRequestClickListener(RejectLinkRequestClickListener rejectLinkRequestClickListener) {
         this.rejectLinkRequestClickListener = rejectLinkRequestClickListener;
@@ -50,31 +48,10 @@ public class InstitutionLinkRequestsAdapter extends RecyclerView.Adapter {
     public void setInstitutionLinkRequestMutableLiveData(MutableLiveData<List<InstitutionLinkRequest>> institutionLinkRequestMutableLiveData) {
         this.institutionLinkRequestMutableLiveData = institutionLinkRequestMutableLiveData;
     }
-
-    public HashSet<String> getLinkRequestsId() {
-        return linkRequestsId;
-    }
-
-    public void setLinkRequestsId(HashSet<String> linkRequestsId) {
-        this.linkRequestsId = linkRequestsId;
-    }
-
-    public ApproveLinkRequestClickListener getApproveLinkRequestClickListener() {
-        return approveLinkRequestClickListener;
-    }
-
     public void setApproveLinkRequestClickListener(ApproveLinkRequestClickListener approveLinkRequestClickListener) {
         this.approveLinkRequestClickListener = approveLinkRequestClickListener;
     }
-
-    public InstitutionLinkRequestsAdapter(List<InstitutionLinkRequest> linkRequests, ApproveLinkRequestClickListener onItemClickListener) {
-        institutionLinkRequestMutableLiveData = new MutableLiveData<>(linkRequests);
-        linkRequestsId = new HashSet<>();
-        approveLinkRequestClickListener = onItemClickListener;
-    }
-
-    public InstitutionLinkRequestsAdapter(List<InstitutionLinkRequest> institutionLinkRequests) {
-        institutionLinkRequestMutableLiveData = new MutableLiveData<>(institutionLinkRequests);
+    public InstitutionLinkRequestsAdapter() {
         linkRequestsId = new HashSet<>();
     }
 
@@ -112,8 +89,6 @@ public class InstitutionLinkRequestsAdapter extends RecyclerView.Adapter {
         }, e -> {
             return;
         });
-
-
     }
 
     private void checkAndLoadAdapterDetails(RecyclerView.ViewHolder holder, int position, MutableLiveData<User> userRequest, MutableLiveData<UserType> userTypeRequest, AtomicInteger aux) {
@@ -125,6 +100,8 @@ public class InstitutionLinkRequestsAdapter extends RecyclerView.Adapter {
     }
 
     private void loadAdapterDetails(RecyclerView.ViewHolder holder, int position, MutableLiveData<User> userRequest, MutableLiveData<UserType> userTypeRequest) {
+        holder.itemView.setAlpha(0f);
+        holder.itemView.animate().alpha(1f).setDuration(300).start();
         TextView titleText = holder.itemView.findViewById(R.id.institution_link_request_adapter_title);
         TextView requestUserTypeText = holder.itemView.findViewById(R.id.institution_link_request_adapter_type_request);
         TextView requestStatusText = holder.itemView.findViewById(R.id.institution_link_request_adapter_type_request_status);
@@ -134,26 +111,24 @@ public class InstitutionLinkRequestsAdapter extends RecyclerView.Adapter {
 
         titleText.setText(userRequest.getValue().getName());
         requestUserTypeText.setText(userTypeRequest.getValue().getDescription());
-        if (institutionLinkRequestMutableLiveData.getValue().get(position).getLinkRequestStatus_id().getId().equals(LinkRequestStatusDAO.APPROVED_REFERENCE)) {
+        if (institutionLinkRequestMutableLiveData.getValue().get(position).getLinkRequestStatus_id().equals(LinkRequestStatusDAO.APPROVED_REFERENCE)) {
             requestStatusText.setText("Aprovado");
-            approveButton.setVisibility(View.GONE);
-            rejectButton.setVisibility(View.GONE);
-        } else if (institutionLinkRequestMutableLiveData.getValue().get(position).getLinkRequestStatus_id().getId().equals(LinkRequestStatusDAO.PENDING_REFERENCE)) {
+
+        } else if (institutionLinkRequestMutableLiveData.getValue().get(position).getLinkRequestStatus_id().equals(LinkRequestStatusDAO.PENDING_REFERENCE)) {
             requestStatusText.setText("Pendente");
+            approveButton.setVisibility(View.VISIBLE);
+            rejectButton.setVisibility(View.VISIBLE);
             if (approveLinkRequestClickListener != null) approveButton.setOnClickListener(view -> {
                 approveLinkRequestClickListener.approve(institutionLinkRequestMutableLiveData.getValue().get(position));
             });
             if (rejectLinkRequestClickListener != null) rejectButton.setOnClickListener(view -> {
                 rejectLinkRequestClickListener.reject(institutionLinkRequestMutableLiveData.getValue().get(position));
             });
-        } else if (institutionLinkRequestMutableLiveData.getValue().get(position).getLinkRequestStatus_id().getId().equals(LinkRequestStatusDAO.REJECTED_REFERENCE)) {
+        } else if (institutionLinkRequestMutableLiveData.getValue().get(position).getLinkRequestStatus_id().equals(LinkRequestStatusDAO.REJECTED_REFERENCE)) {
             requestStatusText.setText("Rejeitado");
-            approveButton.setVisibility(View.GONE);
-            rejectButton.setVisibility(View.GONE);
         }
         Glide.with(holder.itemView.getContext()).load(userRequest.getValue().getPhotoUrl()).placeholder(R.drawable.icone_smarclass_sem_fundo).into(profilePictureUserRequest);
-
-
+        holder.itemView.setVisibility(View.VISIBLE);
     }
 
     public void addItem(InstitutionLinkRequest linkRequest) {

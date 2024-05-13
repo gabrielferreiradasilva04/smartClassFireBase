@@ -123,9 +123,8 @@ public class InstitutionLinkRequestFormViewModel {
         DocumentReference userReference = fb.collection(User.class.getSimpleName()).document(FirebaseAuth.getInstance().getCurrentUser().getUid());
         DocumentReference institutionReference = fb.collection(Institution.class.getSimpleName()).document(institution.getId());
         DocumentReference userTypeReference = fb.collection(UserType.class.getSimpleName()).document(userType.getUuid());
-        DocumentReference linkRequestStatus = fb.collection(LinkRequestStatus.class.getSimpleName()).document(LinkRequestStatusDAO.PENDING_REFERENCE);
         InstitutionLinkRequest institutionLinkRequest = new InstitutionLinkRequest();
-        institutionLinkRequest.setLinkRequestStatus_id(linkRequestStatus);
+        institutionLinkRequest.setLinkRequestStatus_id(LinkRequestStatusDAO.PENDING_REFERENCE);
         institutionLinkRequest.setUser(userReference);
         institutionLinkRequest.setTitle(title);
         institutionLinkRequest.setUserType(userTypeReference);
