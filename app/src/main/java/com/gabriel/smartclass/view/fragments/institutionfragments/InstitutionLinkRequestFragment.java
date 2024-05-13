@@ -29,6 +29,7 @@ import com.gabriel.smartclass.viewModels.InstitutionLinkRequestsFragmentViewMode
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 
+import java.util.List;
 import java.util.Objects;
 
 public class InstitutionLinkRequestFragment extends Fragment {
@@ -50,8 +51,12 @@ public class InstitutionLinkRequestFragment extends Fragment {
         primaryViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
         primaryViewModel.getLinkRequests(LinkRequestStatusDAO.PENDING_REFERENCE);
         initializeRecyclerView();
-
+        primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().observe(getViewLifecycleOwner(), linkRequestsObserve());
         binding.institutionNoitificationsFilterButton.setOnClickListener(filterButtonClickListener());
+    }
+
+    private Observer<? super List<InstitutionLinkRequest>> linkRequestsObserve() {
+        return (Observer<List<InstitutionLinkRequest>>) institutionLinkRequests -> initializeRecyclerView();
     }
 
     public void initializeRecyclerView(){

@@ -54,9 +54,11 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
                     institutionLinkRequestsAdapter.notifyDataSetChanged();
                 }else{
                     institutionLinkRequestsAdapter.getInstitutionLinkRequestMutableLiveData().setValue(new ArrayList<>());
+                    institutionLinkRequestsAdapter.notifyDataSetChanged();
                 }
             }, e->{
                 institutionLinkRequestsAdapter.getInstitutionLinkRequestMutableLiveData().setValue(new ArrayList<>());
+                institutionLinkRequestsAdapter.notifyDataSetChanged();
             });
         }
     }
@@ -96,6 +98,9 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
             snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());
         });
     }
+
+
+
 
 
 
