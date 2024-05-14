@@ -54,8 +54,6 @@ public class InstitutionLinkRequestFragment extends Fragment {
         initializeRecyclerView();
         primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().observe(getViewLifecycleOwner(), linkRequestsObserve());
         binding.institutionNoitificationsFilterButton.setOnClickListener(filterButtonClickListener());
-        BaseNotification baseNotification = new BaseNotification();
-        baseNotification.trigger("Titulo Teste", "Conteudo teste", getContext());
     }
 
     private Observer<? super List<InstitutionLinkRequest>> linkRequestsObserve() {

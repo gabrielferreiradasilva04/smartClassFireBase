@@ -145,6 +145,8 @@
                             android:id="@+id/edtxt_classrooms_capacity"
                             style="@style/circle_capacity_edtxt"
                             tools:ignore="SpeakableTextPresentCheck"
+                            android:layout_marginRight="10dp"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/institution_txtsubtitle_teachers"
                             app:layout_constraintStart_toEndOf="@id/edtxt_coordinators_capacity"/>
 
