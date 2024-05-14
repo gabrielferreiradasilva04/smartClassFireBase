@@ -38,6 +38,7 @@ public class InstitutionMainMenu extends BaseActivity {
         viewModel.loadUserPicture();
         viewModel.syncInstitutionInRealTime();
 
+
     }
 
     private Observer<? super AtomicInteger> notificationsObserve() {

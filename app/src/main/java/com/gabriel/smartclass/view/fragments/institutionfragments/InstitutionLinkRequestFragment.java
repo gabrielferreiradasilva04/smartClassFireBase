@@ -24,6 +24,7 @@ import com.gabriel.smartclass.databinding.EmptyRequestBinding;
 import com.gabriel.smartclass.databinding.FragmentInstitutionNotificationsBinding;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
+import com.gabriel.smartclass.view.BaseNotification;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 import com.gabriel.smartclass.viewModels.InstitutionLinkRequestsFragmentViewModel;
 import com.google.android.material.snackbar.Snackbar;
@@ -53,6 +54,8 @@ public class InstitutionLinkRequestFragment extends Fragment {
         initializeRecyclerView();
         primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().observe(getViewLifecycleOwner(), linkRequestsObserve());
         binding.institutionNoitificationsFilterButton.setOnClickListener(filterButtonClickListener());
+        BaseNotification baseNotification = new BaseNotification();
+        baseNotification.trigger("Titulo Teste", "Conteudo teste", getContext());
     }
 
     private Observer<? super List<InstitutionLinkRequest>> linkRequestsObserve() {
@@ -76,6 +79,7 @@ public class InstitutionLinkRequestFragment extends Fragment {
         super.onDestroyView();
         primaryViewModel.getSnackBarText().removeObserver(observeSnackbar());
         primaryViewModel.getSnackBarText().setValue(null);
+        primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().removeObserver(linkRequestsObserve());
     }
 
 
@@ -119,8 +123,8 @@ public class InstitutionLinkRequestFragment extends Fragment {
     public void refresh(){
         binding.institutionNotificationsSwiperefresh.setOnRefreshListener(() -> {
         });
-
     }
+
 
 
 

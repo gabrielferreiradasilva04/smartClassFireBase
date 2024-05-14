@@ -138,6 +138,7 @@
                             app:layout_constraintEnd_toEndOf="@+id/edtxt_classrooms_capacity"
                             app:layout_constraintStart_toStartOf="@id/edtxt_classrooms_capacity"
                             app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginEnd="18dp"
                             tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
 
                         <androidx.appcompat.widget.AppCompatEditText
