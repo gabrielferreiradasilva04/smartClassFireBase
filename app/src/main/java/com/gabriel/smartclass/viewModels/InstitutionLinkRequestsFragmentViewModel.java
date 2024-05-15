@@ -12,14 +12,20 @@ import com.gabriel.smartclass.adapter.InstitutionLinkRequestsAdapter;
 import com.gabriel.smartclass.dao.InstitutionLinkRequestDAO;
 import com.gabriel.smartclass.dao.InstitutionUserDAO;
 import com.gabriel.smartclass.dao.LinkRequestStatusDAO;
+import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
 
 import com.gabriel.smartclass.model.InstitutionUser;
+import com.gabriel.smartclass.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,8 +55,14 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
     public void getLinkRequests(DocumentReference statusReference){
         if(FirebaseAuth.getInstance().getCurrentUser() != null){
             institutionLinkRequestDAO.getInstitutionLinkRequests(FirebaseAuth.getInstance().getCurrentUser().getUid(), statusReference, task ->{
+                List<InstitutionLinkRequest> institutionLinkRequests = new ArrayList<>();
                 if(task.isComplete() && !task.getResult().isEmpty()){
-                    institutionLinkRequestsAdapter.getInstitutionLinkRequestMutableLiveData().setValue(task.getResult().toObjects(InstitutionLinkRequest.class));
+                    for(QueryDocumentSnapshot snapshots : task.getResult()){
+                        InstitutionLinkRequest linkRequest = snapshots.toObject(InstitutionLinkRequest.class);
+                        linkRequest.setId(snapshots.getId());
+                        institutionLinkRequests.add(linkRequest);
+                    }
+                    institutionLinkRequestsAdapter.getInstitutionLinkRequestMutableLiveData().setValue(institutionLinkRequests);
                     institutionLinkRequestsAdapter.notifyDataSetChanged();
                 }else{
                     institutionLinkRequestsAdapter.getInstitutionLinkRequestMutableLiveData().setValue(new ArrayList<>());
@@ -64,47 +76,42 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
     }
 
 
-    public void approveInstitutionLinkRequest(InstitutionLinkRequest linkRequest) {
-        InstitutionUser institutionUser = new InstitutionUser();
-        institutionUser.setId(linkRequest.getUser().getId());
-        institutionUser.setUser_id(linkRequest.getUser());
-        institutionUser.setUserType_id(linkRequest.getUserType());
-        institutionUser.setActive(true);
-        institutionUser.setId(linkRequest.getUser().getId());
+    public void approveOrRejectInstitutionLinkRequest(InstitutionLinkRequest linkRequest, boolean approve) {
+        if(approve){
+            InstitutionUser institutionUser = new InstitutionUser();
+            institutionUser.setId(linkRequest.getUser().getId());
+            institutionUser.setUser_id(linkRequest.getUser());
+            institutionUser.setUserType_id(linkRequest.getUserType());
+            institutionUser.setActive(true);
+            institutionUser.setId(linkRequest.getUser().getId());
 
-        HashMap<String, Object> updateLinkRequest = new HashMap<>();
-        updateLinkRequest.put("linkRequestStatus_id", LinkRequestStatusDAO.APPROVED_REFERENCE);
-        institutionLinkRequestDAO.updateInstitutionLinkRequest(linkRequest.getId(), linkRequest.getInstitution_id().getId(), updateLinkRequest, unused -> {
+            HashMap<String, Object> updateLinkRequest = new HashMap<>();
+            updateLinkRequest.put("linkRequestStatus_id", LinkRequestStatusDAO.APPROVED_REFERENCE);
+            institutionLinkRequestDAO.updateInstitutionLinkRequest(linkRequest.getId(), linkRequest.getInstitution_id().getId(), updateLinkRequest, unused -> {
+                institutionUserDAO.saveNewInstitutionUser(institutionUser, linkRequest.getInstitution_id(), task -> {
+                    if(task.isComplete()){
+                        List<DocumentReference> institutionsList = new ArrayList<>();
+                        institutionsList.add(linkRequest.getInstitution_id());
+                        new UserDAO().updateInstitutionsList(institutionsList, true, linkRequest.getUser(), task2->{
+                            snackBarText.setValue("Solicitação aprovada! Agora essa pessoa é um membro da sua instituição!");
+                        });
+                    }
+                }, e -> {
+                    snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());
 
-            institutionUserDAO.saveNewInstitutionUser(institutionUser, linkRequest.getInstitution_id(), task -> {
-                snackBarText.setValue("Solicitação aprovada! Agora essa pessoa é um membro da sua instituição!");
-
+                });
             }, e -> {
                 snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());
 
             });
-        }, e -> {
-            snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());
-
-        });
+        }else{
+            HashMap<String, Object> updateLinkRequest = new HashMap<>();
+            updateLinkRequest.put("linkRequestStatus_id", LinkRequestStatusDAO.REJECTED_REFERENCE);
+            institutionLinkRequestDAO.updateInstitutionLinkRequest(linkRequest.getId(), linkRequest.getInstitution_id().getId(), updateLinkRequest, task -> {
+                snackBarText.setValue("Solicitação recusada, essa pessoa não faz parte da sua instituição");
+            }, e -> {
+                snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());
+            });
+        }
     }
-
-    public void rejectInstitutionLinkRequest(InstitutionLinkRequest linkRequest) {
-        HashMap<String, Object> updateLinkRequest = new HashMap<>();
-        updateLinkRequest.put("linkRequestStatus_id", LinkRequestStatusDAO.REJECTED_REFERENCE);
-        institutionLinkRequestDAO.updateInstitutionLinkRequest(linkRequest.getId(), linkRequest.getInstitution_id().getId(), updateLinkRequest, task -> {
-            snackBarText.setValue("Solicitação recusada, essa pessoa não faz parte da sua instituição");
-        }, e -> {
-            snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());
-        });
-    }
-
-
-
-
-
-
-
-
-
 }

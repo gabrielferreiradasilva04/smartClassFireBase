@@ -3,6 +3,9 @@ package com.gabriel.smartclass.dao;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
+import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -19,7 +22,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -31,30 +36,33 @@ public class UserDAO {
     private StorageReference storagePictures = storageReference.child("profilePictures");
 
 
-
-    public void insert(User user){
+    public void insert(User user) {
         fb.collection(this.COLLECTION).add(user);
     }
-    public void getUserInstitutions(OnCompleteListener<DocumentSnapshot> onCompleteListener, OnFailureListener onFailureListener){
+
+    public void getUserInstitutions(OnCompleteListener<DocumentSnapshot> onCompleteListener, OnFailureListener onFailureListener) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         fb.collection(User.class.getSimpleName()).document(auth.getCurrentUser().getUid()).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 
-    public void updateProfile(String displayName, OnSuccessListener onSuccessListener){
+    public void updateProfile(String displayName, OnSuccessListener onSuccessListener) {
         UserProfileChangeRequest changes = new UserProfileChangeRequest.Builder().setDisplayName(displayName).build();
         currentUserAplication.updateProfile(changes).addOnSuccessListener(onSuccessListener);
     }
-    public void updatePassword(String newPassword, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener){
+
+    public void updatePassword(String newPassword, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             user.updatePassword(newPassword).addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
         }
     }
-    public void excludeProfilePicture(OnCompleteListener onCompleteListener, OnFailureListener onFailureListener){
+
+    public void excludeProfilePicture(OnCompleteListener onCompleteListener, OnFailureListener onFailureListener) {
         UserProfileChangeRequest update = new UserProfileChangeRequest.Builder().setPhotoUri(null).build();
         currentUserAplication.updateProfile(update).addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
-    public void uploadProfileImage(String userEmail, Bitmap imageBitmap, OnSuccessListener<UploadTask.TaskSnapshot> onSuccessListener, OnFailureListener onFailureListener){
+
+    public void uploadProfileImage(String userEmail, Bitmap imageBitmap, OnSuccessListener<UploadTask.TaskSnapshot> onSuccessListener, OnFailureListener onFailureListener) {
         StorageReference profileStoregeReference = storagePictures.child(userEmail);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -62,31 +70,74 @@ public class UserDAO {
         UploadTask uploadTask = profileStoregeReference.putBytes(dataBytes);
         uploadTask.addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
-    public void downloadImage(String email, OnSuccessListener<byte[]> onSuccessListener, OnFailureListener onFailureListener){
+
+    public void downloadImage(String email, OnSuccessListener<byte[]> onSuccessListener, OnFailureListener onFailureListener) {
         StorageReference profilePictureRef = storagePictures.child(email);
         profilePictureRef.getBytes(3072 * 3072).addOnSuccessListener(onSuccessListener);
     }
-    public void excludeImageStorage(String email, OnSuccessListener onSuccessListener, OnFailureListener onFailureListener){
+
+    public void excludeImageStorage(String email, OnSuccessListener onSuccessListener, OnFailureListener onFailureListener) {
         StorageReference imageRef = storagePictures.child(email);
         imageRef.delete().addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
-    public void listenerSnapshotChanges(EventListener<DocumentSnapshot> enventListener){
+
+    public void listenerSnapshotChanges(EventListener<DocumentSnapshot> enventListener) {
         fb.collection(COLLECTION).document(currentUserAplication.getUid()).addSnapshotListener(enventListener);
     }
-    public void getUserByUserAuthId(OnCompleteListener<DocumentSnapshot> onCompleteListener){
+
+    public void getUserByUserAuthId(OnCompleteListener<DocumentSnapshot> onCompleteListener) {
         fb.collection(COLLECTION).document(currentUserAplication.getUid()).get().addOnCompleteListener(onCompleteListener);
     }
-    public void getUserPictureByCloudStorage(String email,OnCompleteListener<Uri> onCompleteListener, OnFailureListener onFailureListener){
+
+    public void getUserPictureByCloudStorage(String email, OnCompleteListener<Uri> onCompleteListener, OnFailureListener onFailureListener) {
         storagePictures.child(email).getDownloadUrl().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
-    public void getUserById(String id, OnSuccessListener<DocumentSnapshot> onSuccessListener, OnFailureListener onFailureListener){
+
+    public void getUserById(String id, OnSuccessListener<DocumentSnapshot> onSuccessListener, OnFailureListener onFailureListener) {
         fb.collection(COLLECTION).document(id).get().addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
-    public void updateApplicationUser(HashMap<String, Object> updates, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener){
+
+    public void updateApplicationUser(HashMap<String, Object> updates, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener) {
         fb.collection(COLLECTION).document(currentUserAplication.getUid()).update(updates).addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
-    public void getUserByDocumentReference(DocumentReference userReference, OnCompleteListener<DocumentSnapshot> onCompleteListener, OnFailureListener onFailureListener){
+
+    public void getUserByDocumentReference(DocumentReference userReference, OnCompleteListener<DocumentSnapshot> onCompleteListener, OnFailureListener onFailureListener) {
         fb.collection(COLLECTION).document(userReference.getId()).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+    }
+
+    public void updateUserProfile(HashMap<String, Object> changes, DocumentReference userReference, OnCompleteListener<Void> onCompleteListener) {
+        userReference.update(changes).addOnCompleteListener(onCompleteListener);
+    }
+
+    public void updateInstitutionsList(@NonNull List<DocumentReference> institutionsToAdd, boolean add, @NonNull DocumentReference userReference, OnCompleteListener<Void> onCompleteListener) {
+        if(add){
+            userReference.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult().exists()) {
+                    User user = task.getResult().toObject(User.class);
+                    if(user != null && user.getInstitutions() != null){
+                        for(DocumentReference institutionToAddReference: institutionsToAdd){
+                            user.getInstitutions().add(institutionToAddReference);
+                        }
+                        userReference.update("institutions", user.getInstitutions()).addOnCompleteListener(onCompleteListener);
+                    }
+
+                }
+            });
+        }else{
+            userReference.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult().exists()) {
+                    User user = task.getResult().toObject(User.class);
+                    if(user != null && user.getInstitutions() != null){
+                        for(DocumentReference institutionToAddReference: institutionsToAdd){
+                            user.getInstitutions().remove(institutionToAddReference);
+                        }
+                        userReference.update("institutions", user.getInstitutions()).addOnCompleteListener(onCompleteListener);
+                    }
+                }
+            });
+
+        }
+
     }
 
 

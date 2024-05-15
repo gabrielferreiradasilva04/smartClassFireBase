@@ -31,12 +31,14 @@ public class InstitutionMainMenu extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         navigation();
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        notificationsNumber.observe(this, notificationsObserve());
         ViewModelProvider viewModelProvider = new ViewModelProvider(this);
         notificationsNumber.observe(this, notificationsObserve());
         viewModel = viewModelProvider.get(HostUserActivityViewModel.class);
         viewModel.getInstitutionByCurrentUser();
         viewModel.loadUserPicture();
         viewModel.syncInstitutionInRealTime();
+        viewModel.listenerLinkRequestsPending(notificationsNumber);
 
 
     }

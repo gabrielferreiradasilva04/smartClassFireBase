@@ -36,7 +36,7 @@ public class InstitutionLinkRequestDAO {
 
     public void createNewLinkRequest(InstitutionLinkRequest institutionLinkRequest, DocumentReference institutionReference, OnCompleteListener onCompleteListener, OnFailureListener onFailureListener) throws RuntimeException {
 
-        institutionReference.collection(COLLECTION).whereEqualTo("user", institutionLinkRequest.getUser()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        institutionReference.collection(COLLECTION).whereEqualTo("user", institutionLinkRequest.getUser()).whereEqualTo("linkRequestStatus_id", LinkRequestStatusDAO.PENDING_REFERENCE).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.getResult().isEmpty()) {
@@ -65,7 +65,7 @@ public class InstitutionLinkRequestDAO {
     }
     public void syncNewLinkRequestInRealTime(String institutionID, DocumentReference statusReference, EventListener<QuerySnapshot> eventListener){
         DocumentReference institutionReference = fb.collection(institutionsCollection).document(institutionID);
-        institutionReference.collection(COLLECTION).whereEqualTo("linkRequestStatus_id", statusReference).addSnapshotListener(eventListener);
+        institutionReference.collection(COLLECTION).addSnapshotListener(eventListener);
 
     }
 

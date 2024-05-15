@@ -127,8 +127,8 @@ public class InstitutionLinkRequestsAdapter extends RecyclerView.Adapter {
             });
         } else if (institutionLinkRequestMutableLiveData.getValue().get(position).getLinkRequestStatus_id().equals(LinkRequestStatusDAO.REJECTED_REFERENCE)) {
             requestStatusText.setText("Rejeitado");
-            approveButton.setVisibility(View.VISIBLE);
-            rejectButton.setVisibility(View.VISIBLE);
+            approveButton.setVisibility(View.INVISIBLE);
+            rejectButton.setVisibility(View.INVISIBLE);
         }
         Glide.with(holder.itemView.getContext()).load(userRequest.getValue().getPhotoUrl()).placeholder(R.drawable.icone_smarclass_sem_fundo).into(profilePictureUserRequest);
         holder.itemView.setVisibility(View.VISIBLE);

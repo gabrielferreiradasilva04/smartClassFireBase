@@ -29,6 +29,7 @@ import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
 import com.gabriel.smartclass.model.InstitutionUser;
 import com.gabriel.smartclass.model.User;
+import com.gabriel.smartclass.view.BaseNotification;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -41,12 +42,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class HostUserActivityViewModel extends ViewModel {
@@ -408,5 +412,23 @@ public class HostUserActivityViewModel extends ViewModel {
                 snackBarText.setValue("Ops... Ocorreu um erro ao buscar algumas informações");
             });
         }
+    }
+    public void listenerLinkRequestsPending(@NonNull MutableLiveData<AtomicInteger> notificationsNumber){
+        new InstitutionLinkRequestDAO().syncNewLinkRequestInRealTime(FirebaseAuth.getInstance().getCurrentUser().getUid(), LinkRequestStatusDAO.PENDING_REFERENCE, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(error != null){
+                    return;
+                }else{
+                    if(value!= null && !value.isEmpty()){
+                        List<InstitutionLinkRequest> allInstitutionLinkRequests = value.toObjects(InstitutionLinkRequest.class);
+                        Stream<InstitutionLinkRequest> pendingInstitutionLinkRequests = allInstitutionLinkRequests.stream().filter(object -> object.getLinkRequestStatus_id().equals(LinkRequestStatusDAO.PENDING_REFERENCE));
+                        int i = (int) pendingInstitutionLinkRequests.count();
+                        AtomicInteger aux = new AtomicInteger(i);
+                        notificationsNumber.setValue(aux);
+                    }
+                }
+            }
+        });
     }
 }

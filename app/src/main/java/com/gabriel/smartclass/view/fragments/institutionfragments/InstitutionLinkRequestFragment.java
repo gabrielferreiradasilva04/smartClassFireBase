@@ -10,6 +10,7 @@ import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,6 +31,7 @@ import com.gabriel.smartclass.viewModels.InstitutionLinkRequestsFragmentViewMode
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,6 +56,34 @@ public class InstitutionLinkRequestFragment extends Fragment {
         initializeRecyclerView();
         primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().observe(getViewLifecycleOwner(), linkRequestsObserve());
         binding.institutionNoitificationsFilterButton.setOnClickListener(filterButtonClickListener());
+        primaryViewModel.getInstitutionLinkRequestsAdapter().setApproveLinkRequestClickListener(approveLinkRequest());
+        primaryViewModel.getInstitutionLinkRequestsAdapter().setRejectLinkRequestClickListener(rejectLinkRequest());
+    }
+
+    private RejectLinkRequestClickListener rejectLinkRequest() {
+        return linkRequest -> {
+            primaryViewModel.approveOrRejectInstitutionLinkRequest(linkRequest, false);
+            removeItemFromAdapter(linkRequest);
+        };
+    }
+
+    private void removeItemFromAdapter(InstitutionLinkRequest linkRequest) {
+        int indexRemoved = 0;
+        for(int i = 0; i< primaryViewModel.getInstitutionLinkRequestsAdapter().getItemCount(); i++){
+            if(primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue().get(i).equals(linkRequest)){
+                indexRemoved = i;
+                break;
+            }
+        }
+        primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue().removeIf(object -> object.equals(linkRequest));
+        primaryViewModel.getInstitutionLinkRequestsAdapter().notifyItemRemoved(indexRemoved);
+    }
+
+    private ApproveLinkRequestClickListener approveLinkRequest() {
+        return linkRequest -> {
+            primaryViewModel.approveOrRejectInstitutionLinkRequest(linkRequest, true);
+            removeItemFromAdapter(linkRequest);
+        };
     }
 
     private Observer<? super List<InstitutionLinkRequest>> linkRequestsObserve() {
@@ -77,9 +107,13 @@ public class InstitutionLinkRequestFragment extends Fragment {
         super.onDestroyView();
         primaryViewModel.getSnackBarText().removeObserver(observeSnackbar());
         primaryViewModel.getSnackBarText().setValue(null);
-        primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().removeObserver(linkRequestsObserve());
+        primaryViewModel.getInstitutionLinkRequestsAdapter().setInstitutionLinkRequestMutableLiveData(new MutableLiveData<>(new ArrayList<>()));
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
     private void emptyRequestView() {
         EmptyRequestBinding viewEmpty = binding.emptyContainerHome;
@@ -118,6 +152,7 @@ public class InstitutionLinkRequestFragment extends Fragment {
             return true;
         });
     }
+
     public void refresh(){
         binding.institutionNotificationsSwiperefresh.setOnRefreshListener(() -> {
         });
