@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -20,6 +21,8 @@ import com.gabriel.smartclass.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -29,6 +32,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
     private final InstitutionLinkRequestDAO institutionLinkRequestDAO;
@@ -114,4 +119,27 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
             });
         }
     }
+    public void syncNewLinkRequests(MutableLiveData<List<InstitutionLinkRequest>> institutionLinkRequests){
+        new InstitutionLinkRequestDAO().syncNewLinkRequestInRealTime(FirebaseAuth.getInstance().getCurrentUser().getUid(), LinkRequestStatusDAO.PENDING_REFERENCE, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(error != null){
+                    return;
+                }else{
+                    if(value!= null && !value.isEmpty()){
+                        List<InstitutionLinkRequest> allInstitutionLinkRequests = value.toObjects(InstitutionLinkRequest.class);
+                        Stream<InstitutionLinkRequest> pendingInstitutionLinkRequests = allInstitutionLinkRequests.stream().filter(object -> object.getLinkRequestStatus_id().equals(LinkRequestStatusDAO.PENDING_REFERENCE));
+                        Stream<InstitutionLinkRequest> actualPendingInstitutionLinkRequests = institutionLinkRequests.getValue().stream().filter(object -> object.getLinkRequestStatus_id().equals(LinkRequestStatusDAO.PENDING_REFERENCE));
+                        if(!actualPendingInstitutionLinkRequests.collect(Collectors.toList()).equals(pendingInstitutionLinkRequests.collect(Collectors.toList()))){
+                            snackBarText.setValue("Existem novas solicitações de vínculo, atualize o conteúdo para vê-las");
+                        }else{
+                            snackBarText.setValue("Não existem novas notificações");
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+
 }
