@@ -44,12 +44,15 @@ public class InstitutionHomeFragment extends Fragment {
     public InstitutionHomeFragment() {
 
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentInstitutionHomeBinding.inflate(inflater, container, false);
+        initialize();
+        return binding.getRoot();
+    }
+
+    private void initialize() {
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
         viewModel = viewModelProvider.get(HostUserActivityViewModel.class);
         InstitutionMainMenu main = (InstitutionMainMenu) getActivity();
@@ -61,7 +64,13 @@ public class InstitutionHomeFragment extends Fragment {
         viewModel.getInstitutionStatisticsLiveData().observe(getViewLifecycleOwner(), institutionStatisticsObserver());
         binding.institutionSwipeRefreshLayout.setOnRefreshListener(getOnRefreshListener());
         binding.institutionMenuButton.setOnClickListener(menuButtonClickListener());
-        return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        viewModel.getInstitutionMutableLiveData().removeObserver(institutionObserver());
+        viewModel.getInstitutionStatisticsLiveData().removeObserver(institutionStatisticsObserver());
     }
 
     @NonNull

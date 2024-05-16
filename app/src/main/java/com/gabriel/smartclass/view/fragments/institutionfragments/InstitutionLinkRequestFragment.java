@@ -2,6 +2,7 @@ package com.gabriel.smartclass.view.fragments.institutionfragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.gabriel.smartclass.databinding.FragmentInstitutionNotificationsBindin
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
 import com.gabriel.smartclass.view.BaseNotification;
+import com.gabriel.smartclass.view.InstitutionMainMenu;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 import com.gabriel.smartclass.viewModels.InstitutionLinkRequestsFragmentViewModel;
 import com.google.android.material.snackbar.Snackbar;
@@ -34,10 +36,13 @@ import com.google.firebase.firestore.DocumentReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class InstitutionLinkRequestFragment extends Fragment {
     private FragmentInstitutionNotificationsBinding binding;
     private InstitutionLinkRequestsFragmentViewModel primaryViewModel;
+    public static int actualPendingNotifications;
     public InstitutionLinkRequestFragment() {
     }
     @Override
@@ -48,7 +53,19 @@ public class InstitutionLinkRequestFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        primaryViewModel.getSnackBarText().removeObserver(observeSnackbar());
+        primaryViewModel.getSnackBarText().setValue(null);
+        primaryViewModel.getInstitutionLinkRequestsAdapter().setInstitutionLinkRequestMutableLiveData(new MutableLiveData<>(new ArrayList<>()));
+        primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().removeObserver(linkRequestsObserve());
+    }
     private void initialize() {
+        InstitutionMainMenu main = (InstitutionMainMenu) getActivity();
+        if (main != null) {
+            main.updateTitle("Notificações");
+        }
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
         primaryViewModel = viewModelProvider.get(InstitutionLinkRequestsFragmentViewModel.class);
         primaryViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
@@ -58,8 +75,8 @@ public class InstitutionLinkRequestFragment extends Fragment {
         binding.institutionNoitificationsFilterButton.setOnClickListener(filterButtonClickListener());
         primaryViewModel.getInstitutionLinkRequestsAdapter().setApproveLinkRequestClickListener(approveLinkRequest());
         primaryViewModel.getInstitutionLinkRequestsAdapter().setRejectLinkRequestClickListener(rejectLinkRequest());
+        refresh();
     }
-
     private RejectLinkRequestClickListener rejectLinkRequest() {
         return linkRequest -> {
             primaryViewModel.approveOrRejectInstitutionLinkRequest(linkRequest, false);
@@ -77,6 +94,7 @@ public class InstitutionLinkRequestFragment extends Fragment {
         }
         primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue().removeIf(object -> object.equals(linkRequest));
         primaryViewModel.getInstitutionLinkRequestsAdapter().notifyItemRemoved(indexRemoved);
+        getPendingNotificationsIndex();
     }
 
     private ApproveLinkRequestClickListener approveLinkRequest() {
@@ -94,6 +112,16 @@ public class InstitutionLinkRequestFragment extends Fragment {
         binding.institutionNotificationsRecyclerView.setHasFixedSize(true);
         binding.institutionNotificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.institutionNotificationsRecyclerView.setAdapter(primaryViewModel.getInstitutionLinkRequestsAdapter());
+        getPendingNotificationsIndex();
+        if(binding.institutionNotificationsSwiperefresh.isRefreshing()){
+            binding.institutionNotificationsSwiperefresh.setRefreshing(false);
+        }
+    }
+
+    private void getPendingNotificationsIndex() {
+        Stream<InstitutionLinkRequest> pendingNotifications = primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue()
+                .stream().filter(object->object.getLinkRequestStatus_id().equals(LinkRequestStatusDAO.PENDING_REFERENCE));
+        actualPendingNotifications = pendingNotifications.collect(Collectors.toList()).size();
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -102,13 +130,7 @@ public class InstitutionLinkRequestFragment extends Fragment {
         super.onStart();
         emptyRequestView();
     }
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        primaryViewModel.getSnackBarText().removeObserver(observeSnackbar());
-        primaryViewModel.getSnackBarText().setValue(null);
-        primaryViewModel.getInstitutionLinkRequestsAdapter().setInstitutionLinkRequestMutableLiveData(new MutableLiveData<>(new ArrayList<>()));
-    }
+
 
     @Override
     public void onPause() {
@@ -155,6 +177,7 @@ public class InstitutionLinkRequestFragment extends Fragment {
 
     public void refresh(){
         binding.institutionNotificationsSwiperefresh.setOnRefreshListener(() -> {
+            primaryViewModel.getLinkRequests(LinkRequestStatusDAO.PENDING_REFERENCE);
         });
     }
 

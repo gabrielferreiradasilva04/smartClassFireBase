@@ -28,18 +28,26 @@ public class InstitutionMainMenu extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityInstitutionMainMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        initialize();
+    }
+
+    private void initialize() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         navigation();
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        notificationsNumber.observe(this, notificationsObserve());
         ViewModelProvider viewModelProvider = new ViewModelProvider(this);
         notificationsNumber.observe(this, notificationsObserve());
         viewModel = viewModelProvider.get(HostUserActivityViewModel.class);
         viewModel.getInstitutionByCurrentUser();
         viewModel.loadUserPicture();
         viewModel.syncInstitutionInRealTime();
-        viewModel.listenerLinkRequestsPending(notificationsNumber);
+        viewModel.listenerLinkRequestsPending(notificationsNumber,this);
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        notificationsNumber.removeObserver(notificationsObserve());
 
     }
 

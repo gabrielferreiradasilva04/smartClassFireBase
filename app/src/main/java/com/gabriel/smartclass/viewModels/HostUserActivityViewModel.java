@@ -30,6 +30,9 @@ import com.gabriel.smartclass.model.InstitutionLinkRequest;
 import com.gabriel.smartclass.model.InstitutionUser;
 import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.view.BaseNotification;
+import com.gabriel.smartclass.view.StudentMainMenu;
+import com.gabriel.smartclass.view.fragments.institutionfragments.InstitutionLinkRequestFragment;
+import com.gabriel.smartclass.view.fragments.userfragments.HomeFragment;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -70,8 +73,6 @@ public class HostUserActivityViewModel extends ViewModel {
     private final String courses = "courses";
     private InstitutionsAdapter userInstitutionsAdapter;
     private InstitutionLinkRequestsAdapter institutionLinkRequestsAdapter;
-    public static MutableLiveData<Integer> numberOfNotifications = new MutableLiveData<>(0);
-
     public MutableLiveData<HashMap<String, Integer>> getInstitutionStatisticsLiveData() {
         return institutionStatisticsLiveData;
     }
@@ -92,9 +93,6 @@ public class HostUserActivityViewModel extends ViewModel {
         return userInstitutionsAdapter;
     }
 
-    public InstitutionLinkRequestsAdapter getInstitutionLinkRequestsAdapter() {
-        return institutionLinkRequestsAdapter;
-    }
 
     public HostUserActivityViewModel() {
         userDAO = new UserDAO();
@@ -122,6 +120,7 @@ public class HostUserActivityViewModel extends ViewModel {
                         }
                     });
                 }
+
             } else {
                 userInstitutionsAdapter.notifyDataSetChanged();
             }
@@ -413,7 +412,7 @@ public class HostUserActivityViewModel extends ViewModel {
             });
         }
     }
-    public void listenerLinkRequestsPending(@NonNull MutableLiveData<AtomicInteger> notificationsNumber){
+    public void listenerLinkRequestsPending(@NonNull MutableLiveData<AtomicInteger> notificationsNumber, Context context){
         new InstitutionLinkRequestDAO().syncNewLinkRequestInRealTime(FirebaseAuth.getInstance().getCurrentUser().getUid(), LinkRequestStatusDAO.PENDING_REFERENCE, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -426,9 +425,17 @@ public class HostUserActivityViewModel extends ViewModel {
                         int i = (int) pendingInstitutionLinkRequests.count();
                         AtomicInteger aux = new AtomicInteger(i);
                         notificationsNumber.setValue(aux);
+                        sendNotificationAboutNewRequest(aux, context);
                     }
                 }
             }
         });
+    }
+
+    private void sendNotificationAboutNewRequest(AtomicInteger i, Context context) {
+        if(i.get() > 0 && InstitutionLinkRequestFragment.actualPendingNotifications < i.get()){
+            BaseNotification notification = new BaseNotification();
+            notification.trigger("Solicitações", "Você tem novas solicitações, verifique a tela de solicitações", context);
+        }
     }
 }

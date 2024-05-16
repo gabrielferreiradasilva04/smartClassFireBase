@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.gabriel.smartclass.adapter.InstitutionsAdapter;
+
 import com.gabriel.smartclass.databinding.EmptyRequestBinding;
 import com.gabriel.smartclass.databinding.FragmentHomeBinding;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
@@ -26,6 +26,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private EmptyRecyclerViewObserver observer;
     private RecyclerView recyclerViewInstitutions;
+
 
     public HomeFragment() {
     }
@@ -44,6 +45,7 @@ public class HomeFragment extends Fragment {
         binding.buttonAddInstitutionUserInstitutions.setOnClickListener(onInstitutionClick());
         return binding.getRoot();
     }
+
 
     private void loadUserInstitutions() {
         hostUserActivityViewModel.getUserInstitutionsAdapter().setItemClickListener(institutionClickListener());
@@ -85,6 +87,5 @@ public class HomeFragment extends Fragment {
             hostUserActivityViewModel.getUserInstitutions();
             loadUserInstitutions();
         });
-
     }
 }
