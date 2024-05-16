@@ -28,6 +28,10 @@ public class StudentMainMenu extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityStudentMainMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        initialize();
+    }
+
+    private void initialize() {
         ViewModelProvider viewModelProvider = new ViewModelProvider(this);
         hostUserActivityViewModel = viewModelProvider.get(HostUserActivityViewModel.class);
         hostUserActivityViewModel.getUserInstitutions();

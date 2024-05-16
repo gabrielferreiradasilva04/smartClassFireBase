@@ -56,33 +56,44 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
+        defaultInitialize();
+        if (this.getActivity().getClass().equals(StudentMainMenu.class)) {
+            initializeUserProfile();
+        } else if (this.getActivity().getClass().equals(InstitutionMainMenu.class)) {
+            initializeInstitutionProfile();
+        }
+        return binding.getRoot();
+    }
+
+    private void defaultInitialize() {
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
         hostUserActivityViewModel = viewModelProvider.get(HostUserActivityViewModel.class);
         hostUserActivityViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
         binding.changePasswordProfile.setOnClickListener(clickListenerOpenPasswordDialog());
         hostUserActivityViewModel.getProfilePictureLiveData().observe(getViewLifecycleOwner(), observeProfilePicture());
-        if (this.getActivity().getClass().equals(StudentMainMenu.class)) {
-            studentMain = (StudentMainMenu) getActivity();
-            studentMain.updateTitle("Perfil");
-            loadUserDetails();
-            binding.saveChangesProfile.setOnClickListener(clickListenerUserSaveChanges());
-            binding.profilePicture.setOnClickListener(clickListenerOpenUserPictureOptions());
-        } else if (this.getActivity().getClass().equals(InstitutionMainMenu.class)) {
-            institutionMain = (InstitutionMainMenu) getActivity();
-            institutionMain.updateTitle("Perfil");
-            binding.institutionEdtxtCnpj.setVisibility(View.VISIBLE);
-            binding.institutionTxtviewCapacity.setVisibility(View.VISIBLE);
-            binding.scrollbuttons.setVisibility(View.VISIBLE);
-            binding.saveChangesProfile.setOnClickListener(clickListenerInstitutionSaveChanges());
-            binding.profilePicture.setOnClickListener(clickListenerOpenInstitutionPictureOptions());
-            loadInstitutionDetails();
-            binding.edtxtStudentsCapacity.setOnFocusChangeListener(new CapacityTextListener(binding.edtxtStudentsCapacity));
-            binding.edtxtTeachersCapacity.setOnFocusChangeListener(new CapacityTextListener(binding.edtxtTeachersCapacity));
-            binding.edtxtClassroomsCapacity.setOnFocusChangeListener(new CapacityTextListener(binding.edtxtClassroomsCapacity));
-            binding.edtxtCoordinatorsCapacity.setOnFocusChangeListener(new CapacityTextListener(binding.edtxtCoordinatorsCapacity));
-        }
+    }
 
-        return binding.getRoot();
+    private void initializeInstitutionProfile() {
+        institutionMain = (InstitutionMainMenu) getActivity();
+        institutionMain.updateTitle("Perfil");
+        binding.institutionEdtxtCnpj.setVisibility(View.VISIBLE);
+        binding.institutionTxtviewCapacity.setVisibility(View.VISIBLE);
+        binding.scrollbuttons.setVisibility(View.VISIBLE);
+        binding.saveChangesProfile.setOnClickListener(clickListenerInstitutionSaveChanges());
+        binding.profilePicture.setOnClickListener(clickListenerOpenInstitutionPictureOptions());
+        loadInstitutionDetails();
+        binding.edtxtStudentsCapacity.setOnFocusChangeListener(new CapacityTextListener(binding.edtxtStudentsCapacity));
+        binding.edtxtTeachersCapacity.setOnFocusChangeListener(new CapacityTextListener(binding.edtxtTeachersCapacity));
+        binding.edtxtClassroomsCapacity.setOnFocusChangeListener(new CapacityTextListener(binding.edtxtClassroomsCapacity));
+        binding.edtxtCoordinatorsCapacity.setOnFocusChangeListener(new CapacityTextListener(binding.edtxtCoordinatorsCapacity));
+    }
+
+    private void initializeUserProfile() {
+        studentMain = (StudentMainMenu) getActivity();
+        studentMain.updateTitle("Perfil");
+        loadUserDetails();
+        binding.saveChangesProfile.setOnClickListener(clickListenerUserSaveChanges());
+        binding.profilePicture.setOnClickListener(clickListenerOpenUserPictureOptions());
     }
 
     public void loadUserDetails() {
@@ -112,6 +123,8 @@ public class ProfileFragment extends Fragment {
         super.onDestroyView();
         hostUserActivityViewModel.getSnackBarText().removeObserver(observeSnackbar());
         hostUserActivityViewModel.getSnackBarText().setValue(null);
+        hostUserActivityViewModel.getProfilePictureLiveData().removeObserver(observeProfilePicture());
+
     }
 
     @Override
@@ -294,12 +307,12 @@ public class ProfileFragment extends Fragment {
         if (binding.edtxtCoordinatorsCapacity.getText().toString().equals("")) {
             binding.edtxtCoordinatorsCapacity.setText("0");
         } else {
-                maxCoordinators = Integer.parseInt(binding.edtxtCoordinatorsCapacity.getText().toString());
+            maxCoordinators = Integer.parseInt(binding.edtxtCoordinatorsCapacity.getText().toString());
         }
         if (binding.edtxtClassroomsCapacity.getText().toString().equals("")) {
             binding.edtxtClassroomsCapacity.setText("0");
         } else {
-                maxClassrooms = Integer.parseInt(binding.edtxtClassroomsCapacity.getText().toString());
+            maxClassrooms = Integer.parseInt(binding.edtxtClassroomsCapacity.getText().toString());
         }
         String displayName = binding.edtxtDisplayName.getText().toString();
         String email = binding.edtxtEmail.getText().toString();

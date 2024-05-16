@@ -110,12 +110,12 @@ public class UserDAO {
     }
 
     public void updateInstitutionsList(@NonNull List<DocumentReference> institutionsToAdd, boolean add, @NonNull DocumentReference userReference, OnCompleteListener<Void> onCompleteListener) {
-        if(add){
+        if (add) {
             userReference.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful() && task.getResult().exists()) {
                     User user = task.getResult().toObject(User.class);
-                    if(user != null && user.getInstitutions() != null){
-                        for(DocumentReference institutionToAddReference: institutionsToAdd){
+                    if (user != null && user.getInstitutions() != null) {
+                        for (DocumentReference institutionToAddReference : institutionsToAdd) {
                             user.getInstitutions().add(institutionToAddReference);
                         }
                         userReference.update("institutions", user.getInstitutions()).addOnCompleteListener(onCompleteListener);
@@ -123,12 +123,12 @@ public class UserDAO {
 
                 }
             });
-        }else{
+        } else {
             userReference.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful() && task.getResult().exists()) {
                     User user = task.getResult().toObject(User.class);
-                    if(user != null && user.getInstitutions() != null){
-                        for(DocumentReference institutionToAddReference: institutionsToAdd){
+                    if (user != null && user.getInstitutions() != null) {
+                        for (DocumentReference institutionToAddReference : institutionsToAdd) {
                             user.getInstitutions().remove(institutionToAddReference);
                         }
                         userReference.update("institutions", user.getInstitutions()).addOnCompleteListener(onCompleteListener);
@@ -138,6 +138,11 @@ public class UserDAO {
 
         }
 
+    }
+
+    public void syncUserChangesRealTime(EventListener<DocumentSnapshot> eventListener) {
+        DocumentReference userReference = fb.collection(User.class.getSimpleName()).document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        userReference.addSnapshotListener(eventListener);
     }
 
 
