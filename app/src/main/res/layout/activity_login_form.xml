@@ -37,6 +37,7 @@
 
     <EditText
         android:id="@+id/edTxtEmail_login"
+        android:drawableRight="@drawable/baseline_attach_email_24"
         style="@style/Edit_Text_Forms"
         android:layout_marginTop="40dp"
         android:hint="E-mail"
@@ -52,7 +53,8 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edTxtEmail_login" />
+        app:layout_constraintTop_toBottomOf="@id/edTxtEmail_login"
+        android:drawableRight="@drawable/baseline_account_balance_wallet_24"/>
 
 
     <ImageView

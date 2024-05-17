@@ -316,9 +316,10 @@ public class ProfileFragment extends Fragment {
         }
         String displayName = binding.edtxtDisplayName.getText().toString();
         String email = binding.edtxtEmail.getText().toString();
+        String phoneNumber = binding.edtxtPhoneNumber.getText().toString();
         ProgressBar progressBar = binding.progressBarProfileChanges;
         View view = binding.viewLoading;
-        hostUserActivityViewModel.updateInstitutionProfile(displayName, email, bitmap, progressBar, view, maxTeachers, maxStudents, maxCoordinators, maxClassrooms);
+        hostUserActivityViewModel.updateInstitutionProfile(displayName, email, bitmap, progressBar, view, maxTeachers, maxStudents, maxCoordinators, maxClassrooms, phoneNumber);
     }
 
     @NonNull
