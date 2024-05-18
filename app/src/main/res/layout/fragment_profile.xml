@@ -69,7 +69,7 @@
                     android:maxLength="14"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/institution_edtxt_cnpj"
-                    android:inputType="number"
+                    android:inputType="text|number"
                     tools:ignore="RtlHardcoded,SpeakableTextPresentCheck" />
 
                 <View

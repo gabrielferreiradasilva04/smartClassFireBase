@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.FragmentProfileBinding;
 import com.gabriel.smartclass.utilities.listeners.CapacityTextListener;
+import com.gabriel.smartclass.utilities.maskListeners.MaskListenerPhone;
 import com.gabriel.smartclass.view.InstitutionMainMenu;
 import com.gabriel.smartclass.view.StudentMainMenu;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
@@ -71,6 +72,12 @@ public class ProfileFragment extends Fragment {
         hostUserActivityViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
         binding.changePasswordProfile.setOnClickListener(clickListenerOpenPasswordDialog());
         hostUserActivityViewModel.getProfilePictureLiveData().observe(getViewLifecycleOwner(), observeProfilePicture());
+        phoneMask();
+    }
+
+    private void phoneMask() {
+        MaskListenerPhone maskListenerPhone = new MaskListenerPhone(binding.edtxtPhoneNumber);
+        binding.edtxtPhoneNumber.addTextChangedListener(maskListenerPhone);
     }
 
     private void initializeInstitutionProfile() {
