@@ -43,6 +43,7 @@
                     android:id="@+id/edtxt_email"
                     style="@style/Edit_Text_Forms"
                     android:drawableRight="@drawable/baseline_attach_email_24"
+                    android:inputType="text"
                     android:enabled="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -60,24 +61,12 @@
                     app:layout_constraintTop_toBottomOf="@id/edtxt_email"
                     tools:ignore="RtlHardcoded,SpeakableTextPresentCheck" />
 
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/edtxt_phoneNumber"
-                    style="@style/Edit_Text_Forms"
-                    android:drawableRight="@drawable/baseline_contact_phone_24"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:maxLength="14"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/institution_edtxt_cnpj"
-                    android:inputType="text|number"
-                    tools:ignore="RtlHardcoded,SpeakableTextPresentCheck" />
-
                 <View
                     android:id="@+id/institution_view_divider"
+                    style="@style/divider"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    style="@style/divider"
-                    app:layout_constraintTop_toBottomOf="@id/edtxt_phoneNumber"/>
+                    app:layout_constraintTop_toBottomOf="@id/institution_edtxt_cnpj" />
 
                 <TextView
                     android:id="@+id/institution_txtview_capacity"

@@ -21,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
@@ -31,7 +30,6 @@ import android.widget.Toast;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.FragmentProfileBinding;
 import com.gabriel.smartclass.utilities.listeners.CapacityTextListener;
-import com.gabriel.smartclass.utilities.maskListeners.MaskListenerPhone;
 import com.gabriel.smartclass.view.InstitutionMainMenu;
 import com.gabriel.smartclass.view.StudentMainMenu;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
@@ -72,13 +70,8 @@ public class ProfileFragment extends Fragment {
         hostUserActivityViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
         binding.changePasswordProfile.setOnClickListener(clickListenerOpenPasswordDialog());
         hostUserActivityViewModel.getProfilePictureLiveData().observe(getViewLifecycleOwner(), observeProfilePicture());
-        phoneMask();
     }
 
-    private void phoneMask() {
-        MaskListenerPhone maskListenerPhone = new MaskListenerPhone(binding.edtxtPhoneNumber);
-        binding.edtxtPhoneNumber.addTextChangedListener(maskListenerPhone);
-    }
 
     private void initializeInstitutionProfile() {
         institutionMain = (InstitutionMainMenu) getActivity();
@@ -114,6 +107,7 @@ public class ProfileFragment extends Fragment {
         if (FirebaseAuth.getInstance().getCurrentUser() != null && hostUserActivityViewModel.getInstitutionMutableLiveData().getValue() != null) {
             String name = hostUserActivityViewModel.getInstitutionMutableLiveData().getValue().getName();
             String cnpj = hostUserActivityViewModel.getInstitutionMutableLiveData().getValue().getCnpj();
+            String phone = hostUserActivityViewModel.getInstitutionMutableLiveData().getValue().getPhone();
             String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
             binding.edtxtEmail.setText(email);
             binding.institutionEdtxtCnpj.setText(cnpj);
@@ -323,10 +317,9 @@ public class ProfileFragment extends Fragment {
         }
         String displayName = binding.edtxtDisplayName.getText().toString();
         String email = binding.edtxtEmail.getText().toString();
-        String phoneNumber = binding.edtxtPhoneNumber.getText().toString();
         ProgressBar progressBar = binding.progressBarProfileChanges;
         View view = binding.viewLoading;
-        hostUserActivityViewModel.updateInstitutionProfile(displayName, email, bitmap, progressBar, view, maxTeachers, maxStudents, maxCoordinators, maxClassrooms, phoneNumber);
+        hostUserActivityViewModel.updateInstitutionProfile(displayName, email, bitmap, progressBar, view, maxTeachers, maxStudents, maxCoordinators, maxClassrooms);
     }
 
     @NonNull

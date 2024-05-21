@@ -25,7 +25,6 @@ public class UserInstitutionMenu extends BaseActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(binding.getRoot());
         currentInstitution = getIntent().getParcelableExtra("institution");
-        binding.textViewG.setText(currentInstitution.getName());
     }
     @Override
     public boolean onSupportNavigateUp() {

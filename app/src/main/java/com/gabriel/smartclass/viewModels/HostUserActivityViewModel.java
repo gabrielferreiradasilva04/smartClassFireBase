@@ -324,12 +324,12 @@ public class HostUserActivityViewModel extends ViewModel {
         });
     }
 
-    public void updateInstitutionProfile(@NonNull String displayName, @NonNull String email, @NonNull Bitmap profilePictureCurrent, @NonNull ProgressBar progressBar, @NonNull View viewLoading, int maxTeachers, int maxStudents, int maxCoordinators, int maxClassrooms, String phoneNumber) {
+    public void updateInstitutionProfile(@NonNull String displayName, @NonNull String email, @NonNull Bitmap profilePictureCurrent, @NonNull ProgressBar progressBar, @NonNull View viewLoading, int maxTeachers, int maxStudents, int maxCoordinators, int maxClassrooms) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null && institutionMutableLiveData.getValue() != null) {
             if (!displayName.equals(currentUser.getDisplayName()) || !email.equals(currentUser.getEmail()) || profilePictureCurrent != profilePictureLiveData.getValue() ||
                     maxTeachers != institutionMutableLiveData.getValue().getMaxTeachers() || maxStudents != institutionMutableLiveData.getValue().getMaxStudents()
-                    || maxCoordinators != institutionMutableLiveData.getValue().getMaxCoordinators() || maxClassrooms != institutionMutableLiveData.getValue().getMaxClassrooms() || !phoneNumber.equals(currentUser.getPhoneNumber())) {
+                    || maxCoordinators != institutionMutableLiveData.getValue().getMaxCoordinators() || maxClassrooms != institutionMutableLiveData.getValue().getMaxClassrooms()) {
                 if (profilePictureCurrent != this.profilePictureLiveData.getValue()) {
                     uploadInstitutionPhoto(email, profilePictureCurrent, progressBar, viewLoading);
                 }
@@ -340,9 +340,6 @@ public class HostUserActivityViewModel extends ViewModel {
                     institutionDocumentUpdate.put("maxCoordinators", maxCoordinators);
                     institutionDocumentUpdate.put("maxClassrooms", maxClassrooms);
                     institutionDocumentUpdate.put("name", displayName);
-                    if(!phoneNumber.isEmpty()){
-                        institutionDocumentUpdate.put("phone", phoneNumber);
-                    }
                     institutionDAO.update(institutionDocumentUpdate, currentUser.getUid(), unused -> {
                         snackBarText.setValue("Perfil atualizado");
                     }, e -> {
