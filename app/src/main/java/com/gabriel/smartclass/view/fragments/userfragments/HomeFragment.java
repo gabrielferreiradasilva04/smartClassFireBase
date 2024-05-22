@@ -4,27 +4,35 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.gabriel.smartclass.dao.InstitutionUserDAO;
 import com.gabriel.smartclass.databinding.EmptyRequestBinding;
 import com.gabriel.smartclass.databinding.FragmentHomeBinding;
+import com.gabriel.smartclass.model.Institution;
+import com.gabriel.smartclass.model.InstitutionUser;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
 import com.gabriel.smartclass.view.InstitutionsSearch;
 import com.gabriel.smartclass.view.StudentMainMenu;
 import com.gabriel.smartclass.view.UserInstitutionMenu;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 import com.gabriel.smartclass.adapter.interfaces.OnInstitutionItemClickListener;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class HomeFragment extends Fragment {
-    private HostUserActivityViewModel hostUserActivityViewModel;
+    private HostUserActivityViewModel viewModel;
     private FragmentHomeBinding binding;
-    private EmptyRecyclerViewObserver observer;
     private RecyclerView recyclerViewInstitutions;
 
 
@@ -34,25 +42,42 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+        initialize();
+        binding.buttonAddInstitutionUserInstitutions.setOnClickListener(searchForInstitutions());
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        viewModel.getInstitutionUserMutableLiveData().removeObserver(institutionUserObserver());
+    }
+
+    private void initialize() {
         StudentMainMenu main = (StudentMainMenu) getActivity();
         if (main != null) {
             main.updateTitle("Instituições");
         }
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
-        hostUserActivityViewModel = viewModelProvider.get(HostUserActivityViewModel.class);
+        viewModel = viewModelProvider.get(HostUserActivityViewModel.class);
+        viewModel.getInstitutionUserMutableLiveData().observe(getViewLifecycleOwner(), institutionUserObserver());
+        viewModel.getSnackBarText().observe(getViewLifecycleOwner(), snackbarObserver());
         loadUserInstitutions();
         refresh();
-        binding.buttonAddInstitutionUserInstitutions.setOnClickListener(onInstitutionClick());
-        return binding.getRoot();
     }
 
+    private Observer<? super String> snackbarObserver() {
+        return text ->{
+            Snackbar.make(binding.institutionsRecyclerViewHomeFragment, text, Snackbar.LENGTH_SHORT).show();
+        };
+    }
 
     private void loadUserInstitutions() {
-        hostUserActivityViewModel.getUserInstitutionsAdapter().setItemClickListener(institutionClickListener());
+        viewModel.getUserInstitutionsAdapter().setItemClickListener(institutionClickListener());
         recyclerViewInstitutions = binding.institutionsRecyclerViewHomeFragment;
         recyclerViewInstitutions.setHasFixedSize(true);
         recyclerViewInstitutions.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewInstitutions.setAdapter(hostUserActivityViewModel.getUserInstitutionsAdapter());
+        recyclerViewInstitutions.setAdapter(viewModel.getUserInstitutionsAdapter());
         if(binding.swipeRefreshUserHome.isRefreshing()){
             binding.swipeRefreshUserHome.setRefreshing(false);
         }
@@ -63,28 +88,44 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         EmptyRequestBinding viewEmpty = binding.emptyContainerHome;
-        observer = new EmptyRecyclerViewObserver(recyclerViewInstitutions, viewEmpty.getRoot());
-        hostUserActivityViewModel.getUserInstitutionsAdapter().registerAdapterDataObserver(observer);
-        hostUserActivityViewModel.getUserInstitutionsAdapter().notifyDataSetChanged();
+        EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(recyclerViewInstitutions, viewEmpty.getRoot());
+        viewModel.getUserInstitutionsAdapter().registerAdapterDataObserver(observer);
+        viewModel.getUserInstitutionsAdapter().notifyDataSetChanged();
     }
     @NonNull
     private OnInstitutionItemClickListener institutionClickListener() {
         return institution -> {
-            Intent i = new Intent(requireActivity(), UserInstitutionMenu.class);
-            i.putExtra("institution", institution);
-            startActivity(i);
+            verirfyUserAccess(institution);
         };
     }
 
-    private View.OnClickListener onInstitutionClick() {
+    private void verirfyUserAccess(Institution institution) {
+        viewModel.getInstitutionUserById(FirebaseAuth.getInstance().getCurrentUser().getUid(), institution.getId());
+    }
+    private Observer<? super InstitutionUser> institutionUserObserver() {
+        return institutionUser -> {
+            Log.d("CHAMANDO OBSERVER", "institutionUserObserver: CHAMANDO OBSERVER");
+            if(InstitutionUserDAO.verifyUserAccess(institutionUser)){
+                Log.d("LIBERADO", "institutionUserObserver: Acesso liberado");
+                Intent i = new Intent(requireActivity(), UserInstitutionMenu.class);
+                startActivity(i);
+            }else{
+                Toast.makeText(getContext(), "Algo deu errado...", Toast.LENGTH_LONG).show();
+            }
+        };
+    }
+
+    private View.OnClickListener searchForInstitutions() {
         return v -> {
             Intent i = new Intent(requireActivity(), InstitutionsSearch.class);
             startActivity(i);
         };
     }
+    
+
     public void refresh(){
         binding.swipeRefreshUserHome.setOnRefreshListener(() -> {
-            hostUserActivityViewModel.getUserInstitutions();
+            viewModel.getUserInstitutions();
             loadUserInstitutions();
         });
     }
