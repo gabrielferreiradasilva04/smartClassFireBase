@@ -101,14 +101,8 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
                             snackBarText.setValue("Solicitação aprovada! Agora essa pessoa é um membro da sua instituição!");
                         });
                     }
-                }, e -> {
-                    snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());
-
-                });
-            }, e -> {
-                snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());
-
-            });
+                }, e -> {snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());});
+            }, e -> {snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());});
         }else{
             HashMap<String, Object> updateLinkRequest = new HashMap<>();
             updateLinkRequest.put("linkRequestStatus_id", LinkRequestStatusDAO.REJECTED_REFERENCE);

@@ -5,6 +5,7 @@ import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -15,8 +16,9 @@ public class InstitutionUserDAO {
 
     private final FirebaseFirestore fb = FirebaseFirestore.getInstance();
 
-    public void saveNewInstitutionUser(InstitutionUser institutionUser, DocumentReference institutionReference, OnCompleteListener<DocumentReference> onCompleteListener, OnFailureListener onFailureListener){
-        fb.collection(institutionsCollection).document(institutionReference.getId()).collection(COLLECTION).add(institutionUser).addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+    public void saveNewInstitutionUser(InstitutionUser institutionUser, DocumentReference institutionReference, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener){
+        CollectionReference institutionUserCollection = fb.collection(institutionsCollection).document(institutionReference.getId()).collection(COLLECTION);
+        institutionUserCollection.document(institutionUser.getId()).set(institutionUser).addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
     public void getInstitutionUserById(String userID, String institutionID, OnCompleteListener<DocumentSnapshot> onCompleteListener, OnFailureListener onFailureListener){
        DocumentReference institutionReference = fb.collection(institutionsCollection).document(institutionID);

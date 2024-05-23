@@ -1,11 +1,11 @@
 package com.gabriel.smartclass.viewModels;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -61,7 +61,7 @@ public class HostUserActivityViewModel extends ViewModel {
     private final String courses = "courses";
     private InstitutionsAdapter userInstitutionsAdapter;
 //  institution User viriables
-    private MutableLiveData<InstitutionUser> institutionUserMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<InstitutionUser> institutionUserMutableLiveData = new MutableLiveData<>();
 
     public MutableLiveData<InstitutionUser> getInstitutionUserMutableLiveData() {
         return institutionUserMutableLiveData;
@@ -124,14 +124,11 @@ public class HostUserActivityViewModel extends ViewModel {
     public void getInstitutionUserById(String userID, String institutionID) {
         new InstitutionUserDAO().getInstitutionUserById(userID, institutionID, task -> {
           if(task.isSuccessful() && task.getResult().exists()){
-              Log.d("achou", "getInstitutionUserById: chegou no metodo e achou");
               this.institutionUserMutableLiveData.setValue(task.getResult().toObject(InstitutionUser.class));
           }else{
               snackBarText.setValue("Parece que algo deu errado... Tente novamente mais tarde.");
           }
-        }, e -> {
-            snackBarText.setValue("Parece que algo deu errado... Tente novamente mais tarde.");
-        });
+        }, e -> snackBarText.setValue("Parece que algo deu errado... Tente novamente mais tarde."));
     }
 
     public void loadUserPicture() {

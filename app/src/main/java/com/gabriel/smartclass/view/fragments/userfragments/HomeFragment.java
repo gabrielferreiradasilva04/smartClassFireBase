@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,7 @@ public class HomeFragment extends Fragment {
     private HostUserActivityViewModel viewModel;
     private FragmentHomeBinding binding;
     private RecyclerView recyclerViewInstitutions;
+    private Institution selectedInstitution;
 
 
     public HomeFragment() {
@@ -51,6 +51,8 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         viewModel.getInstitutionUserMutableLiveData().removeObserver(institutionUserObserver());
+        viewModel.getSnackBarText().removeObserver(snackbarObserver());
+        viewModel.getSnackBarText().setValue(null);
     }
 
     private void initialize() {
@@ -68,7 +70,9 @@ public class HomeFragment extends Fragment {
 
     private Observer<? super String> snackbarObserver() {
         return text ->{
-            Snackbar.make(binding.institutionsRecyclerViewHomeFragment, text, Snackbar.LENGTH_SHORT).show();
+            if(text != null){
+                Snackbar.make(binding.institutionsRecyclerViewHomeFragment, text, Snackbar.LENGTH_SHORT).show();
+            }
         };
     }
 
@@ -94,25 +98,29 @@ public class HomeFragment extends Fragment {
     }
     @NonNull
     private OnInstitutionItemClickListener institutionClickListener() {
-        return institution -> {
-            verirfyUserAccess(institution);
-        };
+        return this::verirfyUserAccess;
     }
 
     private void verirfyUserAccess(Institution institution) {
+        assert FirebaseAuth.getInstance().getCurrentUser() != null;
+        this.selectedInstitution = institution;
         viewModel.getInstitutionUserById(FirebaseAuth.getInstance().getCurrentUser().getUid(), institution.getId());
     }
     private Observer<? super InstitutionUser> institutionUserObserver() {
         return institutionUser -> {
-            Log.d("CHAMANDO OBSERVER", "institutionUserObserver: CHAMANDO OBSERVER");
             if(InstitutionUserDAO.verifyUserAccess(institutionUser)){
-                Log.d("LIBERADO", "institutionUserObserver: Acesso liberado");
-                Intent i = new Intent(requireActivity(), UserInstitutionMenu.class);
-                startActivity(i);
+                institutionUserAccess(institutionUser);
             }else{
                 Toast.makeText(getContext(), "Algo deu errado...", Toast.LENGTH_LONG).show();
             }
         };
+    }
+
+    private void institutionUserAccess(InstitutionUser institutionUser) {
+        Intent i = new Intent(requireActivity(), UserInstitutionMenu.class);
+        i.putExtra("institution", selectedInstitution);
+        i.putExtra("institutionUser", institutionUser);
+        startActivity(i);
     }
 
     private View.OnClickListener searchForInstitutions() {
@@ -121,8 +129,6 @@ public class HomeFragment extends Fragment {
             startActivity(i);
         };
     }
-    
-
     public void refresh(){
         binding.swipeRefreshUserHome.setOnRefreshListener(() -> {
             viewModel.getUserInstitutions();

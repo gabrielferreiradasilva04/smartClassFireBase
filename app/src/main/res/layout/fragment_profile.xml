@@ -55,7 +55,7 @@
                     style="@style/Edit_Text_Forms"
                     android:drawableRight="@drawable/ic_account"
                     android:enabled="false"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/edtxt_email"
@@ -82,7 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/institution_txtview_capacity"
-                    android:visibility="visible">
+                    android:visibility="gone">
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
