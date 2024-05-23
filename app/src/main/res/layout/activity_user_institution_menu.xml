@@ -4,4 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.UserInstitutionMenu"/>
+    tools:context=".view.UserInstitutionMenu"
+    android:background="@drawable/main_background">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="SpeakableTextPresentCheck">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/institution_user_mainmenu_profile_view"
+                style="@style/SimpleViewContainer"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:backgroundTint="@color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+            <View
+                android:id="@+id/institution_user_mainmenu_profile_divider"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/divider"
+                app:layout_constraintTop_toBottomOf="@id/institution_user_mainmenu_profile_view"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/institution_user_mainmenu_profile_divider"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
