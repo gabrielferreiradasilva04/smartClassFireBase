@@ -8,42 +8,100 @@
     android:background="@drawable/main_background">
 
     <ScrollView
+        android:id="@+id/institution_user_mainmenu_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="SpeakableTextPresentCheck">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <View
                 android:id="@+id/institution_user_mainmenu_profile_view"
                 style="@style/SimpleViewContainer"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:backgroundTint="@color/white"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                />
+                app:layout_constraintHorizontal_bias="0.473"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <View
                 android:id="@+id/institution_user_mainmenu_profile_divider"
+                style="@style/divider"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/divider"
-                app:layout_constraintTop_toBottomOf="@id/institution_user_mainmenu_profile_view"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@id/institution_user_mainmenu_profile_view"/>
+            <TextView
+                android:id="@+id/institution_user_mainmenu_text_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="nome"
+                android:layout_margin="16dp"
+                app:layout_constraintEnd_toEndOf="@id/institution_user_mainmenu_profile_view"
+                app:layout_constraintTop_toTopOf="@id/institution_user_mainmenu_profile_view"/>
+            <TextView
+                android:id="@+id/institution_user_mainmenu_userType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cargo"
+                android:layout_margin="16dp"
+                app:layout_constraintEnd_toEndOf="@id/institution_user_mainmenu_profile_view"
+                app:layout_constraintTop_toBottomOf="@id/institution_user_mainmenu_text_name"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nome da Instituição de ensino"
+                android:layout_margin="16dp"
+                app:layout_constraintEnd_toEndOf="@id/institution_user_mainmenu_profile_view"
+                app:layout_constraintTop_toBottomOf="@id/institution_user_mainmenu_userType"/>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                style="@style/circle_image_button_profile_picture"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:layout_constraintBottom_toBottomOf="@id/institution_user_mainmenu_profile_view"
+                app:layout_constraintStart_toStartOf="@id/institution_user_mainmenu_profile_view"
+                app:layout_constraintTop_toTopOf="@id/institution_user_mainmenu_profile_view"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/intitution_user_main_menu_my_courses"
+                style="@style/institution_user_menu_buttons"
+                android:drawableLeft="@drawable/ic_school"
+                android:text="Meus Cursos"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/institution_user_mainmenu_profile_divider"
-                tools:ignore="SpeakableTextPresentCheck"
-                android:drawableLeft="@drawable/ic_school"
-                style="@style/institution_user_menu_buttons"
-                android:text="meus cursos"
-                />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                tools:ignore="SpeakableTextPresentCheck" />
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/intitution_user_main_menu_add_courses"
+                style="@style/institution_user_menu_buttons"
+                android:layout_marginTop="12dp"
+                android:drawableLeft="@drawable/icadd"
+                android:text="Mais Cursos"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/intitution_user_main_menu_my_courses"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/intitution_user_main_menu_my_profile"
+                style="@style/institution_user_menu_buttons"
+                android:layout_marginTop="16dp"
+                android:drawableLeft="@drawable/ic_profile"
+                android:text="Meu Perfil"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/intitution_user_main_menu_add_courses"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

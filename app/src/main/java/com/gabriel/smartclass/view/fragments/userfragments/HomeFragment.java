@@ -51,6 +51,7 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         viewModel.getInstitutionUserMutableLiveData().removeObserver(institutionUserObserver());
+        viewModel.getInstitutionUserMutableLiveData().setValue(null);
         viewModel.getSnackBarText().removeObserver(snackbarObserver());
         viewModel.getSnackBarText().setValue(null);
     }
@@ -108,10 +109,12 @@ public class HomeFragment extends Fragment {
     }
     private Observer<? super InstitutionUser> institutionUserObserver() {
         return institutionUser -> {
-            if(InstitutionUserDAO.verifyUserAccess(institutionUser)){
-                institutionUserAccess(institutionUser);
-            }else{
-                Toast.makeText(getContext(), "Algo deu errado...", Toast.LENGTH_LONG).show();
+            if (institutionUser != null) {
+                if(InstitutionUserDAO.verifyUserAccess(institutionUser)){
+                    institutionUserAccess(institutionUser);
+                }else{
+                    Toast.makeText(getContext(), "Algo deu errado...", Toast.LENGTH_LONG).show();
+                }
             }
         };
     }
