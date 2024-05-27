@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +44,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         initialize();
-        binding.buttonAddInstitutionUserInstitutions.setOnClickListener(searchForInstitutions());
         return binding.getRoot();
     }
 
@@ -65,6 +65,7 @@ public class HomeFragment extends Fragment {
         viewModel = viewModelProvider.get(HostUserActivityViewModel.class);
         viewModel.getInstitutionUserMutableLiveData().observe(getViewLifecycleOwner(), institutionUserObserver());
         viewModel.getSnackBarText().observe(getViewLifecycleOwner(), snackbarObserver());
+        binding.buttonAddInstitutionUserInstitutions.setOnClickListener(searchForInstitutions());
         loadUserInstitutions();
         refresh();
     }
@@ -121,6 +122,7 @@ public class HomeFragment extends Fragment {
 
     private void institutionUserAccess(InstitutionUser institutionUser) {
         Intent i = new Intent(requireActivity(), UserInstitutionMenu.class);
+        Log.d("TAG", "institutionUserAccess: "+ institutionUser.getUser_id());
         i.putExtra("institution", selectedInstitution);
         i.putExtra("institutionUser", institutionUser);
         startActivity(i);

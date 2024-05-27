@@ -12,7 +12,6 @@ import java.util.Objects;
 
 public class User implements Parcelable {
     @PropertyName("id")
-
     private String id;
     private String photoUrl;
     private String name;

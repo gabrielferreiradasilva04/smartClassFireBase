@@ -5,11 +5,11 @@ import android.os.Parcelable;
 
 import java.util.Objects;
 
-public class Subject implements Parcelable {
-    private String id;
-    private String description;
+public class Area implements Parcelable {
+    String id;
+    String description;
 
-    protected Subject(Parcel in) {
+    protected Area(Parcel in) {
         id = in.readString();
         description = in.readString();
     }
@@ -25,15 +25,15 @@ public class Subject implements Parcelable {
         return 0;
     }
 
-    public static final Creator<Subject> CREATOR = new Creator<Subject>() {
+    public static final Creator<Area> CREATOR = new Creator<Area>() {
         @Override
-        public Subject createFromParcel(Parcel in) {
-            return new Subject(in);
+        public Area createFromParcel(Parcel in) {
+            return new Area(in);
         }
 
         @Override
-        public Subject[] newArray(int size) {
-            return new Subject[size];
+        public Area[] newArray(int size) {
+            return new Area[size];
         }
     };
 
@@ -53,29 +53,29 @@ public class Subject implements Parcelable {
         this.description = description;
     }
 
-    public Subject(String id, String description) {
+    public Area(String id, String description) {
         this.id = id;
         this.description = description;
     }
 
     @Override
-    public String toString() {
-        return "Subject{" +
-                "id='" + id + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Subject)) return false;
-        Subject subject = (Subject) o;
-        return Objects.equals(getId(), subject.getId()) && Objects.equals(getDescription(), subject.getDescription());
+        if (!(o instanceof Area)) return false;
+        Area area = (Area) o;
+        return Objects.equals(getId(), area.getId()) && Objects.equals(getDescription(), area.getDescription());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getDescription());
+    }
+
+    @Override
+    public String toString() {
+        return "Area{" +
+                "id='" + id + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

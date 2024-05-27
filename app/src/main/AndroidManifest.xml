@@ -17,48 +17,45 @@
         android:theme="@style/Theme.SmartClass"
         tools:targetApi="31">
         <activity
-            android:name=".view.InstitutionMainMenu"
-            android:windowSoftInputMode="adjustPan"
+            android:name=".view.course.MainCourses"
             android:exported="false" />
+        <activity
+            android:name=".view.InstitutionMainMenu"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".view.auth.InstitutionRegisterForm"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"
-            />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".view.linkRequests.InstitutionLinkRequestForm"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"
-            />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".view.InstitutionsSearch"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"
-            />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".view.UserInstitutionMenu"
             android:exported="false" />
         <activity
             android:name=".view.StudentMainMenu"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".view.auth.RegisterForm"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.auth.LoginForm"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"
-            >
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

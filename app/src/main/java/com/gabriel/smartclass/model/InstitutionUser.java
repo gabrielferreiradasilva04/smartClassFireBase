@@ -4,27 +4,31 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 
 import java.util.Map;
 import java.util.Objects;
 
-public class InstitutionUser  implements Parcelable {
+public class InstitutionUser  implements Parcelable{
     private String id;
     private DocumentReference  userType_id;
     private DocumentReference user_id;
     private Map<String, Object> identification;
     private boolean active;
 
-
     protected InstitutionUser(Parcel in) {
         id = in.readString();
         active = in.readByte() != 0;
+
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeByte((byte) (active ? 1 : 0));
+        dest.writeString(userType_id.getPath());
+        dest.writeString(user_id.getPath());
     }
 
     @Override
@@ -35,7 +39,16 @@ public class InstitutionUser  implements Parcelable {
     public static final Creator<InstitutionUser> CREATOR = new Creator<InstitutionUser>() {
         @Override
         public InstitutionUser createFromParcel(Parcel in) {
-            return new InstitutionUser(in);
+            String id = in.readString();
+            byte byteBoolean = in.readByte();
+            boolean active = byteBoolean == 1;
+            String userTypeReferenceString  = in.readString();
+            String userReferenceString = in.readString();
+            DocumentReference userType_id = null;
+            DocumentReference user_id = null;
+            if(userTypeReferenceString != null && !userTypeReferenceString.equals("")){ userType_id = FirebaseFirestore.getInstance().document(userTypeReferenceString);}
+            if(userReferenceString != null && !userReferenceString.equals("")){ user_id = FirebaseFirestore.getInstance().document(userReferenceString);}
+            return new InstitutionUser(id,userType_id, user_id, active);
         }
 
         @Override
@@ -51,8 +64,6 @@ public class InstitutionUser  implements Parcelable {
     public void setId(String id) {
         this.id = id;
     }
-
-
 
     public DocumentReference getUserType_id() {
         return userType_id;
@@ -93,6 +104,13 @@ public class InstitutionUser  implements Parcelable {
     public InstitutionUser(DocumentReference userType_id, Map<String, Object> identification) {
         this.userType_id = userType_id;
         this.identification = identification;
+    }
+
+    public InstitutionUser(String id, DocumentReference userType_id, DocumentReference user_id, boolean active) {
+        this.id = id;
+        this.userType_id = userType_id;
+        this.user_id = user_id;
+        this.active = active;
     }
 
     @Override

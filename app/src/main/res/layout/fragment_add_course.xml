@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_background"
+    tools:context=".view.course.fragments.AddCourse">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".view.course.MainCourses">
+
+            <EditText
+                android:id="@+id/add_course_edtxt_name"
+                style="@style/Edit_Text_Forms"
+                android:hint="Nome do curso"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/add_course_edtxt_description"
+                style="@style/Edit_Text_Forms"
+                android:layout_height="150dp"
+                android:hint="Descrição"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/add_course_edtxt_name" />
+
+            <EditText
+                android:id="@+id/add_course_edtxt_duration"
+                style="@style/Edit_Text_Forms"
+                android:layout_width="145dp"
+                android:inputType="number"
+                android:hint="Duração anos"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/add_course_edtxt_description" />
+
+            <EditText
+                android:id="@+id/add_course_division"
+                style="@style/Edit_Text_Forms"
+                android:inputType="number"
+                android:layout_width="145dp"
+                android:hint="divisão"
+                app:layout_constraintStart_toEndOf="@id/add_course_edtxt_duration"
+                app:layout_constraintTop_toBottomOf="@id/add_course_edtxt_description" />
+
+            <TextView
+                android:id="@+id/add_course_label_area"
+                style="@style/textView_add_course_labels"
+                android:text="Selecione uma área"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/add_course_division" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/add_course_area_spinner"
+                style="@style/spinner_style"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/add_course_label_area" />
+
+            <TextView
+                android:id="@+id/add_course_label_coordinator"
+                style="@style/textView_add_course_labels"
+                android:text="Selecione um coordenador"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/add_course_area_spinner" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/add_course_coordinator_spinner"
+                style="@style/spinner_style"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/add_course_label_coordinator" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                style="@style/Button_Confirm_Forms"
+                app:layout_constraintTop_toBottomOf="@id/add_course_coordinator_spinner"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Criar!"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

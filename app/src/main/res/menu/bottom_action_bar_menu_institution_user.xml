@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Meus Cursos" android:id="@+id/institution_user_menu_my_courses" android:icon="@drawable/ic_school" />
+    <item android:title="Perfil" android:id="@+id/institution_user_menu_profile" android:icon="@drawable/ic_account" />
+    <item android:title="Mais Cursos" android:id="@+id/institution_user_menu_add_course" android:icon="@drawable/icadd"/>
+</menu>

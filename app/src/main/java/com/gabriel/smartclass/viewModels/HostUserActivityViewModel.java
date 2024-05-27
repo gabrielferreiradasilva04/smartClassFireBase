@@ -21,7 +21,7 @@ import com.gabriel.smartclass.dao.InstitutionUserDAO;
 import com.gabriel.smartclass.dao.LinkRequestStatusDAO;
 import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.dao.UserTypeDAO;
-import com.gabriel.smartclass.model.Courses;
+import com.gabriel.smartclass.model.Course;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
 import com.gabriel.smartclass.model.InstitutionUser;
@@ -379,7 +379,7 @@ public class HostUserActivityViewModel extends ViewModel {
 
                     institutionDAO.getInstitutionCourses(FirebaseAuth.getInstance().getCurrentUser().getUid(), taskInstitutionCourses -> {
                         if (taskInstitutionCourses.isComplete() && taskInstitutionCourses.isSuccessful()) {
-                            List<Courses> institutionCourses = taskInstitutionCourses.getResult().toObjects(Courses.class);
+                            List<Course> institutionCourses = taskInstitutionCourses.getResult().toObjects(Course.class);
                             statisticsTemp.put(courses, institutionCourses.size());
                             institutionStatisticsLiveData.setValue(statisticsTemp);
                         }

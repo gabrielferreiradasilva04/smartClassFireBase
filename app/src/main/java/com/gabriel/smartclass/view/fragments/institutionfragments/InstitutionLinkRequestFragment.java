@@ -2,7 +2,7 @@ package com.gabriel.smartclass.view.fragments.institutionfragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -15,8 +15,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.interfaces.ApproveLinkRequestClickListener;

@@ -1,11 +1,6 @@
 package com.gabriel.smartclass.view.fragments.institutionfragments;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,31 +9,28 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.FragmentInstitutionHomeBinding;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.view.InstitutionMainMenu;
 
+import com.gabriel.smartclass.view.course.MainCourses;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InstitutionHomeFragment extends Fragment {
-    private FragmentInstitutionHomeBinding binding;
+    private FragmentInstitutionHomeBinding  binding;
     private HostUserActivityViewModel viewModel;
 
     public InstitutionHomeFragment() {
@@ -162,6 +154,10 @@ public class InstitutionHomeFragment extends Fragment {
         inflater.inflate(R.menu.institution_main_menu, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
+            if(id == R.id.institution_mainmenu_courses){
+                Intent i = new Intent(getActivity(), MainCourses.class);
+                this.startActivity(i);
+            }
             return true;
         });
         popupMenu.show();
