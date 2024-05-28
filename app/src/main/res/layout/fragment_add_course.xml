@@ -93,6 +93,7 @@
                 app:layout_constraintTop_toBottomOf="@id/add_course_label_coordinator" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/add_course_create_button"
                 style="@style/Button_Confirm_Forms"
                 app:layout_constraintTop_toBottomOf="@id/add_course_coordinator_spinner"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -3,9 +3,11 @@ package com.gabriel.smartclass.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.gabriel.smartclass.model.baseEntitys.SimpleAuxEntity;
+
 import java.util.Objects;
 
-public class UserType implements Parcelable {
+public class UserType extends SimpleAuxEntity implements Parcelable {
     private String id;
     private String description;
 

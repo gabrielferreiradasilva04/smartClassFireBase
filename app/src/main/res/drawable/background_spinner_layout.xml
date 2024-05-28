@@ -9,6 +9,8 @@
                     <corners android:radius="20dp" />
                 </shape>
             </item>
+            <item android:gravity="center|end" android:drawable="@drawable/ic_downarrow"/>
         </layer-list>
     </item>
+
 </selector>

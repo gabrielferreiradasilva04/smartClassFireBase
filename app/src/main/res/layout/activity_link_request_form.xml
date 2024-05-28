@@ -55,7 +55,6 @@
                 android:layout_height="50dp"
                 android:layout_margin="40dp"
                 android:background="@drawable/background_spinner_layout"
-                android:dropDownSelector="@drawable/bg_textview_spinner"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

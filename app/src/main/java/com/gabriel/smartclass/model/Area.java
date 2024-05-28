@@ -78,4 +78,8 @@ public class Area implements Parcelable {
                 ", description='" + description + '\'' +
                 '}';
     }
+
+    public Area(String description) {
+        this.description = description;
+    }
 }

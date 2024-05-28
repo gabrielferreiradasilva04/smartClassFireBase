@@ -10,40 +10,32 @@ import android.widget.TextView;
 import androidx.lifecycle.MutableLiveData;
 
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.model.UserType;
+import com.gabriel.smartclass.model.baseEntitys.SimpleAuxEntity;
 
 import java.util.List;
 
-public class SpinnerUserTypeAdapter extends BaseAdapter {
+public class SpinnerAdapterGeneric<T extends SimpleAuxEntity> extends BaseAdapter {
     private Context context;
-    private List<UserType> userTypeList;
-    private MutableLiveData<List<UserType>> mutableLiveDataUserType;
+    private MutableLiveData<List<T>> mutableLiveDataTList;
 
-    public MutableLiveData<List<UserType>> getMutableLiveDataUserType() {
-        return mutableLiveDataUserType;
-    }
-
-    public SpinnerUserTypeAdapter(Context context, List<UserType> userTypeList){
-        this.userTypeList = userTypeList;
-        this.mutableLiveDataUserType = new MutableLiveData<>(this.userTypeList);
+    public SpinnerAdapterGeneric(Context context, MutableLiveData<List<T>> mutableLiveDataTList){
         this.context = context;
+        this.mutableLiveDataTList = mutableLiveDataTList;
     }
-
     @Override
     public int getCount() {
-        if(mutableLiveDataUserType.getValue() != null){
-            return mutableLiveDataUserType.getValue().size();
+        if(mutableLiveDataTList.getValue() != null){
+            return mutableLiveDataTList.getValue().size();
         }
         return 0;
     }
 
     @Override
     public Object getItem(int position) {
-        if(mutableLiveDataUserType.getValue()!=null){
-            return mutableLiveDataUserType.getValue().get(position);
+        if(mutableLiveDataTList.getValue() != null){
+            return mutableLiveDataTList.getValue().get(position);
         }
         return null;
-
     }
 
     @Override
@@ -55,7 +47,7 @@ public class SpinnerUserTypeAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View rootView = LayoutInflater.from(this.context).inflate(R.layout.spinner_layout, parent,false);
         TextView textDescription = rootView.findViewById(R.id.text_description);
-        textDescription.setText(this.mutableLiveDataUserType.getValue().get(position).getDescription());
+        textDescription.setText(this.mutableLiveDataTList.getValue().get(position).getDescription());
         return rootView;
     }
 }
