@@ -1,5 +1,7 @@
 package com.gabriel.smartclass.dao;
 
+import android.util.Log;
+
 import com.gabriel.smartclass.model.Area;
 import com.gabriel.smartclass.model.Institution;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,8 +30,8 @@ public class AreaDAO {
     }
     public void getAllAreas(String institutionID, OnCompleteListener<QuerySnapshot> onCompleteListener){
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
-        DocumentReference institutionReference = fb.collection(INSTITUTIONCOLLECTION).document(institutionID);
-        institutionReference.collection(COLLECTION).get().addOnCompleteListener(onCompleteListener);
+        Log.d("LOG DO INSTITUTIONID", "getAllAreas: "+ institutionID);
+        fb.collection(INSTITUTIONCOLLECTION).document(institutionID).collection(COLLECTION).get().addOnCompleteListener(onCompleteListener);
     }
     public void updateArea(String areaID, String institutionID, HashMap<String, Object> updates){
         FirebaseFirestore fb = FirebaseFirestore.getInstance();

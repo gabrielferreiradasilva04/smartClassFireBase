@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.gabriel.smartclass.R;
+import com.gabriel.smartclass.adapter.SpinnerAdapterGeneric;
 import com.gabriel.smartclass.adapter.SpinnerUserTypeAdapter;
 import com.gabriel.smartclass.dao.InstitutionLinkRequestDAO;
 import com.gabriel.smartclass.dao.LinkRequestStatusDAO;
@@ -39,8 +40,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class InstitutionLinkRequestFormViewModel {
     private InstitutionLinkRequestForm institutionLinkRequestForm;
-    private SpinnerUserTypeAdapter userTypeAdapter;
-    private List<UserType> userTypeList;
+    private SpinnerAdapterGeneric<UserType> userTypeAdapter;
+    private MutableLiveData<List<UserType>> userTypeList;
     private UserTypeDAO userTypeDAO;
     private UserDAO userDAO;
     private InstitutionLinkRequestDAO linkRequestDAO;
@@ -57,9 +58,9 @@ public class InstitutionLinkRequestFormViewModel {
         userDAO = new UserDAO();
     }
     public void getUserTypesAndPopulateSpinner(){
-        this.userTypeList = new ArrayList<>();
+        this.userTypeList = new MutableLiveData<>();
         Spinner userTypeSpinner = institutionLinkRequestForm.findViewById(R.id.spinner_user_type_link);
-        userTypeAdapter = new SpinnerUserTypeAdapter(this.institutionLinkRequestForm.getApplicationContext(), this.userTypeList);
+        userTypeAdapter = new SpinnerAdapterGeneric<UserType>(this.institutionLinkRequestForm.getApplicationContext(), this.userTypeList);
         userTypeSpinner.setAdapter(userTypeAdapter);
         userTypeDAO.getAllUserTypes(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -67,7 +68,7 @@ public class InstitutionLinkRequestFormViewModel {
                 for(DocumentSnapshot documentSnapshot: task.getResult()){
                     UserType userType = documentSnapshot.toObject(UserType.class);
                     userType.setUuid(documentSnapshot.getId());
-                    userTypeAdapter.getMutableLiveDataUserType().getValue().add(userType);
+                    userTypeAdapter.getMutableLiveDataTList().getValue().add(userType);
                     userTypeAdapter.notifyDataSetChanged();
                 }
             }

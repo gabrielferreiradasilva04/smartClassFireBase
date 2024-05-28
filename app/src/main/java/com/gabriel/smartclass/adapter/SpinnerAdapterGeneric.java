@@ -12,15 +12,25 @@ import androidx.lifecycle.MutableLiveData;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.model.baseEntitys.SimpleAuxEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SpinnerAdapterGeneric<T extends SimpleAuxEntity> extends BaseAdapter {
     private Context context;
     private MutableLiveData<List<T>> mutableLiveDataTList;
 
+    public MutableLiveData<List<T>> getMutableLiveDataTList() {
+        return mutableLiveDataTList;
+    }
+
+    public void setMutableLiveDataTList(MutableLiveData<List<T>> mutableLiveDataTList) {
+        this.mutableLiveDataTList = mutableLiveDataTList;
+    }
+
     public SpinnerAdapterGeneric(Context context, MutableLiveData<List<T>> mutableLiveDataTList){
         this.context = context;
         this.mutableLiveDataTList = mutableLiveDataTList;
+        this.mutableLiveDataTList.setValue(new ArrayList<>());
     }
     @Override
     public int getCount() {

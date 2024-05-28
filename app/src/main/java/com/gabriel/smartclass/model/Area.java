@@ -3,9 +3,11 @@ package com.gabriel.smartclass.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.gabriel.smartclass.model.baseEntitys.SimpleAuxEntity;
+
 import java.util.Objects;
 
-public class Area implements Parcelable {
+public class Area extends SimpleAuxEntity implements Parcelable {
     String id;
     String description;
 
@@ -81,5 +83,8 @@ public class Area implements Parcelable {
 
     public Area(String description) {
         this.description = description;
+    }
+
+    public Area() {
     }
 }
