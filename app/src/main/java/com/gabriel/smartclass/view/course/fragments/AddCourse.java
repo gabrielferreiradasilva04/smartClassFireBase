@@ -2,7 +2,6 @@ package com.gabriel.smartclass.view.course.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,15 +16,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.adapter.SpinnerAdapterGeneric;
 import com.gabriel.smartclass.databinding.FragmentAddCourseBinding;
-import com.gabriel.smartclass.model.Area;
 import com.gabriel.smartclass.viewModels.AddCourseViewModel;
 import com.gabriel.smartclass.viewModels.factorys.AddCourseViewModelFactory;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.List;
 
 public class AddCourse extends Fragment {
     private AddCourseViewModel viewModel;
@@ -99,7 +94,16 @@ public class AddCourse extends Fragment {
         this.inflateAddAreaDialogButton.setOnClickListener(inflateAddAreaDialogListener());
         viewModel.getSnackbarText().observe(getViewLifecycleOwner(), snakbarObserver());
         viewModel.getAllAreasAndpopulateSpinner(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        viewModel.getCoordinatorsAndPopulateSpinner(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        createCourse.setOnClickListener(createCourseClickListener());
     }
+
+    private View.OnClickListener createCourseClickListener() {
+        return view ->{
+            viewModel.createNewCourse(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        };
+    }
+
     private Observer<? super String> snakbarObserver() {
         return text ->{
             Snackbar.make(getContext(), binding.addCourseCreateButton, text, Snackbar.LENGTH_SHORT).show();

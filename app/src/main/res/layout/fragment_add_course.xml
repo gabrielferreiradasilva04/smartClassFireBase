@@ -30,6 +30,7 @@
             <EditText
                 android:id="@+id/add_course_edtxt_description"
                 style="@style/Edit_Text_Forms"
+                android:gravity="top"
                 android:layout_height="150dp"
                 android:hint="Descrição"
                 app:layout_constraintEnd_toEndOf="parent"

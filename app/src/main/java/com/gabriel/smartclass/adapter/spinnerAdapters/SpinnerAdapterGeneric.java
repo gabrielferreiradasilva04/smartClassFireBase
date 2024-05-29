@@ -1,4 +1,4 @@
-package com.gabriel.smartclass.adapter;
+package com.gabriel.smartclass.adapter.spinnerAdapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -20,7 +20,7 @@ public class UserTypeDAO {
     private final String COLLECTION = UserType.class.getSimpleName();
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public  final DocumentReference STUDENT_TYPE_REFERENCE = db.collection(this.COLLECTION).document("0kpiVHFO4bp3qvoQa5f8");
+    public final DocumentReference STUDENT_TYPE_REFERENCE = db.collection(this.COLLECTION).document("0kpiVHFO4bp3qvoQa5f8");
     public final DocumentReference TEACHER_TYPE_REFERENCE = db.collection(this.COLLECTION).document("7d2e9taUjSBFu4CkmfIX");
     public final DocumentReference COORDINATOR_TYPE_REFERENCE = db.collection(this.COLLECTION).document("VozV7BKIaUn7dyXQN84y");
 

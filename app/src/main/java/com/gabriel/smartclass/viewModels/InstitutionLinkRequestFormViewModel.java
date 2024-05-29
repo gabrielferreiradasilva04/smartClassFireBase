@@ -12,21 +12,18 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.adapter.SpinnerAdapterGeneric;
-import com.gabriel.smartclass.adapter.SpinnerUserTypeAdapter;
+import com.gabriel.smartclass.adapter.spinnerAdapters.SpinnerAdapterGeneric;
 import com.gabriel.smartclass.dao.InstitutionLinkRequestDAO;
 import com.gabriel.smartclass.dao.LinkRequestStatusDAO;
 import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.dao.UserTypeDAO;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
-import com.gabriel.smartclass.model.LinkRequestStatus;
 import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.model.UserType;
 import com.gabriel.smartclass.view.StudentMainMenu;
 import com.gabriel.smartclass.view.linkRequests.InstitutionLinkRequestForm;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -79,40 +76,36 @@ public class InstitutionLinkRequestFormViewModel {
         if(userType == null || title.isEmpty() || institution == null){
             snackbarText.setValue("Preencha todos os campos");
         }else{
-            FirebaseFirestore.getInstance().collection(Institution.class.getSimpleName()).document(institution.getId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    Institution institutionFind = task.getResult().toObject(Institution.class);
-
-                    ArrayList<Institution> userInstitutions = new ArrayList<>();
-                    AtomicInteger counter = new AtomicInteger();
-                    userDAO.getUserByUserAuthId(task2 -> {
-                        User user = task2.getResult().toObject(User.class);
-                        if(user!=null){
-                            if(user.getInstitutions() != null && !user.getInstitutions().isEmpty()) {
-                                for(DocumentReference doc : user.getInstitutions()){
-                                    doc.addSnapshotListener((value, error) -> {
-                                        if(error == null && value!= null){
-                                            Institution userInstitution = value.toObject(Institution.class);
-                                            userInstitutions.add(userInstitution);
-                                            counter.getAndIncrement();
+            FirebaseFirestore.getInstance().collection(Institution.class.getSimpleName()).document(institution.getId()).get().addOnCompleteListener(task -> {
+                Institution institutionFind = task.getResult().toObject(Institution.class);
+                ArrayList<Institution> userInstitutions = new ArrayList<>();
+                AtomicInteger counter = new AtomicInteger();
+                userDAO.getUserByUserAuthId(task2 -> {
+                    User user = task2.getResult().toObject(User.class);
+                    if(user!=null){
+                        if(user.getInstitutions() != null && !user.getInstitutions().isEmpty()) {
+                            for(DocumentReference doc : user.getInstitutions()){
+                                doc.addSnapshotListener((value, error) -> {
+                                    if(error == null && value!= null){
+                                        Institution userInstitution = value.toObject(Institution.class);
+                                        userInstitutions.add(userInstitution);
+                                        counter.getAndIncrement();
+                                    }
+                                    if(counter.get() == user.getInstitutions().size()){
+                                        if(!userInstitutions.contains(institutionFind)){
+                                            createNewInstitutionLinkRequest(institution, userType, title, context);
+                                        }else{
+                                            snackbarText.setValue("Você já esta vinculado a esta instituição, desfaça o vinculo e tente novamente");
                                         }
-                                        if(counter.get() == user.getInstitutions().size()){
-                                            if(!userInstitutions.contains(institutionFind)){
-                                                createNewInstitutionLinkRequest(institution, userType, title, context);
-                                            }else{
-                                                snackbarText.setValue("Você já esta vinculado a esta instituição, desfaça o vinculo e tente novamente");
-                                            }
 
-                                        }
-                                    });
-                                }
-                            }else{
-                                createNewInstitutionLinkRequest(institution, userType, title, context);
+                                    }
+                                });
                             }
+                        }else{
+                            createNewInstitutionLinkRequest(institution, userType, title, context);
                         }
-                    });
-                }
+                    }
+                });
             });
         }
 

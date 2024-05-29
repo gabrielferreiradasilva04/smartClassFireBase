@@ -3,12 +3,15 @@ package com.gabriel.smartclass.dao;
 
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionUser;
+import com.gabriel.smartclass.model.UserType;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.Firebase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class InstitutionUserDAO {
     private final String COLLECTION = InstitutionUser.class.getSimpleName();
@@ -29,5 +32,9 @@ public class InstitutionUserDAO {
     }
     public static boolean verifyUserAccess(InstitutionUser institutionUser){
         return institutionUser.isActive();
+    }
+    public void getInstitutionUserByUserType(DocumentReference userTypeID, String institutionID, OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        fb.collection(institutionsCollection).document(institutionID).collection(COLLECTION).whereEqualTo("userType_id", userTypeID).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 }
