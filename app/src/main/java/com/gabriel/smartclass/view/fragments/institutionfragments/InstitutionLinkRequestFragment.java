@@ -2,8 +2,6 @@ package com.gabriel.smartclass.view.fragments.institutionfragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -11,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.interfaces.ApproveLinkRequestClickListener;
@@ -25,135 +25,78 @@ import com.gabriel.smartclass.databinding.EmptyRequestBinding;
 import com.gabriel.smartclass.databinding.FragmentInstitutionNotificationsBinding;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
-import com.gabriel.smartclass.view.BaseNotification;
-import com.gabriel.smartclass.view.InstitutionMainMenu;
-import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 import com.gabriel.smartclass.viewModels.InstitutionLinkRequestsFragmentViewModel;
+import com.gabriel.smartclass.viewModels.factorys.InstitutionLinkRequestsViewModelFactory;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class InstitutionLinkRequestFragment extends Fragment {
+    private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private FloatingActionButton actionButton;
+    private InstitutionLinkRequestsFragmentViewModel viewModel;
     private FragmentInstitutionNotificationsBinding binding;
-    private InstitutionLinkRequestsFragmentViewModel primaryViewModel;
     public static int actualPendingNotifications;
-    public InstitutionLinkRequestFragment() {
-    }
+
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentInstitutionNotificationsBinding.inflate(inflater, container, false);
         initialize();
         return binding.getRoot();
     }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        primaryViewModel.getSnackBarText().removeObserver(observeSnackbar());
-        primaryViewModel.getSnackBarText().setValue(null);
-        primaryViewModel.getInstitutionLinkRequestsAdapter().setInstitutionLinkRequestMutableLiveData(new MutableLiveData<>(new ArrayList<>()));
-        primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().removeObserver(linkRequestsObserve());
-    }
-    private void initialize() {
-        InstitutionMainMenu main = (InstitutionMainMenu) getActivity();
-        if (main != null) {
-            main.updateTitle("Notificações");
-        }
-        ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
-        primaryViewModel = viewModelProvider.get(InstitutionLinkRequestsFragmentViewModel.class);
-        primaryViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
-        primaryViewModel.getLinkRequests(LinkRequestStatusDAO.PENDING_REFERENCE);
-        initializeRecyclerView();
-        primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().observe(getViewLifecycleOwner(), linkRequestsObserve());
-        binding.institutionNoitificationsFilterButton.setOnClickListener(filterButtonClickListener());
-        primaryViewModel.getInstitutionLinkRequestsAdapter().setApproveLinkRequestClickListener(approveLinkRequest());
-        primaryViewModel.getInstitutionLinkRequestsAdapter().setRejectLinkRequestClickListener(rejectLinkRequest());
-        refresh();
-    }
-    private RejectLinkRequestClickListener rejectLinkRequest() {
-        return linkRequest -> {
-//            primaryViewModel.approveOrRejectInstitutionLinkRequest(linkRequest, false);
-            removeItemFromAdapter(linkRequest);
-        };
-    }
-
-    private void removeItemFromAdapter(InstitutionLinkRequest linkRequest) {
-        for(int i = 0; i < primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue().size(); i++){
-            if(primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue().get(i).equals(linkRequest)){
-                primaryViewModel.getInstitutionLinkRequestsAdapter().notifyItemRemoved(i);
-                primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue().remove(i);
-                 getPendingNotificationsIndex();
-                break;
-            }
-        }
-
-    }
-
-    private ApproveLinkRequestClickListener approveLinkRequest() {
-        return linkRequest -> {
-//            primaryViewModel.approveOrRejectInstitutionLinkRequest(linkRequest, true);
-            removeItemFromAdapter(linkRequest);
-        };
-    }
-
-    private Observer<? super List<InstitutionLinkRequest>> linkRequestsObserve() {
-        return (Observer<List<InstitutionLinkRequest>>) institutionLinkRequests -> initializeRecyclerView();
-    }
-
-    public void initializeRecyclerView(){
-        binding.institutionNotificationsRecyclerView.setHasFixedSize(true);
-        binding.institutionNotificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.institutionNotificationsRecyclerView.setAdapter(primaryViewModel.getInstitutionLinkRequestsAdapter());
-        getPendingNotificationsIndex();
-        if(binding.institutionNotificationsSwiperefresh.isRefreshing()){
-            binding.institutionNotificationsSwiperefresh.setRefreshing(false);
-        }
-    }
-
-    private void getPendingNotificationsIndex() {
-        Stream<InstitutionLinkRequest> pendingNotifications = primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue()
-                .stream().filter(object->object.getLinkRequestStatus_id().equals(LinkRequestStatusDAO.PENDING_REFERENCE));
-        actualPendingNotifications = pendingNotifications.collect(Collectors.toList()).size();
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onStart() {
         super.onStart();
         emptyRequestView();
     }
 
-
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroyView() {
+        super.onDestroyView();
+        viewModel.getSnackBarText().removeObserver(observeSnackbar());
+        viewModel.getSnackBarText().setValue(null);
     }
 
-    private void emptyRequestView() {
-        EmptyRequestBinding viewEmpty = binding.emptyContainerHome;
-        EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(binding.institutionNotificationsRecyclerView, viewEmpty.getRoot());
-        primaryViewModel.getInstitutionLinkRequestsAdapter().registerAdapterDataObserver(observer);
-        primaryViewModel.getInstitutionLinkRequestsAdapter().notifyDataSetChanged();
+    private void initialize(){
+        loadComponents();
+        InstitutionLinkRequestsViewModelFactory factory = new InstitutionLinkRequestsViewModelFactory(this);
+        ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity(), factory);
+        viewModel = viewModelProvider.get(InstitutionLinkRequestsFragmentViewModel.class);
+        viewModel.getInstitutionLinkRequests(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), LinkRequestStatusDAO.PENDING_REFERENCE);
+        buildRecyclerView();
+        refresh();
+        actionButton.setOnClickListener(openMenu());
+        viewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
     }
 
-    @NonNull
-    private Observer<String> observeSnackbar() {
-        return s -> {
-            if (s != null) {
-                Snackbar snackbar = Snackbar.make(binding.institutionNotificationsRecyclerView, s, Snackbar.LENGTH_SHORT);
-                snackbar.show();
-            }
-
-        };
+    private void loadComponents(){
+        recyclerView = binding.institutionNotificationsRecyclerView;
+        swipeRefreshLayout = binding.institutionNotificationsSwiperefresh;
+        actionButton = binding.institutionNoitificationsFilterButton;
     }
-    public View.OnClickListener filterButtonClickListener(){
-        return this::openFilterOptions;
+    private void buildRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(viewModel.getAdapter());
+        viewModel.getAdapter().setApproveLinkRequestClickListener(approveLinkRequest());
+        viewModel.getAdapter().setRejectLinkRequestClickListener(rejectLinkRequest());
+        verifyRefresh();
+    }
+    public void refresh(){
+        swipeRefreshLayout.setOnRefreshListener(()->{
+            viewModel.getInstitutionLinkRequests(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), LinkRequestStatusDAO.PENDING_REFERENCE);
+            buildRecyclerView();
+        });
+    }
+    public void verifyRefresh(){
+        if(swipeRefreshLayout.isRefreshing()){
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
     private void openFilterOptions(View v) {
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
@@ -163,22 +106,66 @@ public class InstitutionLinkRequestFragment extends Fragment {
         popupMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
             if(id == R.id.pendingFilter){
-                primaryViewModel.getLinkRequests(LinkRequestStatusDAO.PENDING_REFERENCE);
+                viewModel.getInstitutionLinkRequests(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), LinkRequestStatusDAO.PENDING_REFERENCE);
+                buildRecyclerView();
+                emptyRequestView();
             } else if (id == R.id.approveFilter) {
-                primaryViewModel.getLinkRequests(LinkRequestStatusDAO.APPROVED_REFERENCE);
+                viewModel.getInstitutionLinkRequests(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), LinkRequestStatusDAO.APPROVED_REFERENCE);
+                buildRecyclerView();
+                emptyRequestView();
             } else if (id == R.id.rejectFilter) {
-                primaryViewModel.getLinkRequests(LinkRequestStatusDAO.REJECTED_REFERENCE);
+                viewModel.getInstitutionLinkRequests(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), LinkRequestStatusDAO.REJECTED_REFERENCE);
+                buildRecyclerView();
+                emptyRequestView();
             }
             return true;
         });
     }
-
-    public void refresh(){
-        binding.institutionNotificationsSwiperefresh.setOnRefreshListener(() -> {
-            primaryViewModel.getLinkRequests(LinkRequestStatusDAO.PENDING_REFERENCE);
-        });
+    private View.OnClickListener openMenu() {
+        return this::openFilterOptions;
     }
+    @SuppressLint("NotifyDataSetChanged")
+    private void emptyRequestView() {
+            EmptyRequestBinding viewEmpty = binding.emptyContainerHome;
+            EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(binding.institutionNotificationsRecyclerView, viewEmpty.getRoot());
+            viewModel.getAdapter().registerAdapterDataObserver(observer);
+            viewModel.getAdapter().notifyDataSetChanged();
+    }
+    @NonNull
+    private Observer<String> observeSnackbar() {
+        return s -> {
+            if (s != null) {
+               Snackbar.make(binding.institutionNotificationsRecyclerView, s, Snackbar.LENGTH_SHORT).show();
+            }
+        };
+    }
+    private void getPendingNotificationsIndex() {
+        Stream<InstitutionLinkRequest> pendingNotifications = viewModel.getAdapter().getInstitutionLinkRequestMutableLiveData().getValue()
+                .stream().filter(object->object.getLinkRequestStatus_id().equals(LinkRequestStatusDAO.PENDING_REFERENCE));
+        actualPendingNotifications = (int) pendingNotifications.count();
+    }
+    private ApproveLinkRequestClickListener approveLinkRequest() {
+        return linkRequest -> {
+            viewModel.approveOrRejectInstitutionLinkRequest(linkRequest, true);
+            removeItemFromAdapter(linkRequest);
+        };
+    }
+    private void removeItemFromAdapter(InstitutionLinkRequest linkRequest) {
+        for(int i = 0; i < viewModel.getAdapter().getItemCount(); i++){
+            if(viewModel.getAdapter().getInstitutionLinkRequestMutableLiveData().getValue().get(i).equals(linkRequest)){
+                viewModel.getAdapter().removeItem(linkRequest);
+                getPendingNotificationsIndex();
+                break;
+            }
+        }
 
+    }
+    private RejectLinkRequestClickListener rejectLinkRequest() {
+        return linkRequest -> {
+            viewModel.approveOrRejectInstitutionLinkRequest(linkRequest, false);
+            removeItemFromAdapter(linkRequest);
+        };
+    }
 
 
 

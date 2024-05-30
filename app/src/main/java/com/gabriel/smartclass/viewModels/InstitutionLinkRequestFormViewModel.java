@@ -32,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -124,12 +125,21 @@ public class InstitutionLinkRequestFormViewModel {
         institutionLinkRequest.setInstitution_id(institutionReference);
         linkRequestDAO.createNewLinkRequest(institutionLinkRequest, institutionReference, task3 -> {
             if(task3.isSuccessful()){
-                showSuccessDialog(context);
+                updateLinkRequestId(institution, context, task3);
             }
         }, e -> {
             snackbarText.setValue("Algo deu errado: "+e);
         });
     }
+
+    private void updateLinkRequestId(Institution institution, Context context, Task<DocumentReference> task3) {
+        HashMap<String, Object> update = new HashMap<>();
+        update.put("id", task3.getResult().getId());
+        linkRequestDAO.updateInstitutionLinkRequest(task3.getResult().getId(), institution.getId(), update, task4->{
+            showSuccessDialog(context);
+        },e4->{});
+    }
+
 
     public void showSuccessDialog(Context context){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);

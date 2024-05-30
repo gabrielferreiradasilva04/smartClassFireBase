@@ -1,10 +1,9 @@
 package com.gabriel.smartclass.adapter;
 
-import android.util.Log;
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -21,7 +20,6 @@ import com.gabriel.smartclass.dao.LinkRequestStatusDAO;
 import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.dao.UserTypeDAO;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
-import com.gabriel.smartclass.model.LinkRequestStatus;
 import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.model.UserType;
 
@@ -32,7 +30,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class InstitutionLinkRequestsAdapter extends RecyclerView.Adapter {
-    private MutableLiveData<List<InstitutionLinkRequest>> institutionLinkRequestMutableLiveData = new MutableLiveData<>(new ArrayList<>());
+    private MutableLiveData<List<InstitutionLinkRequest>> institutionLinkRequestMutableLiveData;
     private HashSet<String> linkRequestsId;
     private ApproveLinkRequestClickListener approveLinkRequestClickListener;
     private RejectLinkRequestClickListener rejectLinkRequestClickListener;
@@ -48,12 +46,16 @@ public class InstitutionLinkRequestsAdapter extends RecyclerView.Adapter {
     public void setInstitutionLinkRequestMutableLiveData(MutableLiveData<List<InstitutionLinkRequest>> institutionLinkRequestMutableLiveData) {
         this.institutionLinkRequestMutableLiveData = institutionLinkRequestMutableLiveData;
     }
+
     public void setApproveLinkRequestClickListener(ApproveLinkRequestClickListener approveLinkRequestClickListener) {
         this.approveLinkRequestClickListener = approveLinkRequestClickListener;
     }
+
     public InstitutionLinkRequestsAdapter() {
         linkRequestsId = new HashSet<>();
+        institutionLinkRequestMutableLiveData = new MutableLiveData<>(new ArrayList<>());
     }
+
 
     @NonNull
     @Override
@@ -138,14 +140,18 @@ public class InstitutionLinkRequestsAdapter extends RecyclerView.Adapter {
         if (!linkRequestsId.contains(linkRequest.getId())) {
             linkRequestsId.add(linkRequest.getId());
             Objects.requireNonNull(institutionLinkRequestMutableLiveData.getValue()).add(linkRequest);
+            notifyItemInserted(institutionLinkRequestMutableLiveData.getValue().indexOf(linkRequest));
         }
     }
-    public void removeItem(InstitutionLinkRequest linkRequest){
-        if(linkRequestsId.contains(linkRequest.getId())){
-            linkRequestsId.remove(linkRequest.getId());
-            int removedPosition = institutionLinkRequestMutableLiveData.getValue().indexOf(linkRequest);
-            institutionLinkRequestMutableLiveData.getValue().remove(linkRequest);
-            this.notifyItemRemoved(removedPosition);
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void removeItem(InstitutionLinkRequest linkRequest) {
+        int removedPosition = institutionLinkRequestMutableLiveData.getValue().indexOf(linkRequest);
+        institutionLinkRequestMutableLiveData.getValue().remove(linkRequest);
+        notifyItemRemoved(removedPosition);
+        this.notifyItemRangeChanged(removedPosition, this.getItemCount());
+        if (this.getItemCount() == 0) {
+            notifyDataSetChanged();
         }
     }
 

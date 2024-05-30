@@ -34,7 +34,7 @@ public class InstitutionLinkRequestDAO {
     }
 
 
-    public void createNewLinkRequest(InstitutionLinkRequest institutionLinkRequest, DocumentReference institutionReference, OnCompleteListener onCompleteListener, OnFailureListener onFailureListener) throws RuntimeException {
+    public void createNewLinkRequest(InstitutionLinkRequest institutionLinkRequest, DocumentReference institutionReference, OnCompleteListener<DocumentReference> onCompleteListener, OnFailureListener onFailureListener) throws RuntimeException {
 
         institutionReference.collection(COLLECTION).whereEqualTo("user", institutionLinkRequest.getUser()).whereEqualTo("linkRequestStatus_id", LinkRequestStatusDAO.PENDING_REFERENCE).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
