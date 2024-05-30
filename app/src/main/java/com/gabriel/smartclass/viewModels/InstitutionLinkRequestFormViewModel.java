@@ -109,7 +109,6 @@ public class InstitutionLinkRequestFormViewModel {
             });
         }
 
-
     }
 
     private void createNewInstitutionLinkRequest(Institution institution, UserType userType, String title, Context context) {

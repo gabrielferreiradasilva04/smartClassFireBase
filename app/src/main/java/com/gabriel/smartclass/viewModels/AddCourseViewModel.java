@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class AddCourseViewModel extends ViewModel {
     private final AddCourse fragment;
@@ -33,10 +34,6 @@ public class AddCourseViewModel extends ViewModel {
 
     public AddCourseViewModel(AddCourse addCourse) {
         this.fragment = addCourse;
-    }
-
-    public MutableLiveData<List<Area>> getAreasMutableLiveData() {
-        return areasMutableLiveData;
     }
 
     public MutableLiveData<String> getSnackbarText() {
@@ -97,8 +94,10 @@ public class AddCourseViewModel extends ViewModel {
     }
 
     public void addNewItemOnAreaAdapter(Area area) {
-        spinnerAreaAdapter.getMutableLiveDataTList().getValue().add(area);
-        spinnerAreaAdapter.notifyDataSetChanged();
+        if(area != null){
+            Objects.requireNonNull(spinnerAreaAdapter.getMutableLiveDataTList().getValue()).add(area);
+            spinnerAreaAdapter.notifyDataSetChanged();
+        }
     }
 
     public void removeItemFromAreaAdapter(Area area) {
@@ -136,13 +135,9 @@ public class AddCourseViewModel extends ViewModel {
                     updateCourseID(institutionID, courseDAO, task);
                     clearViewFields();
                     snackbarText.setValue("Curso criado com sucesso!");
-                }, e -> {
-                    snackbarText.setValue("Erro ao criar o seu curso... Tente novamente mais tarde");
-                });
+                }, e -> snackbarText.setValue("Erro ao criar o seu curso... Tente novamente mais tarde"));
             }
-        }, e2 -> {
-            snackbarText.setValue("Erro ao criar o seu curso... Tente novamente mais tarde");
-        });
+        }, e2 -> snackbarText.setValue("Erro ao criar o seu curso... Tente novamente mais tarde"));
     }
     private Course buildCourse(String name, String description, String durationString, String divisionString, Area area, InstitutionUser coordinator, String institutionID) throws IllegalArgumentException{
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
@@ -173,6 +168,4 @@ public class AddCourseViewModel extends ViewModel {
         fragment.getEditTextDivision().setText("");
         fragment.getEditTextDuration().setText("");
     }
-
-
 }

@@ -3,6 +3,7 @@ package com.gabriel.smartclass.view.fragments.institutionfragments;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -77,27 +78,26 @@ public class InstitutionLinkRequestFragment extends Fragment {
     }
     private RejectLinkRequestClickListener rejectLinkRequest() {
         return linkRequest -> {
-            primaryViewModel.approveOrRejectInstitutionLinkRequest(linkRequest, false);
+//            primaryViewModel.approveOrRejectInstitutionLinkRequest(linkRequest, false);
             removeItemFromAdapter(linkRequest);
         };
     }
 
     private void removeItemFromAdapter(InstitutionLinkRequest linkRequest) {
-        int indexRemoved = 0;
-        for(int i = 0; i< primaryViewModel.getInstitutionLinkRequestsAdapter().getItemCount(); i++){
+        for(int i = 0; i < primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue().size(); i++){
             if(primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue().get(i).equals(linkRequest)){
-                indexRemoved = i;
+                primaryViewModel.getInstitutionLinkRequestsAdapter().notifyItemRemoved(i);
+                primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue().remove(i);
+                 getPendingNotificationsIndex();
                 break;
             }
         }
-        primaryViewModel.getInstitutionLinkRequestsAdapter().getInstitutionLinkRequestMutableLiveData().getValue().removeIf(object -> object.equals(linkRequest));
-        primaryViewModel.getInstitutionLinkRequestsAdapter().notifyItemRemoved(indexRemoved);
-        getPendingNotificationsIndex();
+
     }
 
     private ApproveLinkRequestClickListener approveLinkRequest() {
         return linkRequest -> {
-            primaryViewModel.approveOrRejectInstitutionLinkRequest(linkRequest, true);
+//            primaryViewModel.approveOrRejectInstitutionLinkRequest(linkRequest, true);
             removeItemFromAdapter(linkRequest);
         };
     }

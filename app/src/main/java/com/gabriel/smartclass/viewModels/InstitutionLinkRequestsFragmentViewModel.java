@@ -1,10 +1,5 @@
 package com.gabriel.smartclass.viewModels;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -18,6 +13,7 @@ import com.gabriel.smartclass.model.InstitutionLinkRequest;
 
 import com.gabriel.smartclass.model.InstitutionUser;
 import com.gabriel.smartclass.model.User;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,11 +23,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,23 +50,23 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
         institutionLinkRequestsAdapter = new InstitutionLinkRequestsAdapter();
     }
 
-    public void getLinkRequests(DocumentReference statusReference){
-        if(FirebaseAuth.getInstance().getCurrentUser() != null){
-            institutionLinkRequestDAO.getInstitutionLinkRequests(FirebaseAuth.getInstance().getCurrentUser().getUid(), statusReference, task ->{
+    public void getLinkRequests(DocumentReference statusReference) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            institutionLinkRequestDAO.getInstitutionLinkRequests(FirebaseAuth.getInstance().getCurrentUser().getUid(), statusReference, task -> {
                 List<InstitutionLinkRequest> institutionLinkRequests = new ArrayList<>();
-                if(task.isComplete() && !task.getResult().isEmpty()){
-                    for(QueryDocumentSnapshot snapshots : task.getResult()){
+                if (task.isComplete() && !task.getResult().isEmpty()) {
+                    for (QueryDocumentSnapshot snapshots : task.getResult()) {
                         InstitutionLinkRequest linkRequest = snapshots.toObject(InstitutionLinkRequest.class);
                         linkRequest.setId(snapshots.getId());
                         institutionLinkRequests.add(linkRequest);
                     }
                     institutionLinkRequestsAdapter.getInstitutionLinkRequestMutableLiveData().setValue(institutionLinkRequests);
                     institutionLinkRequestsAdapter.notifyDataSetChanged();
-                }else{
+                } else {
                     institutionLinkRequestsAdapter.getInstitutionLinkRequestMutableLiveData().setValue(new ArrayList<>());
                     institutionLinkRequestsAdapter.notifyDataSetChanged();
                 }
-            }, e->{
+            }, e -> {
                 institutionLinkRequestsAdapter.getInstitutionLinkRequestMutableLiveData().setValue(new ArrayList<>());
                 institutionLinkRequestsAdapter.notifyDataSetChanged();
             });
@@ -82,51 +75,70 @@ public class InstitutionLinkRequestsFragmentViewModel extends ViewModel {
 
 
     public void approveOrRejectInstitutionLinkRequest(InstitutionLinkRequest linkRequest, boolean approve) {
-        if(approve){
-            InstitutionUser institutionUser = new InstitutionUser();
-            institutionUser.setId(linkRequest.getUser().getId());
-            institutionUser.setUser_id(linkRequest.getUser());
-            institutionUser.setUserType_id(linkRequest.getUserType());
-            institutionUser.setActive(true);
-            institutionUser.setId(linkRequest.getUser().getId());
+        if (approve) {
+            new UserDAO().getUserByDocumentReference(linkRequest.getUser(), task -> {
+                if (task.isComplete() && task.isSuccessful() && task.getResult().exists()) {
+                    createNewInstitutionUser(linkRequest, task);
+                }
+            }, e -> {
+            });
+        } else {
+            rejectInstitutionRequest(linkRequest);
+        }
+    }
 
-            HashMap<String, Object> updateLinkRequest = new HashMap<>();
-            updateLinkRequest.put("linkRequestStatus_id", LinkRequestStatusDAO.APPROVED_REFERENCE);
-            institutionLinkRequestDAO.updateInstitutionLinkRequest(linkRequest.getId(), linkRequest.getInstitution_id().getId(), updateLinkRequest, unused -> {
-                institutionUserDAO.saveNewInstitutionUser(institutionUser, linkRequest.getInstitution_id(), task -> {
-                    if(task.isComplete()){
-                        List<DocumentReference> institutionsList = new ArrayList<>();
-                        institutionsList.add(linkRequest.getInstitution_id());
-                        new UserDAO().updateInstitutionsList(institutionsList, true, linkRequest.getUser(), task2->{
-                            snackBarText.setValue("Solicitação aprovada! Agora essa pessoa é um membro da sua instituição!");
-                        });
-                    }
-                }, e -> {snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());});
-            }, e -> {snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());});
-        }else{
-            HashMap<String, Object> updateLinkRequest = new HashMap<>();
-            updateLinkRequest.put("linkRequestStatus_id", LinkRequestStatusDAO.REJECTED_REFERENCE);
-            institutionLinkRequestDAO.updateInstitutionLinkRequest(linkRequest.getId(), linkRequest.getInstitution_id().getId(), updateLinkRequest, task -> {
-                snackBarText.setValue("Solicitação recusada, essa pessoa não faz parte da sua instituição");
+    private void rejectInstitutionRequest(InstitutionLinkRequest linkRequest) {
+        HashMap<String, Object> updateLinkRequest = new HashMap<>();
+        updateLinkRequest.put("linkRequestStatus_id", LinkRequestStatusDAO.REJECTED_REFERENCE);
+        institutionLinkRequestDAO.updateInstitutionLinkRequest(linkRequest.getId(), linkRequest.getInstitution_id().getId(), updateLinkRequest, task -> {
+            snackBarText.setValue("Solicitação recusada, essa pessoa não faz parte da sua instituição");
+        }, e -> {
+            snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());
+        });
+    }
+
+    private void createNewInstitutionUser(InstitutionLinkRequest linkRequest, Task<DocumentSnapshot> task) {
+        User user = task.getResult().toObject(User.class);
+        InstitutionUser institutionUser = new InstitutionUser();
+        institutionUser.setId(linkRequest.getUser().getId());
+        institutionUser.setUser_id(linkRequest.getUser());
+        institutionUser.setUserType_id(linkRequest.getUserType());
+        institutionUser.setActive(true);
+        institutionUser.setId(linkRequest.getUser().getId());
+        institutionUser.setDescription(user.getName());
+        HashMap<String, Object> updateLinkRequest = new HashMap<>();
+        updateLinkRequest.put("linkRequestStatus_id", LinkRequestStatusDAO.APPROVED_REFERENCE);
+        institutionLinkRequestDAO.updateInstitutionLinkRequest(linkRequest.getId(), linkRequest.getInstitution_id().getId(), updateLinkRequest, unused -> {
+            institutionUserDAO.saveNewInstitutionUser(institutionUser, linkRequest.getInstitution_id(), task2 -> {
+                if (task2.isComplete()) {
+                    List<DocumentReference> institutionsList = new ArrayList<>();
+                    institutionsList.add(linkRequest.getInstitution_id());
+                    new UserDAO().updateInstitutionsList(institutionsList, true, linkRequest.getUser(), task3 -> {
+                        snackBarText.setValue("Solicitação aprovada! Agora essa pessoa é um membro da sua instituição!");
+                    });
+                }
             }, e -> {
                 snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());
             });
-        }
+        }, e -> {
+            snackBarText.setValue("Ops... Algo deu errado, tente novamente mais tarde: " + e.getMessage());
+        });
     }
-    public void syncNewLinkRequests(MutableLiveData<List<InstitutionLinkRequest>> institutionLinkRequests){
+
+    public void syncNewLinkRequests(MutableLiveData<List<InstitutionLinkRequest>> institutionLinkRequests) {
         new InstitutionLinkRequestDAO().syncNewLinkRequestInRealTime(FirebaseAuth.getInstance().getCurrentUser().getUid(), LinkRequestStatusDAO.PENDING_REFERENCE, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if(error != null){
+                if (error != null) {
                     return;
-                }else{
-                    if(value!= null && !value.isEmpty()){
+                } else {
+                    if (value != null && !value.isEmpty()) {
                         List<InstitutionLinkRequest> allInstitutionLinkRequests = value.toObjects(InstitutionLinkRequest.class);
                         Stream<InstitutionLinkRequest> pendingInstitutionLinkRequests = allInstitutionLinkRequests.stream().filter(object -> object.getLinkRequestStatus_id().equals(LinkRequestStatusDAO.PENDING_REFERENCE));
                         Stream<InstitutionLinkRequest> actualPendingInstitutionLinkRequests = institutionLinkRequests.getValue().stream().filter(object -> object.getLinkRequestStatus_id().equals(LinkRequestStatusDAO.PENDING_REFERENCE));
-                        if(!actualPendingInstitutionLinkRequests.collect(Collectors.toList()).equals(pendingInstitutionLinkRequests.collect(Collectors.toList()))){
+                        if (!actualPendingInstitutionLinkRequests.collect(Collectors.toList()).equals(pendingInstitutionLinkRequests.collect(Collectors.toList()))) {
                             snackBarText.setValue("Existem novas solicitações de vínculo, atualize o conteúdo para vê-las");
-                        }else{
+                        } else {
                             snackBarText.setValue("Não existem novas notificações");
                         }
                     }

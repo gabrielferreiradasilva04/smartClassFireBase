@@ -140,6 +140,14 @@ public class InstitutionLinkRequestsAdapter extends RecyclerView.Adapter {
             Objects.requireNonNull(institutionLinkRequestMutableLiveData.getValue()).add(linkRequest);
         }
     }
+    public void removeItem(InstitutionLinkRequest linkRequest){
+        if(linkRequestsId.contains(linkRequest.getId())){
+            linkRequestsId.remove(linkRequest.getId());
+            int removedPosition = institutionLinkRequestMutableLiveData.getValue().indexOf(linkRequest);
+            institutionLinkRequestMutableLiveData.getValue().remove(linkRequest);
+            this.notifyItemRemoved(removedPosition);
+        }
+    }
 
     @Override
     public int getItemCount() {

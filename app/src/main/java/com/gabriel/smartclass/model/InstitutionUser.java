@@ -3,7 +3,6 @@ package com.gabriel.smartclass.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.gabriel.smartclass.model.baseEntitys.SimpleAuxEntity;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -13,6 +12,7 @@ import java.util.Objects;
 
 public class InstitutionUser implements Parcelable{
     private String id;
+    private String description;
     private DocumentReference  userType_id;
     private DocumentReference user_id;
     private Map<String, Object> identification;
@@ -20,13 +20,14 @@ public class InstitutionUser implements Parcelable{
 
     protected InstitutionUser(Parcel in) {
         id = in.readString();
+        description = in.readString();
         active = in.readByte() != 0;
-
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
+        dest.writeString(description);
         dest.writeByte((byte) (active ? 1 : 0));
         dest.writeString(userType_id.getPath());
         dest.writeString(user_id.getPath());
@@ -41,6 +42,7 @@ public class InstitutionUser implements Parcelable{
         @Override
         public InstitutionUser createFromParcel(Parcel in) {
             String id = in.readString();
+            String description = in.readString();
             byte byteBoolean = in.readByte();
             boolean active = byteBoolean == 1;
             String userTypeReferenceString  = in.readString();
@@ -49,7 +51,7 @@ public class InstitutionUser implements Parcelable{
             DocumentReference user_id = null;
             if(userTypeReferenceString != null && !userTypeReferenceString.equals("")){ userType_id = FirebaseFirestore.getInstance().document(userTypeReferenceString);}
             if(userReferenceString != null && !userReferenceString.equals("")){ user_id = FirebaseFirestore.getInstance().document(userReferenceString);}
-            return new InstitutionUser(id,userType_id, user_id, active);
+            return new InstitutionUser(id,userType_id, user_id, active, description);
         }
 
         @Override
@@ -86,6 +88,14 @@ public class InstitutionUser implements Parcelable{
         return identification;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public void setIdentification(Map<String, Object> identification) {
         this.identification = identification;
     }
@@ -98,8 +108,6 @@ public class InstitutionUser implements Parcelable{
         this.active = active;
     }
 
-    public InstitutionUser() {
-    }
 
 
     public InstitutionUser(DocumentReference userType_id, Map<String, Object> identification) {
@@ -107,11 +115,15 @@ public class InstitutionUser implements Parcelable{
         this.identification = identification;
     }
 
-    public InstitutionUser(String id, DocumentReference userType_id, DocumentReference user_id, boolean active) {
+    public InstitutionUser(String id, DocumentReference userType_id, DocumentReference user_id, boolean active, String description) {
         this.id = id;
         this.userType_id = userType_id;
         this.user_id = user_id;
         this.active = active;
+        this.description = description;
+    }
+
+    public InstitutionUser() {
     }
 
     @Override
