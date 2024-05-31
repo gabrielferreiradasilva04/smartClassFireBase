@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -22,6 +23,9 @@ public class CourseRCAdapter extends RecyclerView.Adapter {
     private final MutableLiveData<List<Course>> mutableliveDataCourse;
     private final HashSet<String> tIds;
     private DefaultClickListener<Course> clickListener;
+    private DefaultClickListener<Course> clickListener1;
+    private DefaultClickListener<Course> clickListener2;
+
 
     public CourseRCAdapter(){
         this.mutableliveDataCourse = new MutableLiveData<>(new ArrayList<>());
@@ -59,14 +63,18 @@ public class CourseRCAdapter extends RecyclerView.Adapter {
             String description = mutableliveDataCourse.getValue().get(position).getName();
             ImageButton buttonRemoveItem = holder.itemView.findViewById(R.id.course_recycler_view_buttonremove);
             ImageButton buttonEditItem = holder.itemView.findViewById(R.id.course_recycler_view_buttonedit);
+            Button buttonSubjects = holder.itemView.findViewById(R.id.course_recycler_view_buttonsubjects);
             TextView textDescription = holder.itemView.findViewById(R.id.course_recyclerview_title);
             textDescription.setText(description);
-            if(clickListener != null){
+            if(clickListener != null && clickListener1 != null && clickListener2 != null){
                 buttonRemoveItem.setOnClickListener(view ->{
                     clickListener.onClick(mutableliveDataCourse.getValue().get(position));
                 });
                 buttonEditItem.setOnClickListener(view ->{
-                    clickListener.onClick(mutableliveDataCourse.getValue().get(position));
+                    clickListener1.onClick(mutableliveDataCourse.getValue().get(position));
+                });
+                buttonSubjects.setOnClickListener(view ->{
+                    clickListener2.onClick(mutableliveDataCourse.getValue().get(position));
                 });
             }
         }catch (NullPointerException e){
