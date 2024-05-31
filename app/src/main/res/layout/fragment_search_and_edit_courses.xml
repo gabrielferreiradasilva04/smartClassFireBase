@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/main_background"
     tools:context=".view.course.fragments.SearchAndEditCourses">
+    <EditText
+        android:id="@+id/seacrch_courses_edtxtTitle"
+        android:layout_width="0dp"
+        style="@style/Edit_Text_Forms"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/seacrch_courses_buttonsearch"
+        android:hint="Titúlo do curso"/>
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ImageButton
+        android:id="@+id/seacrch_courses_buttonsearch"
+        style="@style/Button_Add_Items"
+        android:src="@drawable/baseline_search_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/seacrch_courses_edtxtTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_course_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/seacrch_courses_edtxtTitle"
+        app:layout_constraintVertical_bias="0.157" />
 
-</FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,12 +3,13 @@ package com.gabriel.smartclass.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.gabriel.smartclass.model.baseEntitys.SimpleAuxEntity;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
-public class Course implements Parcelable {
+public class Course extends SimpleAuxEntity implements Parcelable {
     private String id;
     private String name;
     private String description;

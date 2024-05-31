@@ -24,5 +24,6 @@
 
     <string name="courses_institution_mainmenu">Cursos</string>
     <string name="classrooms_institution_mainmenu">Turmas</string>
+    <string name="especial_search_character">\uf8ff</string>
 
 </resources>

@@ -7,16 +7,20 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import com.gabriel.smartclass.R;
+import com.gabriel.smartclass.adapter.SimpleDefaultAdapter;
 import com.gabriel.smartclass.databinding.FragmentAddCourseBinding;
+import com.gabriel.smartclass.model.Subject;
 import com.gabriel.smartclass.viewModels.AddCourseViewModel;
 import com.gabriel.smartclass.viewModels.factorys.AddCourseViewModelFactory;
 import com.google.android.material.snackbar.Snackbar;
@@ -31,8 +35,9 @@ public class AddCourse extends Fragment {
     private EditText editTextDivision;
     private Spinner areaSpinner;
     private Spinner coordinatorSpinner;
-    private Button inflateAddAreaDialogButton;
+    private ImageButton inflateAddAreaDialogButton;
     private Button createCourse;
+
 
     public Button getCreateCourse() {
         return createCourse;
@@ -62,7 +67,7 @@ public class AddCourse extends Fragment {
         return coordinatorSpinner;
     }
 
-    public Button getInflateAddAreaDialogButton() {
+    public ImageButton getInflateAddAreaDialogButton() {
         return inflateAddAreaDialogButton;
     }
 
@@ -76,7 +81,8 @@ public class AddCourse extends Fragment {
         initialize();
         return binding.getRoot();
     }
-    public void loadComponents(){
+
+    public void loadComponents() {
         this.editTextname = binding.addCourseEdtxtName;
         this.editTextDescription = binding.addCourseEdtxtDescription;
         this.editTextDivision = binding.addCourseDivision;
@@ -86,7 +92,8 @@ public class AddCourse extends Fragment {
         this.inflateAddAreaDialogButton = binding.addCourseCreatenewareaButton;
         this.createCourse = binding.addCourseCreateButton;
     }
-    public void initialize(){
+
+    public void initialize() {
         AddCourseViewModelFactory factory = new AddCourseViewModelFactory(this);
         ViewModelProvider provider = new ViewModelProvider(requireActivity(), factory);
         viewModel = provider.get(AddCourseViewModel.class);
@@ -98,25 +105,26 @@ public class AddCourse extends Fragment {
         createCourse.setOnClickListener(createCourseClickListener());
     }
 
+
     private View.OnClickListener createCourseClickListener() {
-        return view ->{
+        return view -> {
             viewModel.createNewCourse(FirebaseAuth.getInstance().getCurrentUser().getUid());
         };
     }
 
     private Observer<? super String> snakbarObserver() {
-        return text ->{
+        return text -> {
             Snackbar.make(getContext(), binding.addCourseCreateButton, text, Snackbar.LENGTH_SHORT).show();
         };
     }
 
     private View.OnClickListener inflateAddAreaDialogListener() {
-        return view ->{
+        return view -> {
             inflateAddAreaDialog();
         };
     }
 
-    public void inflateAddAreaDialog(){
+    public void inflateAddAreaDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         dialogBuilder.setCancelable(false);
         final View popUp = getLayoutInflater().inflate(R.layout.activity_addnew_area_dialog, null);
@@ -126,15 +134,15 @@ public class AddCourse extends Fragment {
         EditText editTextDescription = popUp.findViewById(R.id.add_new_area_edtxt_description);
         Dialog dialog = dialogBuilder.create();
         dialog.show();
-        buttonDone.setOnClickListener(view ->{
+        buttonDone.setOnClickListener(view -> {
             dialog.dismiss();
-            dialog.setOnDismissListener(listener->{
+            dialog.setOnDismissListener(listener -> {
                 buttonDone.setOnClickListener(null);
                 buttonConfirm.setOnClickListener(null);
                 listener.cancel();
             });
         });
-        buttonConfirm.setOnClickListener(v2->{
+        buttonConfirm.setOnClickListener(v2 -> {
             addNewArea(editTextDescription);
         });
     }
@@ -142,5 +150,7 @@ public class AddCourse extends Fragment {
         viewModel.addNewArea(editTextDescription.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getUid());
         editTextDescription.setText("");
     }
+
+
 
 }

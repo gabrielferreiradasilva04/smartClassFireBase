@@ -5,7 +5,6 @@ import android.widget.Toast;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.gabriel.smartclass.adapter.spinnerAdapters.InstitutionUserSpinnerAdapter;
 import com.gabriel.smartclass.adapter.spinnerAdapters.SpinnerAdapterGeneric;
 import com.gabriel.smartclass.dao.AreaDAO;
 import com.gabriel.smartclass.dao.CourseDAO;
@@ -19,7 +18,6 @@ import com.gabriel.smartclass.view.course.fragments.AddCourse;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +27,7 @@ public class AddCourseViewModel extends ViewModel {
     private final MutableLiveData<String> snackbarText = new MutableLiveData<>();
     private final MutableLiveData<List<Area>> areasMutableLiveData = new MutableLiveData<>();
     private SpinnerAdapterGeneric<Area> spinnerAreaAdapter;
-    private InstitutionUserSpinnerAdapter spinnerInstitutionUserAdapter;
+    private SpinnerAdapterGeneric<InstitutionUser> spinnerInstitutionUserAdapter;
     private final MutableLiveData<List<InstitutionUser>> institutionUsersMutableLiveData = new MutableLiveData<>();
 
     public AddCourseViewModel(AddCourse addCourse) {
@@ -81,11 +79,11 @@ public class AddCourseViewModel extends ViewModel {
     }
 
     public void getCoordinatorsAndPopulateSpinner(String institutionID) {
-        spinnerInstitutionUserAdapter = new InstitutionUserSpinnerAdapter(fragment.getContext(), this.institutionUsersMutableLiveData);
+        spinnerInstitutionUserAdapter = new SpinnerAdapterGeneric<>(fragment.getContext(), this.institutionUsersMutableLiveData);
         fragment.getCoordinatorSpinner().setAdapter(spinnerInstitutionUserAdapter);
         new InstitutionUserDAO().getInstitutionUserByUserType(new UserTypeDAO().COORDINATOR_TYPE_REFERENCE, institutionID, task -> {
             if (task.isComplete() && task.getResult() != null) {
-                spinnerInstitutionUserAdapter.getMutableLiveDataInstitutionUser().setValue(task.getResult().toObjects(InstitutionUser.class));
+                spinnerInstitutionUserAdapter.getMutableLiveDataTList().setValue(task.getResult().toObjects(InstitutionUser.class));
                 spinnerInstitutionUserAdapter.notifyDataSetChanged();
             }
         }, e -> {
@@ -94,15 +92,10 @@ public class AddCourseViewModel extends ViewModel {
     }
 
     public void addNewItemOnAreaAdapter(Area area) {
-        if(area != null){
+        if (area != null) {
             Objects.requireNonNull(spinnerAreaAdapter.getMutableLiveDataTList().getValue()).add(area);
             spinnerAreaAdapter.notifyDataSetChanged();
         }
-    }
-
-    public void removeItemFromAreaAdapter(Area area) {
-        spinnerAreaAdapter.getMutableLiveDataTList().getValue().remove(area);
-        spinnerAreaAdapter.notifyDataSetChanged();
     }
 
     public void createNewCourse(String institutionID) {
@@ -124,7 +117,7 @@ public class AddCourseViewModel extends ViewModel {
 
     }
 
-    private void saveCourse(String name, String description, String durationString, String divisionString, Area area, InstitutionUser coordinator, String institutionID) throws IllegalArgumentException{
+    private void saveCourse(String name, String description, String durationString, String divisionString, Area area, InstitutionUser coordinator, String institutionID) throws IllegalArgumentException {
         Course course = buildCourse(name, description, durationString, divisionString, area, coordinator, institutionID);
         CourseDAO courseDAO = new CourseDAO();
         courseDAO.findCourseByName(institutionID, name, task2 -> {
@@ -139,7 +132,8 @@ public class AddCourseViewModel extends ViewModel {
             }
         }, e2 -> snackbarText.setValue("Erro ao criar o seu curso... Tente novamente mais tarde"));
     }
-    private Course buildCourse(String name, String description, String durationString, String divisionString, Area area, InstitutionUser coordinator, String institutionID) throws IllegalArgumentException{
+
+    private Course buildCourse(String name, String description, String durationString, String divisionString, Area area, InstitutionUser coordinator, String institutionID) throws IllegalArgumentException {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         int divisionInteger = Integer.parseInt(divisionString);
         if (divisionInteger > 4 || divisionInteger <= 1) {
@@ -162,7 +156,8 @@ public class AddCourseViewModel extends ViewModel {
         updates.put("id", task.getResult().getId());
         courseDAO.updateCourse(task.getResult().getId(), institutionID, updates);
     }
-    private void clearViewFields(){
+
+    private void clearViewFields() {
         fragment.getEditTextname().setText("");
         fragment.getEditTextDescription().setText("");
         fragment.getEditTextDivision().setText("");
