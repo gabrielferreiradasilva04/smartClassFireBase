@@ -18,14 +18,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:inputType="text"
         android:text="Curso"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="@+id/course_recycler_view_mainview"
         app:layout_constraintStart_toStartOf="@id/course_recycler_view_mainview"
-        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck"
-        tools:layout_editor_absoluteX="178dp" />
+        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/course_recyclerview_title"
@@ -33,7 +31,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:inputType="text"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/course_recycler_view_mainview"
