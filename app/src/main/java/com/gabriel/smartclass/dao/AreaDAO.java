@@ -41,4 +41,7 @@ public class AreaDAO {
                 .document(areaID);
         areaReference.update(updates);
     }
+    public DocumentReference getAreaReferenceByID(String institutionID, String areaID){
+        return FirebaseFirestore.getInstance().collection(INSTITUTIONCOLLECTION).document(institutionID).collection(COLLECTION).document(areaID);
+    }
 }

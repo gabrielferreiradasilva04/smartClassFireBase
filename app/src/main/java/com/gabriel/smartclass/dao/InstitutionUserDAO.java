@@ -37,4 +37,7 @@ public class InstitutionUserDAO {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         fb.collection(institutionsCollection).document(institutionID).collection(COLLECTION).whereEqualTo("userType_id", userTypeID).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
+    public DocumentReference getInstitutionUserReferenceByID(String institutionID, String institutionUserID){
+        return FirebaseFirestore.getInstance().collection(institutionsCollection).document(institutionID).collection(COLLECTION).document(institutionUserID);
+    }
 }

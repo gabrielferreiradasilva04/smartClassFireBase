@@ -32,8 +32,6 @@ public class MainCourses extends AppCompatActivity {
         viewPager.setAdapter(fragmentAdapter);
         tabLayout = binding.mainCourseTabs;
         tabLayout.setupWithViewPager(viewPager);
-
-
     }
 
     @Override

@@ -16,7 +16,7 @@ public class Course extends SimpleAuxEntity implements Parcelable {
     private int duration;
     private int division_of_the_school_year;
     private DocumentReference area_id;
-    private DocumentReference coordinantor_id;
+    private DocumentReference coordinator_id;
     protected Course(Parcel in) {
         id = in.readString();
         name = in.readString();
@@ -32,7 +32,7 @@ public class Course extends SimpleAuxEntity implements Parcelable {
         dest.writeInt(duration);
         dest.writeInt(division_of_the_school_year);
         dest.writeString(area_id.getPath());
-        dest.writeString(coordinantor_id.getPath());
+        dest.writeString(coordinator_id.getPath());
     }
 
     @Override
@@ -107,12 +107,12 @@ public class Course extends SimpleAuxEntity implements Parcelable {
         this.area_id = area_id;
     }
 
-    public DocumentReference getCoordinantor_id() {
-        return coordinantor_id;
+    public DocumentReference getCoordinator_id() {
+        return coordinator_id;
     }
 
-    public void setCoordinantor_id(DocumentReference coordinantor_id) {
-        this.coordinantor_id = coordinantor_id;
+    public void setCoordinator_id(DocumentReference coordinator_id) {
+        this.coordinator_id = coordinator_id;
     }
 
     public int getDivision_of_the_school_year() {
@@ -128,12 +128,12 @@ public class Course extends SimpleAuxEntity implements Parcelable {
         if (this == o) return true;
         if (!(o instanceof Course)) return false;
         Course course = (Course) o;
-        return getDuration() == course.getDuration() && getDivision_of_the_school_year() == course.getDivision_of_the_school_year() && Objects.equals(getId(), course.getId()) && Objects.equals(getName(), course.getName()) && Objects.equals(getDescription(), course.getDescription()) && Objects.equals(getArea_id(), course.getArea_id()) && Objects.equals(getCoordinantor_id(), course.getCoordinantor_id());
+        return getDuration() == course.getDuration() && getDivision_of_the_school_year() == course.getDivision_of_the_school_year() && Objects.equals(getId(), course.getId()) && Objects.equals(getName(), course.getName()) && Objects.equals(getDescription(), course.getDescription()) && Objects.equals(getArea_id(), course.getArea_id()) && Objects.equals(getCoordinator_id(), course.getCoordinator_id());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getDescription(), getDuration(), getDivision_of_the_school_year(), getArea_id(), getCoordinantor_id());
+        return Objects.hash(getId(), getName(), getDescription(), getDuration(), getDivision_of_the_school_year(), getArea_id(), getCoordinator_id());
     }
 
     public Course() {
@@ -145,7 +145,7 @@ public class Course extends SimpleAuxEntity implements Parcelable {
         this.description = description;
         this.duration = duration;
         this.area_id = area_id;
-        this.coordinantor_id = coordinantor_id;
+        this.coordinator_id = coordinantor_id;
         this.division_of_the_school_year = division_of_the_school_year;
     }
 }

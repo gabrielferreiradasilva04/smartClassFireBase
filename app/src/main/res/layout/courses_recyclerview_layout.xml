@@ -7,8 +7,11 @@
         android:id="@+id/course_recycler_view_mainview"
         style="@style/SimpleViewContainer"
         android:layout_height="150dp"
+        android:minHeight="150dp"
+        android:maxHeight="200dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
 
@@ -24,19 +27,32 @@
         app:layout_constraintTop_toTopOf="@+id/course_recycler_view_mainview"
         app:layout_constraintStart_toStartOf="@id/course_recycler_view_mainview"
         tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
-
-    <TextView
-        android:id="@+id/course_recyclerview_title"
-        android:textColor="@color/black"
-        android:textAllCaps="true"
-        android:layout_width="wrap_content"
+    <HorizontalScrollView
+        android:id="@+id/course_recycler_view_hscroll"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/course_recycler_view_mainview"
         app:layout_constraintTop_toBottomOf="@id/courses_recyclerview_textlabel"
-        tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+        app:layout_constraintStart_toStartOf="@id/course_recycler_view_mainview"
+        app:layout_constraintEnd_toEndOf="@id/course_recycler_view_mainview">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/course_recyclerview_title"
+                android:textColor="@color/black"
+                android:textAllCaps="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </HorizontalScrollView>
+
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/course_recycler_view_buttonremove"
@@ -44,28 +60,29 @@
         style="@style/Button_Add_Items"
         android:src="@drawable/ic_trash"
         app:layout_constraintEnd_toStartOf="@id/course_recycler_view_buttonedit"
-        app:layout_constraintTop_toBottomOf="@id/course_recyclerview_title"
+        app:layout_constraintTop_toBottomOf="@id/course_recycler_view_hscroll"
+        app:layout_constraintBottom_toBottomOf="@id/course_recycler_view_mainview"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/course_recycler_view_buttonedit"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
         style="@style/Button_Add_Items"
-        android:src="@drawable/ic_edit"
+        android:src="@drawable/ic_edit32"
+        android:backgroundTint="@color/azul_ceruleo"
         app:layout_constraintEnd_toEndOf="@id/course_recycler_view_mainview"
-        app:layout_constraintTop_toBottomOf="@id/course_recyclerview_title"
+        app:layout_constraintTop_toBottomOf="@id/course_recycler_view_hscroll"
+        app:layout_constraintBottom_toBottomOf="@id/course_recycler_view_mainview"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/course_recycler_view_buttonsubjects"
         style="@style/Button_Confirm_Forms"
         android:layout_width="0dp"
-        android:layout_margin="10dp"
         android:text="Matérias do Curso"
         android:backgroundTint="@color/azul_ceruleo"
         app:layout_constraintBottom_toBottomOf="@id/course_recycler_view_mainview"
         app:layout_constraintStart_toStartOf="@id/course_recycler_view_mainview"
+        app:layout_constraintTop_toTopOf="@id/course_recycler_view_hscroll"
         app:layout_constraintEnd_toStartOf="@id/course_recycler_view_buttonremove"/>
 
     <View

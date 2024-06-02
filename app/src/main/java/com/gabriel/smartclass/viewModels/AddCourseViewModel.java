@@ -63,6 +63,7 @@ public class AddCourseViewModel extends ViewModel {
         HashMap<String, Object> updates = new HashMap<>();
         updates.put("id", id);
         areaDAO.updateArea(id, institutionID, updates);
+        area.setId(id);
         addNewItemOnAreaAdapter(area);
     }
 
@@ -147,14 +148,14 @@ public class AddCourseViewModel extends ViewModel {
         DocumentReference areaReference = fb.collection(Institution.class.getSimpleName()).document(institutionID).collection(Area.class.getSimpleName()).document(area.getId());
         DocumentReference coordinatorReference = fb.collection(Institution.class.getSimpleName()).document(institutionID).collection(InstitutionUser.class.getSimpleName()).document(coordinator.getId());
         course.setArea_id(areaReference);
-        course.setCoordinantor_id(coordinatorReference);
+        course.setCoordinator_id(coordinatorReference);
         return course;
     }
 
     private void updateCourseID(String institutionID, CourseDAO courseDAO, Task<DocumentReference> task) {
         HashMap<String, Object> updates = new HashMap<>();
         updates.put("id", task.getResult().getId());
-        courseDAO.updateCourse(task.getResult().getId(), institutionID, updates);
+        courseDAO.updateCourse(task.getResult().getId(), institutionID, updates, task1 -> {}, e -> {snackbarText.setValue("Pode ser que alguns dados não tenham sido salvos!");});
     }
 
     private void clearViewFields() {

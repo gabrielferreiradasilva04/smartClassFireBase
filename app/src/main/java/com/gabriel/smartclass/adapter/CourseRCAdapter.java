@@ -22,14 +22,30 @@ import java.util.List;
 public class CourseRCAdapter extends RecyclerView.Adapter {
     private final MutableLiveData<List<Course>> mutableliveDataCourse;
     private final HashSet<String> tIds;
-    private DefaultClickListener<Course> clickListener;
-    private DefaultClickListener<Course> clickListener1;
-    private DefaultClickListener<Course> clickListener2;
+    private DefaultClickListener<Course> clickListenerRemove;
+    private DefaultClickListener<Course> clickListenerEdit;
+    private DefaultClickListener<Course> clickListenerSubjects;
 
 
     public CourseRCAdapter(){
         this.mutableliveDataCourse = new MutableLiveData<>(new ArrayList<>());
         this.tIds = new HashSet<>();
+    }
+
+    public DefaultClickListener<Course> getClickListenerEdit() {
+        return clickListenerEdit;
+    }
+
+    public void setClickListenerEdit(DefaultClickListener<Course> clickListenerEdit) {
+        this.clickListenerEdit = clickListenerEdit;
+    }
+
+    public DefaultClickListener<Course> getClickListenerSubjects() {
+        return clickListenerSubjects;
+    }
+
+    public void setClickListenerSubjects(DefaultClickListener<Course> clickListenerSubjects) {
+        this.clickListenerSubjects = clickListenerSubjects;
     }
 
     public MutableLiveData<List<Course>> getMutableliveDataCourse() {
@@ -40,12 +56,12 @@ public class CourseRCAdapter extends RecyclerView.Adapter {
         return tIds;
     }
 
-    public DefaultClickListener<Course> getClickListener() {
-        return clickListener;
+    public DefaultClickListener<Course> getClickListenerRemove() {
+        return clickListenerRemove;
     }
 
-    public void setClickListener(DefaultClickListener<Course> clickListener) {
-        this.clickListener = clickListener;
+    public void setClickListenerRemove(DefaultClickListener<Course> clickListenerRemove) {
+        this.clickListenerRemove = clickListenerRemove;
     }
 
     @NonNull
@@ -66,16 +82,10 @@ public class CourseRCAdapter extends RecyclerView.Adapter {
             Button buttonSubjects = holder.itemView.findViewById(R.id.course_recycler_view_buttonsubjects);
             TextView textDescription = holder.itemView.findViewById(R.id.course_recyclerview_title);
             textDescription.setText(description);
-            if(clickListener != null && clickListener1 != null && clickListener2 != null){
-                buttonRemoveItem.setOnClickListener(view ->{
-                    clickListener.onClick(mutableliveDataCourse.getValue().get(position));
-                });
-                buttonEditItem.setOnClickListener(view ->{
-                    clickListener1.onClick(mutableliveDataCourse.getValue().get(position));
-                });
-                buttonSubjects.setOnClickListener(view ->{
-                    clickListener2.onClick(mutableliveDataCourse.getValue().get(position));
-                });
+            if(clickListenerRemove != null && clickListenerEdit != null && clickListenerSubjects != null){
+                buttonRemoveItem.setOnClickListener(view -> clickListenerRemove.onClick(mutableliveDataCourse.getValue().get(position)));
+                buttonEditItem.setOnClickListener(view -> clickListenerEdit.onClick(mutableliveDataCourse.getValue().get(position)));
+                buttonSubjects.setOnClickListener(view -> clickListenerSubjects.onClick(mutableliveDataCourse.getValue().get(position)));
             }
         }catch (NullPointerException e){
             Log.d("ADAPTER ERROR", "onBindViewHolder: valor nulo encontrado no adapter");
