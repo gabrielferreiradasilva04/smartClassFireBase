@@ -5,6 +5,7 @@ import android.util.Log;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.model.Course;
 import com.gabriel.smartclass.model.Institution;
+import com.gabriel.smartclass.model.Subject;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,6 +22,7 @@ import java.util.Locale;
 public class CourseDAO {
     private final String COLLECTION = Course.class.getSimpleName();
     private final String INSTITUTIONCOLLECTION = Institution.class.getSimpleName();
+    private final String SUBJECTSCOLLECTION = Subject.class.getSimpleName();
     private final String SEARCHAUXSTRING = "\uffff";
 
     public void saveNewCourse(Course course, String institutionID, OnCompleteListener<DocumentReference> onCompleteListener, OnFailureListener onFailureListener){
@@ -50,6 +52,21 @@ public class CourseDAO {
                 .delete()
                 .addOnCompleteListener(onCompleteListener)
                 .addOnFailureListener(onFailureListener);
+    }
+    public void addSubjectsOnCourse(String courseID, String institutionID, Subject subject, OnCompleteListener<DocumentReference> onCompleteListener, OnFailureListener onFailureListener){
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        fb.collection(INSTITUTIONCOLLECTION).document(institutionID).collection(COLLECTION).document(courseID)
+                .collection(SUBJECTSCOLLECTION)
+                .add(subject)
+                .addOnCompleteListener(onCompleteListener)
+                .addOnFailureListener(onFailureListener);
+    }
+    public void removeSubjectFromCourse(String institutionID, String courseID, String subjectID, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener){
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        fb.collection(INSTITUTIONCOLLECTION).document(institutionID).collection(COLLECTION).document(courseID).collection(SUBJECTSCOLLECTION)
+                .document(subjectID)
+                .delete()
+                .addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 
 

@@ -26,6 +26,7 @@ import com.gabriel.smartclass.databinding.FragmentSearchAndEditCoursesBinding;
 import com.gabriel.smartclass.model.Area;
 import com.gabriel.smartclass.model.Course;
 import com.gabriel.smartclass.model.InstitutionUser;
+import com.gabriel.smartclass.view.course.dialogs.AddSubjectsOnCourseDialog;
 import com.gabriel.smartclass.view.course.dialogs.EditCourseDialog;
 import com.gabriel.smartclass.viewModels.SearchAndEditCourseViewModel;
 import com.gabriel.smartclass.viewModels.factorys.SearchAndEditCourseFactory;
@@ -123,6 +124,10 @@ public class SearchAndEditCourses extends Fragment {
         dialog.show(getParentFragmentManager(), dialog.getTag());
     }
     public void inflateSubjectsDialog(Course course){
+        AddSubjectsOnCourseDialog dialog = new AddSubjectsOnCourseDialog();
+        viewModel.getSnackBarText().setValue(null);
+        viewModel.setCourseEdit(course);
+        dialog.show(getParentFragmentManager(), dialog.getTag());
 
     }
 

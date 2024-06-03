@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.UserInstitutionMenu"
+    tools:context=".view.user.views.institutionUser.InstitutionUserMainMenu"
     android:background="@drawable/main_background">
 
     <androidx.fragment.app.FragmentContainerView

@@ -1,4 +1,4 @@
-package com.gabriel.smartclass.view.fragments.institutionusersfragments;
+package com.gabriel.smartclass.view.user.fragments.institutionUser;
 
 import android.os.Bundle;
 
@@ -12,10 +12,10 @@ import com.gabriel.smartclass.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link InstitutionUserAddCourses#newInstance} factory method to
+ * Use the {@link InstitutionUserCourses#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InstitutionUserAddCourses extends Fragment {
+public class InstitutionUserCourses extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class InstitutionUserAddCourses extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public InstitutionUserAddCourses() {
+    public InstitutionUserCourses() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class InstitutionUserAddCourses extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment InstitutionUserAddCourses.
+     * @return A new instance of fragment InstitutionUserCourses.
      */
     // TODO: Rename and change types and number of parameters
-    public static InstitutionUserAddCourses newInstance(String param1, String param2) {
-        InstitutionUserAddCourses fragment = new InstitutionUserAddCourses();
+    public static InstitutionUserCourses newInstance(String param1, String param2) {
+        InstitutionUserCourses fragment = new InstitutionUserCourses();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class InstitutionUserAddCourses extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_institution_user_add_courses, container, false);
+        return inflater.inflate(R.layout.fragment_institution_user_courses, container, false);
     }
 }

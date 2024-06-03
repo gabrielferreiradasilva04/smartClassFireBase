@@ -27,7 +27,7 @@ import com.gabriel.smartclass.model.InstitutionLinkRequest;
 import com.gabriel.smartclass.model.InstitutionUser;
 import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.view.BaseNotification;
-import com.gabriel.smartclass.view.fragments.institutionfragments.InstitutionLinkRequestFragment;
+import com.gabriel.smartclass.view.user.fragments.institution.InstitutionLinkRequestFragment;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;

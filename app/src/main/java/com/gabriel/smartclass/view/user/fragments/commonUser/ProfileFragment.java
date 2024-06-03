@@ -1,4 +1,4 @@
-package com.gabriel.smartclass.view.fragments.userfragments;
+package com.gabriel.smartclass.view.user.fragments.commonUser;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,19 +28,18 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.databinding.FragmentProfileBinding;
 import com.gabriel.smartclass.utilities.listeners.CapacityTextListener;
-import com.gabriel.smartclass.view.InstitutionMainMenu;
-import com.gabriel.smartclass.view.StudentMainMenu;
+import com.gabriel.smartclass.view.user.views.institution.InstitutionMainMenu;
+import com.gabriel.smartclass.view.user.views.commonUser.CommonUserMainMenu;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileFragment extends Fragment {
-    private FragmentProfileBinding binding;
+    private com.gabriel.smartclass.databinding.FragmentProfileBinding binding;
     private HostUserActivityViewModel hostUserActivityViewModel;
     InstitutionMainMenu institutionMain;
-    private StudentMainMenu studentMain;
+    private CommonUserMainMenu studentMain;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -54,9 +53,9 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        binding = com.gabriel.smartclass.databinding.FragmentProfileBinding.inflate(inflater, container, false);
         defaultInitialize();
-        if (this.getActivity().getClass().equals(StudentMainMenu.class)) {
+        if (this.getActivity().getClass().equals(CommonUserMainMenu.class)) {
             initializeUserProfile();
         } else if (this.getActivity().getClass().equals(InstitutionMainMenu.class)) {
             initializeInstitutionProfile();
@@ -89,7 +88,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initializeUserProfile() {
-        studentMain = (StudentMainMenu) getActivity();
+        studentMain = (CommonUserMainMenu) getActivity();
         studentMain.updateTitle("Perfil");
         loadUserDetails();
         binding.saveChangesProfile.setOnClickListener(clickListenerUserSaveChanges());

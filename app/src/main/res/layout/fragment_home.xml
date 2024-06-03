@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main_background"
-    tools:context=".view.fragments.userfragments.HomeFragment">
+    tools:context=".view.user.fragments.commonUser.HomeFragment">
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh_userHome"
         android:layout_width="match_parent"

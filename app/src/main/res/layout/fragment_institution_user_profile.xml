@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main_background"
-    tools:context=".view.fragments.institutionusersfragments.InstitutionUserProfile">
+    tools:context=".view.user.fragments.institutionUser.InstitutionUserProfile">
     <ScrollView
         android:id="@+id/institution_user_mainmenu_scroll"
         android:layout_width="match_parent"

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +17,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.adapter.SimpleDefaultAdapter;
 import com.gabriel.smartclass.databinding.FragmentAddCourseBinding;
-import com.gabriel.smartclass.model.Subject;
 import com.gabriel.smartclass.viewModels.AddCourseViewModel;
 import com.gabriel.smartclass.viewModels.factorys.AddCourseViewModelFactory;
 import com.google.android.material.snackbar.Snackbar;
@@ -127,7 +124,7 @@ public class AddCourse extends Fragment {
     public void inflateAddAreaDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
         dialogBuilder.setCancelable(false);
-        final View popUp = getLayoutInflater().inflate(R.layout.activity_addnew_area_dialog, null);
+        final View popUp = getLayoutInflater().inflate(R.layout.dialog_addnewarea_course, null);
         dialogBuilder.setView(popUp);
         Button buttonConfirm = popUp.findViewById(R.id.add_new_area_button_confirm);
         Button buttonDone = popUp.findViewById(R.id.add_new_area_button_cancel);

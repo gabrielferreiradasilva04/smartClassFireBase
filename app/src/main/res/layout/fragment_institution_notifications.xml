@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".view.fragments.institutionfragments.InstitutionLinkRequestFragment"
+    tools:context=".view.user.fragments.institution.InstitutionLinkRequestFragment"
     android:background="@drawable/main_background">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

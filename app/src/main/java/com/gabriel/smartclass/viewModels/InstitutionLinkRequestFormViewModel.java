@@ -21,7 +21,7 @@ import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
 import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.model.UserType;
-import com.gabriel.smartclass.view.StudentMainMenu;
+import com.gabriel.smartclass.view.user.views.commonUser.CommonUserMainMenu;
 import com.gabriel.smartclass.view.linkRequests.InstitutionLinkRequestForm;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -151,7 +151,7 @@ public class InstitutionLinkRequestFormViewModel {
         Button buttonConfirm = popUp.findViewById(R.id.buttonConfirmLinkRequestSuccessDialog);
         buttonConfirm.setOnClickListener(veiw -> {
             dialog.dismiss();
-            Intent i = new Intent(context, StudentMainMenu.class);
+            Intent i = new Intent(context, CommonUserMainMenu.class);
             context.startActivity(i);
             institutionLinkRequestForm.finish();
         });

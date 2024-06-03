@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.gabriel.smartclass.view.fragments.institutionfragments.InstitutionLinkRequestFragment;
+import com.gabriel.smartclass.view.user.fragments.institution.InstitutionLinkRequestFragment;
 import com.gabriel.smartclass.viewModels.InstitutionLinkRequestsFragmentViewModel;
 
 public class InstitutionLinkRequestsViewModelFactory implements ViewModelProvider.Factory{

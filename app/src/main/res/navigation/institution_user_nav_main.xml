@@ -6,17 +6,17 @@
     app:startDestination="@id/institution_user_menu_profile">
     <fragment
         android:id="@+id/institution_user_menu_profile"
-        android:name="com.gabriel.smartclass.view.fragments.institutionusersfragments.InstitutionUserProfile"
+        android:name="com.gabriel.smartclass.view.user.fragments.institutionUser.InstitutionUserProfile"
         android:label="fragment_institution_user_profile"
         tools:layout="@layout/fragment_institution_user_profile" />
     <fragment
         android:id="@+id/institution_user_menu_add_course"
-        android:name="com.gabriel.smartclass.view.fragments.institutionusersfragments.InstitutionUserAddCourses"
+        android:name="com.gabriel.smartclass.view.user.fragments.institutionUser.InstitutionUserAddCourses"
         android:label="fragment_institution_user_add_courses"
         tools:layout="@layout/fragment_institution_user_add_courses" />
     <fragment
         android:id="@+id/institution_user_menu_my_courses"
-        android:name="com.gabriel.smartclass.view.fragments.institutionusersfragments.InstitutionUserCourses"
+        android:name="com.gabriel.smartclass.view.user.fragments.institutionUser.InstitutionUserCourses"
         android:label="fragment_institution_user_courses"
         tools:layout="@layout/fragment_institution_user_courses" />
 </navigation>

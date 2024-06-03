@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -51,13 +52,15 @@ public class EditCourseDialog extends DialogFragment {
         this.coordinatorSpinner.setAdapter(null);
         this.backButton.setOnClickListener(null);
         this.saveButton.setOnClickListener(null);
-        viewModel.getSnackBarText().removeObserver(snackbarObserve());
-        viewModel.getSnackBarText().setValue(null);
         viewModel.getSpinnerAreaAdapter().getMutableLiveDataTList().setValue(new ArrayList<>());
         viewModel.getSpinnerCoordinatorAdapter().getMutableLiveDataTList().setValue(new ArrayList<>());
         this.viewModel.getSnackBarText().removeObserver(snackbarObserve());
         this.viewModel.getSnackBarText().setValue(null);
         this.viewModel = null;
+    }
+    public void onResume() {
+        super.onResume();
+        getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
     }
 
     public void initialize(){

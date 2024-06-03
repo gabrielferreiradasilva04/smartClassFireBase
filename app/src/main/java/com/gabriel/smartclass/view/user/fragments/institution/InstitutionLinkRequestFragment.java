@@ -1,4 +1,4 @@
-package com.gabriel.smartclass.view.fragments.institutionfragments;
+package com.gabriel.smartclass.view.user.fragments.institution;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

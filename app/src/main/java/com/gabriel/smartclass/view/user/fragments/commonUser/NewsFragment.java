@@ -1,4 +1,4 @@
-package com.gabriel.smartclass.view.fragments.userfragments;
+package com.gabriel.smartclass.view.user.fragments.commonUser;
 
 import android.os.Bundle;
 
@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.view.StudentMainMenu;
+import com.gabriel.smartclass.view.user.views.commonUser.CommonUserMainMenu;
 
 public class NewsFragment extends Fragment {
 
@@ -20,9 +20,9 @@ public class NewsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        StudentMainMenu main = (StudentMainMenu) getActivity();
+        CommonUserMainMenu main = (CommonUserMainMenu) getActivity();
         main.updateTitle("Notícias");
-        return inflater.inflate(R.layout.fragment_news, container, false);
+        return inflater.inflate(R.layout.fragment_commonuser_news, container, false);
 
     }
 }

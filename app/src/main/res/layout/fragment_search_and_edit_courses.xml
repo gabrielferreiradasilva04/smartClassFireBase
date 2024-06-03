@@ -17,7 +17,7 @@
 
     <ImageButton
         android:id="@+id/seacrch_courses_buttonsearch"
-        style="@style/Button_Add_Items"
+        style="@style/Custom_ImageButtons"
         android:src="@drawable/baseline_search_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/seacrch_courses_edtxtTitle"

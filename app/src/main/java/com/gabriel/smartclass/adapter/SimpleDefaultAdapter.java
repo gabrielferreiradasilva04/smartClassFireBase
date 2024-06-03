@@ -85,14 +85,16 @@ public class SimpleDefaultAdapter<T extends SimpleAuxEntity> extends RecyclerVie
         if(!tIds.contains(t.getId())){
             tIds.add(t.getId());
             mutableLiveDataT.getValue().add(t);
+            this.notifyItemInserted(mutableLiveDataT.getValue().indexOf(t));
         }
     }
     public void removeItem(@NonNull T t){
         if(mutableLiveDataT.getValue().contains(t)){
             int removedPosition = mutableLiveDataT.getValue().indexOf(t);
-            mutableLiveDataT.getValue().remove(t);
             notifyItemRemoved(removedPosition);
             this.notifyItemRangeChanged(removedPosition, this.getItemCount());
+            mutableLiveDataT.getValue().remove(t);
+            ;
         }
 
     }

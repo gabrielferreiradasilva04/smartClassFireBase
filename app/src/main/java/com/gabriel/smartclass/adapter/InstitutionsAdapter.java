@@ -47,7 +47,7 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.institutions_adapter, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_institution_layout, parent, false);
         return new MyViewHolder(itemView);
     }
 

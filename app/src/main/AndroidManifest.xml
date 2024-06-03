@@ -17,10 +17,10 @@
         android:theme="@style/Theme.SmartClass"
         tools:targetApi="31">
         <activity
-            android:name=".view.course.MainCourses"
+            android:name=".view.course.views.MainCourses"
             android:exported="false" />
         <activity
-            android:name=".view.InstitutionMainMenu"
+            android:name=".view.user.views.institution.InstitutionMainMenu"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
@@ -32,14 +32,14 @@
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".view.InstitutionsSearch"
+            android:name=".view.user.views.institution.InstitutionsSearch"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".view.UserInstitutionMenu"
+            android:name=".view.user.views.institutionUser.InstitutionUserMainMenu"
             android:exported="false" />
         <activity
-            android:name=".view.StudentMainMenu"
+            android:name=".view.user.views.commonUser.CommonUserMainMenu"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity

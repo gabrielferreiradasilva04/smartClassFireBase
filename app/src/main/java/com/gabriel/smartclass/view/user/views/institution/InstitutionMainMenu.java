@@ -1,4 +1,4 @@
-package com.gabriel.smartclass.view;
+package com.gabriel.smartclass.view.user.views.institution;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragments.institutionfragments.InstitutionHomeFragment"
+    tools:context=".view.user.fragments.institution.InstitutionHomeFragment"
     android:background="@drawable/main_background">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -31,8 +31,8 @@
                     <View
                         android:id="@+id/statistics_view"
                         style="@style/SimpleViewContainer"
-                        android:layout_marginTop="4dp"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 

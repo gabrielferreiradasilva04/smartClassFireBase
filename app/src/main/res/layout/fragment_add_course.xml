@@ -16,7 +16,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".view.course.MainCourses">
+            tools:context=".view.course.views.MainCourses">
 
             <EditText
                 android:id="@+id/add_course_edtxt_name"
@@ -73,7 +73,7 @@
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/add_course_createnewarea_button"
-                style="@style/Button_Add_Items"
+                style="@style/Custom_ImageButtons"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/add_icon"
                 app:layout_constraintEnd_toEndOf="parent"

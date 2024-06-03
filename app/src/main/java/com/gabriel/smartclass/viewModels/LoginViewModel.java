@@ -1,6 +1,5 @@
 package com.gabriel.smartclass.viewModels;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -10,12 +9,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.dao.UserAuthDAO;
-import com.gabriel.smartclass.view.InstitutionMainMenu;
-import com.gabriel.smartclass.view.StudentMainMenu;
+import com.gabriel.smartclass.view.user.views.institution.InstitutionMainMenu;
+import com.gabriel.smartclass.view.user.views.commonUser.CommonUserMainMenu;
 import com.gabriel.smartclass.view.auth.LoginForm;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseUser;
 
 public class LoginViewModel extends ViewModel {
     private UserAuthDAO userAuthDAO;
@@ -46,7 +44,7 @@ public class LoginViewModel extends ViewModel {
                                 loginForm.finish();
                             }else{
                                 progressBar.setVisibility(View.GONE);
-                                Intent i = new Intent(loginForm.getApplicationContext(), StudentMainMenu.class);
+                                Intent i = new Intent(loginForm.getApplicationContext(), CommonUserMainMenu.class);
                                 loginForm.startActivity(i);
                                 loginForm.finish();
                             }

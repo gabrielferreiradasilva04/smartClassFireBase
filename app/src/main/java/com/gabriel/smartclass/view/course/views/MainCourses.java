@@ -1,4 +1,4 @@
-package com.gabriel.smartclass.view.course;
+package com.gabriel.smartclass.view.course.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -11,7 +11,7 @@ import com.gabriel.smartclass.view.course.fragments.CourseFragmentAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainCourses extends AppCompatActivity {
-    ActivityMainCoursesBinding binding;
+    com.gabriel.smartclass.databinding.ActivityMainCoursesBinding binding;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private CourseFragmentAdapter fragmentAdapter;
@@ -19,7 +19,7 @@ public class MainCourses extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainCoursesBinding.inflate(getLayoutInflater());
+        binding = com.gabriel.smartclass.databinding.ActivityMainCoursesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initialize();
     }

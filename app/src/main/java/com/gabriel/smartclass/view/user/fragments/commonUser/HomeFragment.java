@@ -1,4 +1,4 @@
-package com.gabriel.smartclass.view.fragments.userfragments;
+package com.gabriel.smartclass.view.user.fragments.commonUser;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,14 +16,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.gabriel.smartclass.dao.InstitutionUserDAO;
-import com.gabriel.smartclass.databinding.EmptyRequestBinding;
-import com.gabriel.smartclass.databinding.FragmentHomeBinding;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionUser;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
-import com.gabriel.smartclass.view.InstitutionsSearch;
-import com.gabriel.smartclass.view.StudentMainMenu;
-import com.gabriel.smartclass.view.UserInstitutionMenu;
+import com.gabriel.smartclass.view.user.views.institution.InstitutionsSearch;
+import com.gabriel.smartclass.view.user.views.commonUser.CommonUserMainMenu;
+import com.gabriel.smartclass.view.user.views.institutionUser.InstitutionUserMainMenu;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 import com.gabriel.smartclass.adapter.interfaces.OnInstitutionItemClickListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -32,7 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeFragment extends Fragment {
     private HostUserActivityViewModel viewModel;
-    private FragmentHomeBinding binding;
+    private com.gabriel.smartclass.databinding.FragmentHomeBinding binding;
     private RecyclerView recyclerViewInstitutions;
     private Institution selectedInstitution;
 
@@ -42,7 +40,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = com.gabriel.smartclass.databinding.FragmentHomeBinding.inflate(inflater, container, false);
         initialize();
         return binding.getRoot();
     }
@@ -57,7 +55,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void initialize() {
-        StudentMainMenu main = (StudentMainMenu) getActivity();
+        CommonUserMainMenu main = (CommonUserMainMenu) getActivity();
         if (main != null) {
             main.updateTitle("Instituições");
         }
@@ -93,7 +91,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        EmptyRequestBinding viewEmpty = binding.emptyContainerHome;
+        com.gabriel.smartclass.databinding.EmptyRequestBinding viewEmpty = binding.emptyContainerHome;
         EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(recyclerViewInstitutions, viewEmpty.getRoot());
         viewModel.getUserInstitutionsAdapter().registerAdapterDataObserver(observer);
         viewModel.getUserInstitutionsAdapter().notifyDataSetChanged();
@@ -121,7 +119,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void institutionUserAccess(InstitutionUser institutionUser) {
-        Intent i = new Intent(requireActivity(), UserInstitutionMenu.class);
+        Intent i = new Intent(requireActivity(), InstitutionUserMainMenu.class);
         Log.d("TAG", "institutionUserAccess: "+ institutionUser.getUser_id());
         i.putExtra("institution", selectedInstitution);
         i.putExtra("institutionUser", institutionUser);

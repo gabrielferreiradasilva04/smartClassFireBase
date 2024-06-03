@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="Curso"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="@+id/course_recycler_view_mainview"
         app:layout_constraintStart_toStartOf="@id/course_recycler_view_mainview"
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:textSize="16sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -56,8 +56,7 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/course_recycler_view_buttonremove"
-        android:backgroundTint="@color/vermelho"
-        style="@style/Button_Add_Items"
+        style="@style/Custom_ImageButtons"
         android:src="@drawable/ic_trash"
         app:layout_constraintEnd_toStartOf="@id/course_recycler_view_buttonedit"
         app:layout_constraintTop_toBottomOf="@id/course_recycler_view_hscroll"
@@ -66,9 +65,8 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/course_recycler_view_buttonedit"
-        style="@style/Button_Add_Items"
+        style="@style/Custom_ImageButtons"
         android:src="@drawable/ic_edit32"
-        android:backgroundTint="@color/azul_ceruleo"
         app:layout_constraintEnd_toEndOf="@id/course_recycler_view_mainview"
         app:layout_constraintTop_toBottomOf="@id/course_recycler_view_hscroll"
         app:layout_constraintBottom_toBottomOf="@id/course_recycler_view_mainview"
@@ -78,7 +76,7 @@
         android:id="@+id/course_recycler_view_buttonsubjects"
         style="@style/Button_Confirm_Forms"
         android:layout_width="0dp"
-        android:text="Matérias do Curso"
+        android:text="Matérias"
         android:backgroundTint="@color/azul_ceruleo"
         app:layout_constraintBottom_toBottomOf="@id/course_recycler_view_mainview"
         app:layout_constraintStart_toStartOf="@id/course_recycler_view_mainview"

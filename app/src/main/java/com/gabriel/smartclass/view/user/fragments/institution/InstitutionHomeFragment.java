@@ -1,4 +1,4 @@
-package com.gabriel.smartclass.view.fragments.institutionfragments;
+package com.gabriel.smartclass.view.user.fragments.institution;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,16 +21,16 @@ import android.widget.TextView;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.FragmentInstitutionHomeBinding;
 import com.gabriel.smartclass.model.Institution;
-import com.gabriel.smartclass.view.InstitutionMainMenu;
+import com.gabriel.smartclass.view.user.views.institution.InstitutionMainMenu;
 
-import com.gabriel.smartclass.view.course.MainCourses;
+import com.gabriel.smartclass.view.course.views.MainCourses;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InstitutionHomeFragment extends Fragment {
-    private FragmentInstitutionHomeBinding  binding;
+    private FragmentInstitutionHomeBinding binding;
     private HostUserActivityViewModel viewModel;
 
     public InstitutionHomeFragment() {

@@ -13,7 +13,7 @@ import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.model.InstitutionLinkRequest;
 import com.gabriel.smartclass.model.InstitutionUser;
 import com.gabriel.smartclass.model.User;
-import com.gabriel.smartclass.view.fragments.institutionfragments.InstitutionLinkRequestFragment;
+import com.gabriel.smartclass.view.user.fragments.institution.InstitutionLinkRequestFragment;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;

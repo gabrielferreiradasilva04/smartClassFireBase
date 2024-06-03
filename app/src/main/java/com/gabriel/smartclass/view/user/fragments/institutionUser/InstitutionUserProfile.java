@@ -1,4 +1,4 @@
-package com.gabriel.smartclass.view.fragments.institutionusersfragments;
+package com.gabriel.smartclass.view.user.fragments.institutionUser;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -8,20 +8,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.gabriel.smartclass.databinding.FragmentInstitutionUserProfileBinding;
-import com.gabriel.smartclass.view.UserInstitutionMenu;
+import com.gabriel.smartclass.view.user.views.institutionUser.InstitutionUserMainMenu;
 import com.gabriel.smartclass.viewModels.InstitutionUserProfileViewModel;
 import com.gabriel.smartclass.viewModels.factorys.InstitutionUserProfileViewModelFactory;
 
 public class InstitutionUserProfile extends Fragment {
-    private UserInstitutionMenu parentView;
-    private FragmentInstitutionUserProfileBinding binding;
+    private InstitutionUserMainMenu parentView;
+    private com.gabriel.smartclass.databinding.FragmentInstitutionUserProfileBinding binding;
     private  InstitutionUserProfileViewModel viewModel;
     private EditText edtxt_username;
     private EditText edtxt_userType;
@@ -50,7 +48,7 @@ public class InstitutionUserProfile extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentInstitutionUserProfileBinding.inflate(inflater, container, false);
+        binding = com.gabriel.smartclass.databinding.FragmentInstitutionUserProfileBinding.inflate(inflater, container, false);
         initialize();
         return binding.getRoot();
     }
@@ -58,10 +56,10 @@ public class InstitutionUserProfile extends Fragment {
         InstitutionUserProfileViewModelFactory factory = new InstitutionUserProfileViewModelFactory(this);
         ViewModelProvider provider = new ViewModelProvider(requireActivity(), factory);
         viewModel = provider.get(InstitutionUserProfileViewModel.class);
-        parentView = (UserInstitutionMenu) getActivity();
+        parentView = (InstitutionUserMainMenu) getActivity();
         loadComponents();
         viewModel.loadUserDetails(parentView.getCurrentInstitutionUser(), parentView.getCurrentInstitution());
-        UserInstitutionMenu.institutionUserProfilePicture.observe(getViewLifecycleOwner(), profilePictureObserver());
+        InstitutionUserMainMenu.institutionUserProfilePicture.observe(getViewLifecycleOwner(), profilePictureObserver());
     }
 
     private Observer<? super Bitmap> profilePictureObserver() {

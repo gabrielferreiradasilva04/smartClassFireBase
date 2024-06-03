@@ -1,23 +1,18 @@
 package com.gabriel.smartclass.viewModels;
 
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.bumptech.glide.Glide;
-import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.dao.InstitutionUserDAO;
 import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.dao.UserTypeDAO;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionUser;
 import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.model.UserType;
-import com.gabriel.smartclass.view.UserInstitutionMenu;
-import com.gabriel.smartclass.view.fragments.institutionusersfragments.InstitutionUserProfile;
+import com.gabriel.smartclass.view.user.views.institutionUser.InstitutionUserMainMenu;
+import com.gabriel.smartclass.view.user.fragments.institutionUser.InstitutionUserProfile;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -71,7 +66,7 @@ public class InstitutionUserProfileViewModel extends ViewModel {
 
     private void downloadProfilePicture(User user) {
         new UserDAO().downloadImage(user.getEmail(), bytes -> {
-            UserInstitutionMenu.institutionUserProfilePicture.setValue(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+            InstitutionUserMainMenu.institutionUserProfilePicture.setValue(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
         }, e -> {
         });
     }

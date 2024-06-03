@@ -19,7 +19,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".view.course.MainCourses">
+                tools:context=".view.course.views.MainCourses">
                 <TextView
                     android:id="@+id/dialog_editcourse_title_name"
                     android:textSize="18dp"
@@ -112,7 +112,7 @@
 
                 <ImageButton
                     android:id="@+id/dialog_editCourse_backbutton"
-                    style="@style/Button_Add_Items"
+                    style="@style/Custom_ImageButtons"
                     android:src="@drawable/baseline_arrow_back_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

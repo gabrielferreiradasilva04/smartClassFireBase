@@ -1,6 +1,5 @@
-package com.gabriel.smartclass.view;
+package com.gabriel.smartclass.view.user.views.commonUser;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavHost;
@@ -12,12 +11,12 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.databinding.ActivityStudentMainMenuBinding;
+import com.gabriel.smartclass.databinding.ActivityCommonuserMainmenuBinding;
 import com.gabriel.smartclass.view.base.BaseActivity;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 
-public class StudentMainMenu extends BaseActivity {
-    private ActivityStudentMainMenuBinding binding;
+public class CommonUserMainMenu extends BaseActivity {
+    private ActivityCommonuserMainmenuBinding binding;
     private NavHost navHostFragment;
     private NavController navController;
     private HostUserActivityViewModel hostUserActivityViewModel;
@@ -26,7 +25,7 @@ public class StudentMainMenu extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityStudentMainMenuBinding.inflate(getLayoutInflater());
+        binding = ActivityCommonuserMainmenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initialize();
     }
