@@ -5,84 +5,85 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/main_background">
+<!--    -->
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/add_course_add_subject_texttitleLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Matérias do Curso"
-            android:textColor="@color/white"
-            android:layout_margin="20dp"
-            android:textSize="23sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+<!--        <TextView-->
+<!--            android:id="@+id/add_course_add_subject_texttitleLabel"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Matérias do Curso"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:layout_margin="20dp"-->
+<!--            android:textSize="23sp"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-        <EditText
-            android:id="@+id/add_course_add_subject_edtxtDescription"
-            style="@style/Edit_Text_Forms"
-            android:hint="Descrição"
-            android:inputType="text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_course_add_subject_texttitleLabel"
-            tools:ignore="SpeakableTextPresentCheck" />
+<!--        <EditText-->
+<!--            android:id="@+id/add_course_add_subject_edtxtDescription"-->
+<!--            style="@style/Edit_Text_Forms"-->
+<!--            android:hint="Descrição"-->
+<!--            android:inputType="text"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/add_course_add_subject_texttitleLabel"-->
+<!--            tools:ignore="SpeakableTextPresentCheck" />-->
 
-        <EditText
-            android:id="@+id/add_course_add_subject_edtxtMinimumGrade"
-            style="@style/Edit_Text_Forms"
-            android:hint="Nota mínima"
-            android:inputType="numberDecimal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_course_add_subject_edtxtDescription" />
+<!--        <EditText-->
+<!--            android:id="@+id/add_course_add_subject_edtxtMinimumGrade"-->
+<!--            style="@style/Edit_Text_Forms"-->
+<!--            android:hint="Nota mínima"-->
+<!--            android:inputType="numberDecimal"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/add_course_add_subject_edtxtDescription" />-->
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/add_course_add_subject_button"
-            style="@style/Custom_ImageButtons"
-            android:src="@drawable/add_icon"
-            app:layout_constraintEnd_toStartOf="@id/add_course_add_subject_cancel"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_course_add_subject_edtxtMinimumGrade"
-            tools:ignore="SpeakableTextPresentCheck" />
+<!--        <androidx.appcompat.widget.AppCompatImageButton-->
+<!--            android:id="@+id/add_course_add_subject_button"-->
+<!--            style="@style/Custom_ImageButtons"-->
+<!--            android:src="@drawable/add_icon"-->
+<!--            app:layout_constraintEnd_toStartOf="@id/add_course_add_subject_cancel"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/add_course_add_subject_edtxtMinimumGrade"-->
+<!--            tools:ignore="SpeakableTextPresentCheck" />-->
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/add_course_add_subject_cancel"
-            style="@style/Custom_ImageButtons"
-            android:src="@drawable/baseline_arrow_back_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/add_course_add_subject_button"
-            app:layout_constraintTop_toBottomOf="@id/add_course_add_subject_edtxtMinimumGrade"
-            tools:ignore="SpeakableTextPresentCheck" />
+<!--        <androidx.appcompat.widget.AppCompatImageButton-->
+<!--            android:id="@+id/add_course_add_subject_cancel"-->
+<!--            style="@style/Custom_ImageButtons"-->
+<!--            android:src="@drawable/baseline_arrow_back_24"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@id/add_course_add_subject_button"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/add_course_add_subject_edtxtMinimumGrade"-->
+<!--            tools:ignore="SpeakableTextPresentCheck" />-->
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/add_course_add_subject_button">
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/add_course_add_subject_button">-->
 
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<!--            <androidx.core.widget.NestedScrollView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent">-->
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view_course_subjects"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"  android:layout_margin="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/recycler_view_course_subjects"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"  android:layout_margin="10dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
 
-            </androidx.core.widget.NestedScrollView>
+<!--            </androidx.core.widget.NestedScrollView>-->
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 
 </LinearLayout>

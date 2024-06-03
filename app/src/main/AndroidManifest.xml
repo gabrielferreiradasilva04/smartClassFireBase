@@ -17,6 +17,9 @@
         android:theme="@style/Theme.SmartClass"
         tools:targetApi="31">
         <activity
+            android:name=".view.course.views.AddSubjectsOnCourse"
+            android:exported="false" />
+        <activity
             android:name=".view.course.views.MainCourses"
             android:exported="false" />
         <activity
