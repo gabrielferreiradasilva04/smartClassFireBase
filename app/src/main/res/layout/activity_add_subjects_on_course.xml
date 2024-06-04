@@ -6,64 +6,59 @@
     android:layout_height="match_parent"
     android:background="@drawable/main_background"
     tools:context=".view.course.views.AddSubjectsOnCourse">
-        <TextView
-            android:id="@+id/addsubjects_oncourse_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Matérias do Curso"
-            android:textColor="@color/white"
-            android:layout_margin="20dp"
-            android:textSize="23sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/addsubjects_oncourse_description"
-            style="@style/Edit_Text_Forms"
-            android:hint="Descrição"
-            android:inputType="text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addsubjects_oncourse_title"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-        <EditText
-            android:id="@+id/addsubjects_oncourse_minimumgrade"
-            style="@style/Edit_Text_Forms"
-            android:hint="Nota mínima"
-            android:inputType="numberDecimal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addsubjects_oncourse_description" />
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/addsubjects_oncourse_saveButton"
-            style="@style/Custom_ImageButtons"
-            android:src="@drawable/add_icon"
-            app:layout_constraintEnd_toStartOf="@id/addsubjects_oncourse_cancelButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addsubjects_oncourse_minimumgrade"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/addsubjects_oncourse_cancelButton"
-            style="@style/Custom_ImageButtons"
-            android:src="@drawable/baseline_arrow_back_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/addsubjects_oncourse_saveButton"
-            app:layout_constraintTop_toBottomOf="@id/addsubjects_oncourse_minimumgrade"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/addsubjects_oncourse_recyclerview"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"  android:layout_margin="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/addsubjects_oncourse_saveButton" />
+                    android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/addsubjects_oncourse_description"
+                            style="@style/Edit_Text_Forms"
+                            android:hint="Descrição"
+                            android:inputType="text"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="SpeakableTextPresentCheck" />
+
+                        <EditText
+                            android:id="@+id/addsubjects_oncourse_minimumgrade"
+                            style="@style/Edit_Text_Forms"
+                            android:hint="Nota mínima"
+                            android:inputType="numberDecimal"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/addsubjects_oncourse_description" />
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/addsubjects_oncourse_saveButton"
+                            style="@style/Custom_ImageButtons"
+                            android:src="@drawable/add_icon"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/addsubjects_oncourse_minimumgrade"
+                            tools:ignore="SpeakableTextPresentCheck" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:layout_constraintTop_toBottomOf="@id/addsubjects_oncourse_saveButton">
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/addsubjects_oncourse_recyclerview"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="10dp"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

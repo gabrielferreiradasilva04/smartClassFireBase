@@ -57,7 +57,6 @@ public class SimpleDefaultAdapter<T extends SimpleAuxEntity> extends RecyclerVie
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position){
-        try{
             holder.itemView.setAlpha(0f);
             holder.itemView.animate().alpha(1f).setDuration(300).start();
             String description = mutableLiveDataT.getValue().get(position).getDescription();
@@ -69,9 +68,7 @@ public class SimpleDefaultAdapter<T extends SimpleAuxEntity> extends RecyclerVie
                     clickListener.onClick(mutableLiveDataT.getValue().get(position));
                 });
             }
-        }catch (NullPointerException e){
-            Log.d("ADAPTER ERROR", "onBindViewHolder: valor nulo encontrado no adapter");
-        }
+            holder.itemView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -90,11 +87,11 @@ public class SimpleDefaultAdapter<T extends SimpleAuxEntity> extends RecyclerVie
     }
     public void removeItem(@NonNull T t){
         if(mutableLiveDataT.getValue().contains(t)){
-            int removedPosition = mutableLiveDataT.getValue().indexOf(t);
-            notifyItemRemoved(removedPosition);
-            this.notifyItemRangeChanged(removedPosition, this.getItemCount());
             mutableLiveDataT.getValue().remove(t);
-            ;
+            notifyDataSetChanged();
+            if (this.getItemCount() == 0) {
+                notifyDataSetChanged();
+            }
         }
 
     }

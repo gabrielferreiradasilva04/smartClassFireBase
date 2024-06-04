@@ -1,9 +1,9 @@
 package com.gabriel.smartclass.view.course.fragments;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -13,27 +13,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.interfaces.DefaultClickListener;
 import com.gabriel.smartclass.databinding.FragmentSearchAndEditCoursesBinding;
-import com.gabriel.smartclass.model.Area;
 import com.gabriel.smartclass.model.Course;
-import com.gabriel.smartclass.model.InstitutionUser;
-import com.gabriel.smartclass.view.course.dialogs.AddSubjectsOnCourseDialog;
 import com.gabriel.smartclass.view.course.dialogs.EditCourseDialog;
+import com.gabriel.smartclass.view.course.views.AddSubjectsOnCourse;
 import com.gabriel.smartclass.viewModels.SearchAndEditCourseViewModel;
 import com.gabriel.smartclass.viewModels.factorys.SearchAndEditCourseFactory;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.HashMap;
+import java.util.Objects;
 
 public class SearchAndEditCourses extends Fragment {
     private FragmentSearchAndEditCoursesBinding binding;
@@ -50,18 +43,11 @@ public class SearchAndEditCourses extends Fragment {
         this.title = title;
     }
 
-    public RecyclerView getRecyclerView() {
-        return recyclerView;
-    }
-
-    public void setRecyclerView(RecyclerView recyclerView) {
-        this.recyclerView = recyclerView;
-    }
-
     public SearchAndEditCourses() {
     }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSearchAndEditCoursesBinding.inflate(inflater, container, false);
         initialize();
@@ -76,7 +62,7 @@ public class SearchAndEditCourses extends Fragment {
 
     }
 
-    public void initialize(){
+    public void initialize() {
         loadComponents();
         SearchAndEditCourseFactory factory = new SearchAndEditCourseFactory(this);
         ViewModelProvider provider = new ViewModelProvider(requireActivity(), factory);
@@ -85,12 +71,14 @@ public class SearchAndEditCourses extends Fragment {
         searchButton.setOnClickListener(searchButtonListener());
         viewModel.getSnackBarText().observe(getViewLifecycleOwner(), snackbarObserve());
     }
-    private void loadComponents(){
+
+    private void loadComponents() {
         this.title = binding.seacrchCoursesEdtxtTitle;
         this.recyclerView = binding.searchCourseRecyclerview;
         this.searchButton = binding.seacrchCoursesButtonsearch;
     }
-    public void buildRecyclerView(){
+
+    public void buildRecyclerView() {
         viewModel.getAdapter().setClickListenerEdit(openEditView());
         viewModel.getAdapter().setClickListenerRemove(removeCourse());
         viewModel.getAdapter().setClickListenerSubjects(openSubjectsDialog());
@@ -98,37 +86,42 @@ public class SearchAndEditCourses extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(viewModel.getAdapter());
     }
+
     private Observer<? super String> snackbarObserve() {
-        return text ->{
-          if(text != null && !text.equals("")){
-              Snackbar.make(binding.seacrchCoursesEdtxtTitle, text, Snackbar.LENGTH_SHORT).show();
-          }
+        return text -> {
+            if (text != null && !text.equals("")) {
+                Snackbar.make(binding.seacrchCoursesEdtxtTitle, text, Snackbar.LENGTH_SHORT).show();
+            }
         };
     }
+
     private View.OnClickListener searchButtonListener() {
-        return view ->{
-                viewModel.searchCoursesAndPopulateAdapter(FirebaseAuth.getInstance().getCurrentUser().getUid(), title.getText().toString());
-        };
+        return view -> viewModel.searchCoursesAndPopulateAdapter(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), title.getText().toString());
     }
-    private DefaultClickListener<Course> openSubjectsDialog(){return this::inflateSubjectsDialog;}
-    private DefaultClickListener<Course> openEditView(){return this::inflateEditCourseDialog;}
-    private DefaultClickListener<Course> removeCourse(){
-        return course -> {
-            viewModel.deleteCourse(FirebaseAuth.getInstance().getCurrentUser().getUid(), course);
-        };
+
+    private DefaultClickListener<Course> openSubjectsDialog() {
+        return this::inflateActivityAddSubjects;
     }
+
+    private DefaultClickListener<Course> openEditView() {
+        return this::inflateEditCourseDialog;
+    }
+
+    private DefaultClickListener<Course> removeCourse() {
+        return course -> viewModel.deleteCourse(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), course);
+    }
+
     public void inflateEditCourseDialog(Course course) {
         EditCourseDialog dialog = new EditCourseDialog();
         viewModel.getSnackBarText().setValue(null);
         viewModel.setCourseEdit(course);
         dialog.show(getParentFragmentManager(), dialog.getTag());
     }
-    public void inflateSubjectsDialog(Course course){
-        AddSubjectsOnCourseDialog dialog = new AddSubjectsOnCourseDialog();
-        viewModel.getSnackBarText().setValue(null);
-        viewModel.setCourseEdit(course);
-        dialog.show(getParentFragmentManager(), dialog.getTag());
 
+    public void inflateActivityAddSubjects(Course course) {
+        Intent i = new Intent(this.getContext(), AddSubjectsOnCourse.class);
+        i.putExtra("courseToEdit", course);
+        startActivity(i);
     }
 
 }

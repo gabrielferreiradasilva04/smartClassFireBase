@@ -12,6 +12,6 @@
         />
     <item
         android:id="@+id/institution_mainmenu_classrooms"
-        android:title="Salas de Aula"
+        android:title="Turmas"
         />
 </menu>

@@ -5,37 +5,30 @@ import android.util.Log;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.gabriel.smartclass.adapter.CourseRCAdapter;
-import com.gabriel.smartclass.adapter.SimpleDefaultAdapter;
 import com.gabriel.smartclass.adapter.spinnerAdapters.SpinnerAdapterGeneric;
 import com.gabriel.smartclass.dao.AreaDAO;
 import com.gabriel.smartclass.dao.CourseDAO;
 import com.gabriel.smartclass.dao.InstitutionUserDAO;
-import com.gabriel.smartclass.dao.SubjectDAO;
 import com.gabriel.smartclass.dao.UserTypeDAO;
 import com.gabriel.smartclass.model.Area;
 import com.gabriel.smartclass.model.Course;
 import com.gabriel.smartclass.model.InstitutionUser;
-import com.gabriel.smartclass.model.Subject;
-import com.gabriel.smartclass.view.course.dialogs.AddSubjectsOnCourseDialog;
 import com.gabriel.smartclass.view.course.fragments.SearchAndEditCourses;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class SearchAndEditCourseViewModel extends ViewModel {
     private final SearchAndEditCourses view;
     private final CourseRCAdapter adapter = new CourseRCAdapter();
-    private final MutableLiveData<List<Course>> mutableLiveDataCourse = new MutableLiveData<>();
     private final MutableLiveData<String> snackBarText = new MutableLiveData<>();
     //editDialog fields and components
     private SpinnerAdapterGeneric<Area> spinnerAreaAdapter;
@@ -44,11 +37,6 @@ public class SearchAndEditCourseViewModel extends ViewModel {
     private final MutableLiveData<List<InstitutionUser>> coordinatorMutableLiveData = new MutableLiveData<>(new ArrayList<>());
     private Course courseEdit; //atributo utilizado pelos dialog fragments para a edição dos dados do curso
     //addSubjectsOnCourse filds and components
-    private SimpleDefaultAdapter<Subject> subjectRCAdapter;
-
-    public SimpleDefaultAdapter<Subject> getSubjectRCAdapter() {
-        return subjectRCAdapter;
-    }
 
     public Course getCourseEdit() {
         return courseEdit;
@@ -74,9 +62,6 @@ public class SearchAndEditCourseViewModel extends ViewModel {
         return adapter;
     }
 
-    public MutableLiveData<List<Course>> getMutableLiveDataCourse() {
-        return mutableLiveDataCourse;
-    }
 
     public MutableLiveData<String> getSnackBarText() {
         return snackBarText;
@@ -118,7 +103,7 @@ public class SearchAndEditCourseViewModel extends ViewModel {
         new AreaDAO().getAllAreas(institutionID, task -> {
             if (task.isComplete() && task.isSuccessful()) {
                 spinnerAreaAdapter.getMutableLiveDataTList().setValue(task.getResult().toObjects(Area.class));
-                for (Area area : spinnerAreaAdapter.getMutableLiveDataTList().getValue()) {
+                for (Area area : Objects.requireNonNull(spinnerAreaAdapter.getMutableLiveDataTList().getValue())) {
                     if (area.getId().equals(course.getArea_id().getId())) {
                         spinner.setSelection(spinnerAreaAdapter.getMutableLiveDataTList().getValue().indexOf(area));
                     }
@@ -137,7 +122,7 @@ public class SearchAndEditCourseViewModel extends ViewModel {
             if (task.isComplete() && task.isSuccessful()) {
                 Log.d("Retorno", "getCoordinatorsAndPopulateSpinnerOnEditDialog: " + task.getResult().toObjects(InstitutionUser.class));
                 spinnerCoordinatorAdapter.getMutableLiveDataTList().setValue(task.getResult().toObjects(InstitutionUser.class));
-                for (InstitutionUser user : spinnerCoordinatorAdapter.getMutableLiveDataTList().getValue()) {
+                for (InstitutionUser user : Objects.requireNonNull(spinnerCoordinatorAdapter.getMutableLiveDataTList().getValue())) {
                     if (user.getId().equals(course.getCoordinator_id().getId())) {
                         spinner.setSelection(spinnerCoordinatorAdapter.getMutableLiveDataTList().getValue().indexOf(user));
                     }
@@ -165,7 +150,7 @@ public class SearchAndEditCourseViewModel extends ViewModel {
                 throw new RuntimeException("A divisão do curso deve ser feita em semestres (2) bimestres (4) ou trimestres (3)");
 
             } else {
-                int position  = adapter.getMutableliveDataCourse().getValue().indexOf(course);
+                int position  = Objects.requireNonNull(adapter.getMutableliveDataCourse().getValue()).indexOf(course);
                 Course courseChanged = adapter.getMutableliveDataCourse().getValue().get(position);
                 HashMap<String, Object> updates = new HashMap<>();
                 if (!description.equalsIgnoreCase(course.getDescription())) {
@@ -204,49 +189,6 @@ public class SearchAndEditCourseViewModel extends ViewModel {
         } catch (RuntimeException e) {
             snackBarText.setValue(e.getMessage());
         }
-    }
-    // add subjects dialog methods
-    @SuppressLint("NotifyDataSetChanged")
-    public void initSubjectAdapter(String institutionID){
-        new SubjectDAO().getAllSubjectsFromCourse(institutionID, courseEdit.getId(), task -> {
-            if(task.isComplete() && task.isSuccessful()){
-                this.subjectRCAdapter.getMutableLiveDataT().setValue(task.getResult().toObjects(Subject.class));
-                this.subjectRCAdapter.notifyDataSetChanged();
-            }
-        }, e->{});
-        this.subjectRCAdapter = new SimpleDefaultAdapter<>();
-    }
-
-    public void addNewSubjectOnCourse(String institutionID, String description, String minimumGrade){
-        if(!description.isEmpty() && !minimumGrade.isEmpty()){
-            double minimumGradeInt = Double.parseDouble(minimumGrade);
-            Subject subject = new Subject();
-            subject.setMinimum_grade(minimumGradeInt);
-            subject.setDescription(description.toLowerCase());
-            new CourseDAO().addSubjectsOnCourse(this.courseEdit.getId(), institutionID, subject, task -> {
-                subject.setId(task.getResult().getId());
-                updateSubjectID(institutionID, task);
-                this.subjectRCAdapter.addItem(subject);
-            }, e -> {
-            });
-        }else{
-            snackBarText.setValue("Preencha todos os campos");
-        }
-    }
-
-    private void updateSubjectID(String institutionID, Task<DocumentReference> task) {
-        HashMap<String, Object> update = new HashMap<>();
-        update.put("id", task.getResult().getId());
-        new SubjectDAO().updateSubject(institutionID, courseEdit.getId(), task.getResult().getId(), update, unused ->{}, e -> {});
-    }
-
-    public void removeSubjectFromCourse(String institutionID, String courseID, Subject subject){
-        new CourseDAO().removeSubjectFromCourse(institutionID,courseID,subject.getId(), task->{
-            subjectRCAdapter.removeItem(subject);
-        }, e -> {
-            snackBarText.setValue("Erro ao deltar matéria");
-        });
-
     }
 
 

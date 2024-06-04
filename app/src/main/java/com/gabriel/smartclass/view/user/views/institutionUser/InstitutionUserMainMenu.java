@@ -34,7 +34,6 @@ public class InstitutionUserMainMenu extends BaseActivity {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +41,6 @@ public class InstitutionUserMainMenu extends BaseActivity {
         initialize();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private void initialize() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
