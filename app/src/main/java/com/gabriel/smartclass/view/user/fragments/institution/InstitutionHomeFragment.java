@@ -24,6 +24,7 @@ import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.view.user.views.institution.InstitutionMainMenu;
 
 import com.gabriel.smartclass.view.course.views.MainCourses;
+import com.gabriel.smartclass.view.user.views.institution.InstitutionsMembersSearch;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 
 import java.util.ArrayList;
@@ -102,7 +103,6 @@ public class InstitutionHomeFragment extends Fragment {
         if (swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
         }
-
     }
 
     public void progressToProgressBar() {
@@ -156,6 +156,10 @@ public class InstitutionHomeFragment extends Fragment {
             int id = item.getItemId();
             if(id == R.id.institution_mainmenu_courses){
                 Intent i = new Intent(getActivity(), MainCourses.class);
+                this.startActivity(i);
+            }
+            if(id == R.id.institution_mainmenu_members){
+                Intent i = new Intent(getActivity(), InstitutionsMembersSearch.class);
                 this.startActivity(i);
             }
             return true;

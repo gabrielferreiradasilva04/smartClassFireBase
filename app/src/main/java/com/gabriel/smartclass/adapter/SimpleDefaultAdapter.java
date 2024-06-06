@@ -25,11 +25,16 @@ import java.util.List;
 public class SimpleDefaultAdapter<T extends SimpleAuxEntity> extends RecyclerView.Adapter{
     private final MutableLiveData<List<T>> mutableLiveDataT;
     private final HashSet<String> tIds;
+    private boolean showUserDetails = false;
     private DefaultClickListener<T> clickListener;
 
     public SimpleDefaultAdapter(){
         this.mutableLiveDataT = new MutableLiveData<>(new ArrayList<>());
         this.tIds = new HashSet<>();
+    }
+
+    public boolean isShowUserDetails() {
+        return showUserDetails;
     }
 
     public MutableLiveData<List<T>> getMutableLiveDataT() {
@@ -40,21 +45,19 @@ public class SimpleDefaultAdapter<T extends SimpleAuxEntity> extends RecyclerVie
         return tIds;
     }
 
-    public DefaultClickListener getClickListener() {
+    public DefaultClickListener<T> getClickListener() {
         return clickListener;
     }
 
-    public void setClickListener(DefaultClickListener clickListener) {
+    public void setClickListener(DefaultClickListener<T> clickListener) {
         this.clickListener = clickListener;
     }
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.simple_default_recycler_view_layout, parent, false);
         return new DefaultViewHolder(itemView);
     }
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position){
             holder.itemView.setAlpha(0f);

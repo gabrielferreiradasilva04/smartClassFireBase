@@ -3,10 +3,8 @@ package com.gabriel.smartclass.dao;
 
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionUser;
-import com.gabriel.smartclass.model.UserType;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.firebase.Firebase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -39,5 +37,13 @@ public class InstitutionUserDAO {
     }
     public DocumentReference getInstitutionUserReferenceByID(String institutionID, String institutionUserID){
         return FirebaseFirestore.getInstance().collection(institutionsCollection).document(institutionID).collection(COLLECTION).document(institutionUserID);
+    }
+    public void getAllInstitutionUsers(String institutionID, OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        fb.collection(institutionsCollection).document(institutionID).collection(COLLECTION).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+    }
+    public void deleteInstitutionUser(String institutionID, String institutionUserID, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener){
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        fb.collection(institutionsCollection).document(institutionID).collection(COLLECTION).document(institutionUserID).delete().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 }
