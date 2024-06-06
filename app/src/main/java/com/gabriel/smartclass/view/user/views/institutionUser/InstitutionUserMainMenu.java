@@ -49,6 +49,9 @@ public class InstitutionUserMainMenu extends BaseActivity {
         currentInstitutionUser = getIntent().getParcelableExtra("institutionUser");
         navigation();
     }
+    public void updateTitle(String title){
+        getSupportActionBar().setTitle(title);
+    }
 
     @Override
     public boolean onSupportNavigateUp() {

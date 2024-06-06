@@ -3,6 +3,7 @@ package com.gabriel.smartclass.view.user.fragments.institutionUser;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -46,13 +47,14 @@ public class InstitutionUserProfile extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = com.gabriel.smartclass.databinding.FragmentInstitutionUserProfileBinding.inflate(inflater, container, false);
         initialize();
         return binding.getRoot();
     }
     private void initialize(){
+        buildMenu();
         InstitutionUserProfileViewModelFactory factory = new InstitutionUserProfileViewModelFactory(this);
         ViewModelProvider provider = new ViewModelProvider(requireActivity(), factory);
         viewModel = provider.get(InstitutionUserProfileViewModel.class);
@@ -69,6 +71,12 @@ public class InstitutionUserProfile extends Fragment {
     private void loadProfilePicture(Bitmap bitmap) {
         if(bitmap!=null){
             imageButton.setImageBitmap(bitmap);
+        }
+    }
+    public void buildMenu(){
+        InstitutionUserMainMenu main = (InstitutionUserMainMenu) getActivity();
+        if (main != null) {
+            main.updateTitle("Perfil");
         }
     }
 

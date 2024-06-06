@@ -32,6 +32,16 @@ public class InstitutionsMembersSearch extends AppCompatActivity {
         initialize();
         setContentView(binding.getRoot());
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.viewModel.getSnackBarText().removeObserver(snackBarObserver());
+        this.viewModel.getSnackBarText().setValue(null);
+        this.viewModel.getInstitutionUserMutableLiveData().removeObserver(institutionUsersObserver());
+        this.adapter.setClickListener(null);
+    }
+
     public void initialize(){
         buildMenu();
         this.adapter = new SimpleDefaultAdapter<>();
