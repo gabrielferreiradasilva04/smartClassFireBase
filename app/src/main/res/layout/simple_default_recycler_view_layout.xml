@@ -5,19 +5,9 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
-    <View
-        android:id="@+id/simple_recycler_view_mainview"
-        style="@style/SimpleViewContainer"
-        android:layout_height="60dp"
-        app:layout_constraintBottom_toTopOf="@id/simple_recyclerview_divider"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
     <TextView
         android:id="@+id/simple_recyclerview_title"
         android:layout_width="0dp"
-        android:textColor="@color/black"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="testando"
@@ -25,17 +15,17 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/simple_recycler_view_buttonremove"
-        app:layout_constraintStart_toStartOf="@+id/simple_recycler_view_mainview"
-        app:layout_constraintTop_toTopOf="@+id/simple_recycler_view_mainview"
-        app:layout_constraintBottom_toBottomOf="@id/simple_recycler_view_mainview"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/simple_recycler_view_buttonremove"
         style="@style/Custom_ImageButtons"
         android:src="@drawable/ic_trash"
-        app:layout_constraintEnd_toEndOf="@+id/simple_recycler_view_mainview"
-        app:layout_constraintBottom_toBottomOf="@+id/simple_recycler_view_mainview"
-        app:layout_constraintTop_toTopOf="@+id/simple_recycler_view_mainview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <View

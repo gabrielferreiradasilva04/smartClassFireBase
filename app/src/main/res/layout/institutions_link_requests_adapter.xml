@@ -6,12 +6,14 @@
     android:layout_height="wrap_content"
     android:visibility="gone">
 
-    <View
+    <ImageView
         android:id="@+id/institution_link_request_adapter_main_container"
         style="@style/institution_link_requests_container"
+        android:src="@drawable/fundosolicitacoes"
+        android:clipToOutline="true"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -92,5 +94,12 @@
         app:layout_constraintTop_toBottomOf="@id/institution_link_request_adapter_profile_picture"
         tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck"
         android:visibility="invisible"/>
+    <View
+        android:id="@+id/institution_link_request_adapter_divider"
+        style="@style/divider"
+        app:layout_constraintTop_toBottomOf="@id/institution_link_request_adapter_main_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

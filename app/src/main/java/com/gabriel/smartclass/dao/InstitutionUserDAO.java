@@ -11,6 +11,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
+
 public class InstitutionUserDAO {
     private final String COLLECTION = InstitutionUser.class.getSimpleName();
     private final String institutionsCollection = Institution.class.getSimpleName();
@@ -40,10 +42,13 @@ public class InstitutionUserDAO {
     }
     public void getAllInstitutionUsers(String institutionID, OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
-        fb.collection(institutionsCollection).document(institutionID).collection(COLLECTION).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+        fb.collection(institutionsCollection).document(institutionID).collection(COLLECTION).whereEqualTo("active", true).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
     public void deleteInstitutionUser(String institutionID, String institutionUserID, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener){
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         fb.collection(institutionsCollection).document(institutionID).collection(COLLECTION).document(institutionUserID).delete().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+    }
+    public void updateInstitutionUser(String institutionID, String institutionUserID, HashMap<String, Object> updates, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener){
+        FirebaseFirestore.getInstance().collection(institutionsCollection).document(institutionID).collection(COLLECTION).document(institutionUserID).update(updates).addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 }
