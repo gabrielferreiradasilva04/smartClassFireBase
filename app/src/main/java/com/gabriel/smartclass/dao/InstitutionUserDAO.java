@@ -1,6 +1,7 @@
 package com.gabriel.smartclass.dao;
 
 
+import com.gabriel.smartclass.model.Course;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionUser;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 public class InstitutionUserDAO {
     private final String COLLECTION = InstitutionUser.class.getSimpleName();
     private final String institutionsCollection = Institution.class.getSimpleName();
+    private final String courseCollection = Course.class.getSimpleName();
 
     private final FirebaseFirestore fb = FirebaseFirestore.getInstance();
 
@@ -50,5 +52,8 @@ public class InstitutionUserDAO {
     }
     public void updateInstitutionUser(String institutionID, String institutionUserID, HashMap<String, Object> updates, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener){
         FirebaseFirestore.getInstance().collection(institutionsCollection).document(institutionID).collection(COLLECTION).document(institutionUserID).update(updates).addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
+    }
+    public void getInstitutionUserCourses(String institutionID, String institutionUserID){
+        
     }
 }

@@ -40,7 +40,6 @@ public class InstitutionUserCourses extends Fragment {
         if (main != null) {
             main.updateTitle("Meus Cursos");
         }
-
     }
     public void buildRecyclerView(){
 
