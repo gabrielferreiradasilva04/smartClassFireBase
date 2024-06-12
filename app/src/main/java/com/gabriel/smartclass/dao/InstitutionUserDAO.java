@@ -67,14 +67,11 @@ public class InstitutionUserDAO {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         DocumentReference institutionUserReference = fb.collection(institutionsCollection).document(institutionID).collection(COLLECTION).document(institutionUserID);
         if (!iscoordinator) {
-            Log.d("Busca de cursos", "getInstitutionUserCourses: busca por usuario comum");
             fb.collection(institutionsCollection).document(institutionID).collection(courseCollection)
                     .whereArrayContains("students_id", institutionUserReference)
                     .get().addOnCompleteListener(onCompleteListener)
                     .addOnFailureListener(onFailureListener);
         } else{
-            Log.d("Busca de cursos", "getInstitutionUserCourses: busca por coordenador" + institutionUserReference+ "+" + institutionUserID);
-
             fb.collection(institutionsCollection).document(institutionID).collection(courseCollection)
                     .whereEqualTo("coordinator_id", institutionUserReference)
                     .get().addOnCompleteListener(onCompleteListener)
@@ -83,6 +80,5 @@ public class InstitutionUserDAO {
     }
     public void getInstitutionUserByID(String institutionID ,String userId, OnCompleteListener<DocumentSnapshot> onCompleteListener){
         FirebaseFirestore.getInstance().collection(institutionsCollection).document(institutionID).collection(COLLECTION).document(userId).get().addOnCompleteListener(onCompleteListener);
-
     }
 }

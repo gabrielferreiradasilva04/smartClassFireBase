@@ -22,6 +22,7 @@ public class CoordinatorCourseViewModel extends ViewModel {
     private Course course;
     private Institution institution;
     private InstitutionUserAdapter membersAdapter = new InstitutionUserAdapter();
+    private MutableLiveData<String> snackbarText = new MutableLiveData<>();
 
     public InstitutionUserAdapter getMembersAdapter() {
         return membersAdapter;
@@ -77,6 +78,8 @@ public class CoordinatorCourseViewModel extends ViewModel {
                         }
                     });
                 }
+            }else{
+                snackbarText.setValue("Erro ao carregar membros de instituição");
             }
         });
     }

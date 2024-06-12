@@ -2,7 +2,9 @@ package com.gabriel.smartclass.view.user.fragments.institutionUser;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,11 +33,20 @@ public class InstitutionUserAddCourses extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentInstitutionUserAddCoursesBinding.inflate(inflater, container, false);
         initialize();
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.viewModel.getSnackbarText().setValue(null);
+        this.viewModel.getSnackbarText().removeObserver(this.snackBarObserve());
+        this.viewModel.setCourseAdapter(null);
+        this.viewModel = null;
     }
 
     public void initialize() {
@@ -68,15 +79,15 @@ public class InstitutionUserAddCourses extends Fragment {
         this.searchButton.setOnClickListener(view -> {
             this.viewModel.searchCourses(viewModel.getCurrentInstitution().getId(), this.title.getText().toString());
         });
-        this.viewModel.getSnackbarText().observe(getViewLifecycleOwner(), text -> {
+        this.viewModel.getSnackbarText().observe(this.getViewLifecycleOwner(), this.snackBarObserve());
+    }
+
+    @NonNull
+    private Observer<String> snackBarObserve() {
+        return text -> {
             if (text != null && !text.equals("")) {
                 Snackbar.make(getContext(), binding.useraddcoursesRecyclerview, text, Snackbar.LENGTH_SHORT).show();
             }
-        });
-    }
-    private void emptyview() {
-        EmptyRequestBinding viewEmpty = binding.emptyContainerUseraddcourses;
-        EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(binding.useraddcoursesRecyclerview, viewEmpty.getRoot());
-        viewModel.getSearchCoursesAdapter().registerAdapterDataObserver(observer);
+        };
     }
 }
