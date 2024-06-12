@@ -1,66 +1,94 @@
 package com.gabriel.smartclass.view.user.fragments.institutionUser;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import com.gabriel.smartclass.R;
+import com.gabriel.smartclass.databinding.EmptyRequestBinding;
+import com.gabriel.smartclass.databinding.FragmentCoordinatorCourseMembersBinding;
+import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
+import com.gabriel.smartclass.view.course.views.MainCourses;
+import com.gabriel.smartclass.view.user.views.institution.InstitutionsMembersSearch;
+import com.gabriel.smartclass.view.user.views.institutionUser.CoordinatorCourseMainMenu;
+import com.gabriel.smartclass.viewModels.CoordinatorCourseViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CoordinatorCourseMembers#newInstance} factory method to
- * create an instance of this fragment.
- */
+@SuppressLint("NotifyDataSetChanged")
+
 public class CoordinatorCourseMembers extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FragmentCoordinatorCourseMembersBinding binding;
+    private CoordinatorCourseViewModel viewModel;
+    private RecyclerView recyclerView;
+    private FloatingActionButton menuButton;
 
     public CoordinatorCourseMembers() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CoordinatorCourseMembers.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CoordinatorCourseMembers newInstance(String param1, String param2) {
-        CoordinatorCourseMembers fragment = new CoordinatorCourseMembers();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.binding = FragmentCoordinatorCourseMembersBinding.inflate(inflater, container, false);
+        initialize();
+        return this.binding.getRoot();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_coordinator_course_members, container, false);
+    public void onStart() {
+        super.onStart();
+        emptyview();
+    }
+
+    private void initialize() {
+        CoordinatorCourseMainMenu parentView = (CoordinatorCourseMainMenu) getActivity();
+        parentView.updateTitle("Membros");
+        this.loadComponents();
+        this.viewModel = new ViewModelProvider(requireActivity()).get(CoordinatorCourseViewModel.class);
+        this.viewModel.getCourseMembers(viewModel.getInstitution().getId(), viewModel.getCourse().getId());
+        buildRecyclerView();
+        this.menuButton.setOnClickListener(this::openMenuOptions);
+    }
+
+    private void buildRecyclerView() {
+        this.recyclerView.setHasFixedSize(false);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.recyclerView.setAdapter(this.viewModel.getMembersAdapter());
+    }
+
+    private void loadComponents() {
+        this.recyclerView = binding.coursemembersRecyclerview;
+        this.menuButton = binding.coursemembersButton;
+    }
+
+    private void emptyview() {
+        EmptyRequestBinding viewEmpty = binding.emptyContainerCoursemembers;
+        EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(binding.coursemembersRecyclerview, viewEmpty.getRoot());
+        this.viewModel.getMembersAdapter().registerAdapterDataObserver(observer);
+        this.viewModel.getMembersAdapter().notifyDataSetChanged();
+    }
+
+    private void openMenuOptions(View v) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), v);
+        MenuInflater inflater = popupMenu.getMenuInflater();
+        inflater.inflate(R.menu.coordinator_course_addmembers, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.addmemebersmenu_teacher){
+                CoordinatorAddTeacherDialog dialog = new CoordinatorAddTeacherDialog();
+                dialog.show(getParentFragmentManager(), dialog.getTag());
+            }
+            return true;
+        });
+        popupMenu.show();
     }
 }

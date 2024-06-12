@@ -18,6 +18,8 @@ import com.gabriel.smartclass.view.course.fragments.AddCourse;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -104,11 +106,13 @@ public class AddCourseViewModel extends ViewModel {
         String description = fragment.getEditTextDescription().getText().toString().trim().toLowerCase();
         String durationString = fragment.getEditTextDuration().getText().toString().trim();
         String divisionString = fragment.getEditTextDivision().getText().toString().trim();
+        List<DocumentReference> students_id = new ArrayList<>();
+        List<DocumentReference> teachers_id = new ArrayList<>();
         Area area = (Area) fragment.getAreaSpinner().getSelectedItem();
         InstitutionUser coordinator = (InstitutionUser) fragment.getCoordinatorSpinner().getSelectedItem();
         if (!name.equals("") && !description.equals("") && !durationString.equals("") && !divisionString.equals("") && area != null && coordinator != null) {
             try {
-                saveCourse(name, description, durationString, divisionString, area, coordinator, institutionID);
+                saveCourse(name, description, durationString, divisionString, area, coordinator, institutionID, students_id, teachers_id);
             } catch (IllegalArgumentException e) {
                 snackbarText.setValue(e.getMessage());
             }
@@ -118,8 +122,8 @@ public class AddCourseViewModel extends ViewModel {
 
     }
 
-    private void saveCourse(String name, String description, String durationString, String divisionString, Area area, InstitutionUser coordinator, String institutionID) throws IllegalArgumentException {
-        Course course = buildCourse(name, description, durationString, divisionString, area, coordinator, institutionID);
+    private void saveCourse(String name, String description, String durationString, String divisionString, Area area, InstitutionUser coordinator, String institutionID, List<DocumentReference> students_id, List<DocumentReference> teachers_id) throws IllegalArgumentException {
+        Course course = buildCourse(name, description, durationString, divisionString, area, coordinator, institutionID, students_id, teachers_id);
         CourseDAO courseDAO = new CourseDAO();
         courseDAO.findCourseByName(institutionID, name, task2 -> {
             if (task2.isComplete() && !task2.getResult().isEmpty()) {
@@ -134,7 +138,7 @@ public class AddCourseViewModel extends ViewModel {
         }, e2 -> snackbarText.setValue("Erro ao criar o seu curso... Tente novamente mais tarde"));
     }
 
-    private Course buildCourse(String name, String description, String durationString, String divisionString, Area area, InstitutionUser coordinator, String institutionID) throws IllegalArgumentException {
+    private Course buildCourse(String name, String description, String durationString, String divisionString, Area area, InstitutionUser coordinator, String institutionID, List<DocumentReference> students_id, List<DocumentReference> teachers_id) throws IllegalArgumentException {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         int divisionInteger = Integer.parseInt(divisionString);
         if (divisionInteger > 4 || divisionInteger <= 1) {
@@ -149,6 +153,8 @@ public class AddCourseViewModel extends ViewModel {
         DocumentReference coordinatorReference = fb.collection(Institution.class.getSimpleName()).document(institutionID).collection(InstitutionUser.class.getSimpleName()).document(coordinator.getId());
         course.setArea_id(areaReference);
         course.setCoordinator_id(coordinatorReference);
+        course.setStudents_id(students_id);
+        course.setTeachers_id(teachers_id);
         return course;
     }
 

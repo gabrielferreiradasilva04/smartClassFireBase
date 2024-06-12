@@ -3,64 +3,80 @@ package com.gabriel.smartclass.view.user.fragments.institutionUser;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
-import com.gabriel.smartclass.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link InstitutionUserAddCourses#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.gabriel.smartclass.databinding.EmptyRequestBinding;
+import com.gabriel.smartclass.databinding.FragmentInstitutionUserAddCoursesBinding;
+import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
+import com.gabriel.smartclass.viewModels.InstitutionUserMainMenuViewModel;
+import com.google.android.material.snackbar.Snackbar;
+
 public class InstitutionUserAddCourses extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FragmentInstitutionUserAddCoursesBinding binding;
+    private InstitutionUserMainMenuViewModel viewModel;
+    private ImageButton searchButton;
+    private EditText title;
+    private RecyclerView recyclerView;
 
     public InstitutionUserAddCourses() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment InstitutionUserAddCourses.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static InstitutionUserAddCourses newInstance(String param1, String param2) {
-        InstitutionUserAddCourses fragment = new InstitutionUserAddCourses();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_institution_user_add_courses, container, false);
+        binding = FragmentInstitutionUserAddCoursesBinding.inflate(inflater, container, false);
+        initialize();
+        return binding.getRoot();
+    }
+
+    public void initialize() {
+        buildViewModel();
+        loadComponents();
+        componentsListener();
+        buildRecyclerView();
+    }
+
+    public void buildRecyclerView() {
+        EmptyRequestBinding viewEmpty = binding.emptyContainerUseraddcourses;
+        EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(binding.useraddcoursesRecyclerview, viewEmpty.getRoot());
+        viewModel.getSearchCoursesAdapter().registerAdapterDataObserver(observer);
+        this.recyclerView.setHasFixedSize(false);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.recyclerView.setAdapter(this.viewModel.getSearchCoursesAdapter());
+    }
+
+    public void loadComponents() {
+        this.searchButton = binding.useraddcoursesSearchbutton;
+        this.title = binding.useraddcoursesTitle;
+        this.recyclerView = binding.useraddcoursesRecyclerview;
+    }
+
+    public void buildViewModel() {
+        this.viewModel = new ViewModelProvider(requireActivity()).get(InstitutionUserMainMenuViewModel.class);
+    }
+
+    public void componentsListener() {
+        this.searchButton.setOnClickListener(view -> {
+            this.viewModel.searchCourses(viewModel.getCurrentInstitution().getId(), this.title.getText().toString());
+        });
+        this.viewModel.getSnackbarText().observe(getViewLifecycleOwner(), text -> {
+            if (text != null && !text.equals("")) {
+                Snackbar.make(getContext(), binding.useraddcoursesRecyclerview, text, Snackbar.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void emptyview() {
+        EmptyRequestBinding viewEmpty = binding.emptyContainerUseraddcourses;
+        EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(binding.useraddcoursesRecyclerview, viewEmpty.getRoot());
+        viewModel.getSearchCoursesAdapter().registerAdapterDataObserver(observer);
     }
 }

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Grade" android:id="@+id/coordinatorcorses_tabletime" android:icon="@drawable/baseline_table_chart_24"/>
-    <item android:title="Integrantes" android:id="@+id/coordinatorcorses_members" android:icon="@drawable/ic_account"/>
-    <item android:title="Matérias" android:id="@+id/coordinatorcorses_subjects" android:icon="@drawable/baseline_book_24"/>
-    <item android:title="Avisos" android:id="@+id/coordinatorcorses_news" android:icon="@drawable/baseline_newspaper_24"/>
+    <item android:title="Salas" android:id="@+id/coordinatorcourses_classes" android:icon="@drawable/baseline_class_24"/>
+    <item android:title="Integrantes" android:id="@+id/coordinatorcourses_members" android:icon="@drawable/ic_account"/>
+    <item android:title="Avisos" android:id="@+id/coordinatorcourses_news" android:icon="@drawable/baseline_newspaper_24"/>
 </menu>

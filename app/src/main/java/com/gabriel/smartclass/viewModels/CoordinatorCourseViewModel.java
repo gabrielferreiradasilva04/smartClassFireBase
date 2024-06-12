@@ -1,13 +1,43 @@
 package com.gabriel.smartclass.viewModels;
 
+import android.annotation.SuppressLint;
+
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.gabriel.smartclass.adapter.InstitutionUserAdapter;
+import com.gabriel.smartclass.dao.CourseDAO;
+import com.gabriel.smartclass.dao.InstitutionUserDAO;
 import com.gabriel.smartclass.model.Course;
+import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionUser;
+import com.google.firebase.firestore.DocumentReference;
 
-public class CoordinatorCourseMainMenuViewModel extends ViewModel {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class CoordinatorCourseViewModel extends ViewModel {
     private InstitutionUser coordinator;
     private Course course;
+    private Institution institution;
+    private InstitutionUserAdapter membersAdapter = new InstitutionUserAdapter();
+
+    public InstitutionUserAdapter getMembersAdapter() {
+        return membersAdapter;
+    }
+
+    public void setMembersAdapter(InstitutionUserAdapter membersAdapter) {
+        this.membersAdapter = membersAdapter;
+    }
+
+    public Institution getInstitution() {
+        return institution;
+    }
+
+    public void setInstitution(Institution institution) {
+        this.institution = institution;
+    }
 
     public Course getCourse() {
         return course;
@@ -23,5 +53,31 @@ public class CoordinatorCourseMainMenuViewModel extends ViewModel {
 
     public void setCoordinator(InstitutionUser coordinator) {
         this.coordinator = coordinator;
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    public void getCourseMembers(String institutionID, String courseID){
+        MutableLiveData<List<InstitutionUser>> institutionUsers = new MutableLiveData<>();
+        List<InstitutionUser> tempList = new ArrayList<>();
+        new CourseDAO().getAllTeachersAndStudents(institutionID, courseID, task -> {
+            if (task.isSuccessful()) {
+                List<DocumentReference> documentReferences = task.getResult();
+                AtomicInteger pendingTasks = new AtomicInteger(documentReferences.size());
+
+                for (DocumentReference documentReference : documentReferences) {
+                    new InstitutionUserDAO().getInstitutionUserByID(institutionID, documentReference.getId(), task1 -> {
+                        if (task1.isSuccessful()) {
+                            InstitutionUser institutionUser = task1.getResult().toObject(InstitutionUser.class);
+                            tempList.add(institutionUser);
+                        }
+
+                        if (pendingTasks.decrementAndGet() == 0) {
+                            institutionUsers.setValue(tempList);
+                            this.membersAdapter.getInstitutionUsers().setValue(tempList);
+                            this.membersAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }
+        });
     }
 }

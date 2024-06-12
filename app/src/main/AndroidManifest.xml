@@ -17,6 +17,9 @@
         android:theme="@style/Theme.SmartClass"
         tools:targetApi="31">
         <activity
+            android:name=".view.user.views.institutionUser.CoordinatorCourseMainMenu"
+            android:exported="false" />
+        <activity
             android:name=".view.user.views.institution.InstitutionsMembersSearch"
             android:exported="false" />
         <activity
@@ -43,7 +46,8 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".view.user.views.institutionUser.InstitutionUserMainMenu"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".view.user.views.commonUser.CommonUserMainMenu"
             android:exported="false"

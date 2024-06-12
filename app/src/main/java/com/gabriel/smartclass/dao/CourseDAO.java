@@ -1,28 +1,29 @@
 package com.gabriel.smartclass.dao;
 
-import android.util.Log;
-
-import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.model.Course;
 import com.gabriel.smartclass.model.Institution;
+import com.gabriel.smartclass.model.Student;
 import com.gabriel.smartclass.model.Subject;
+import com.gabriel.smartclass.model.Teacher;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.core.Query;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.List;
 
 public class CourseDAO {
     private final String COLLECTION = Course.class.getSimpleName();
     private final String INSTITUTIONCOLLECTION = Institution.class.getSimpleName();
     private final String SUBJECTSCOLLECTION = Subject.class.getSimpleName();
+    private final String STUDENTSCOLLECION = Student.class.getSimpleName();
+    private final String TEACHERSCOLLECTION = Teacher.class.getSimpleName();
     private final String SEARCHAUXSTRING = "\uffff";
 
     public void saveNewCourse(Course course, String institutionID, OnCompleteListener<DocumentReference> onCompleteListener, OnFailureListener onFailureListener){
@@ -68,7 +69,76 @@ public class CourseDAO {
                 .delete()
                 .addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
+    public void addStudent(String institutionID, String courseID, Student student, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener){
+        FirebaseFirestore.getInstance()
+                .collection(INSTITUTIONCOLLECTION)
+                .document(institutionID)
+                .collection(COLLECTION)
+                .document(courseID)
+                .collection(STUDENTSCOLLECION)
+                .document(student.getId())
+                .set(student)
+                .addOnCompleteListener(onCompleteListener)
+                .addOnFailureListener(onFailureListener);
 
-
-
+    }
+    public void removeStudent(String institutionID, String courseID, Student student, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener){
+        FirebaseFirestore.getInstance()
+                .collection(INSTITUTIONCOLLECTION)
+                .document(institutionID)
+                .collection(COLLECTION)
+                .document(courseID)
+                .collection(STUDENTSCOLLECION)
+                .document(student.getId()).delete()
+                .addOnCompleteListener(onCompleteListener)
+                .addOnFailureListener(onFailureListener);
+    }
+    public void addTeacher(String institutionID, String courseID, Teacher teacher, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener){
+        FirebaseFirestore.getInstance()
+                .collection(INSTITUTIONCOLLECTION)
+                .document(institutionID)
+                .collection(COLLECTION)
+                .document(courseID)
+                .collection(TEACHERSCOLLECTION)
+                .document(teacher.getId())
+                .set(teacher)
+                .addOnCompleteListener(onCompleteListener)
+                .addOnFailureListener(onFailureListener);
+    }
+    public void removeTeacher(String institutionID, String courseID, Teacher teacher, OnCompleteListener<Void> onCompleteListener, OnFailureListener onFailureListener){
+        FirebaseFirestore.getInstance()
+                .collection(INSTITUTIONCOLLECTION)
+                .document(institutionID)
+                .collection(COLLECTION)
+                .document(courseID)
+                .collection(TEACHERSCOLLECTION)
+                .document(teacher.getId()).delete()
+                .addOnCompleteListener(onCompleteListener)
+                .addOnFailureListener(onFailureListener);
+    }
+    public void getAllTeachersAndStudents(String institutionID, String courseID, final OnCompleteListener<List<DocumentReference>> onCompleteListener){
+        FirebaseFirestore fb = FirebaseFirestore.getInstance();
+        Task<QuerySnapshot> teacherCollectionList = fb.collection(INSTITUTIONCOLLECTION).document(institutionID).collection(COLLECTION).document(courseID).collection(TEACHERSCOLLECTION).get();
+        Task<QuerySnapshot> studentsCollectionList = fb.collection(INSTITUTIONCOLLECTION).document(institutionID).collection(COLLECTION).document(courseID).collection(STUDENTSCOLLECION).get();
+        Tasks.whenAllComplete(teacherCollectionList, studentsCollectionList).addOnCompleteListener(task -> {
+                    List<DocumentReference> combinedList = new ArrayList<>();
+                    if (task.isSuccessful()) {
+                        QuerySnapshot teachersSnapshot = teacherCollectionList.getResult();
+                        QuerySnapshot studentsSnapshot = studentsCollectionList.getResult();
+                        if (teachersSnapshot != null) {
+                            for (QueryDocumentSnapshot document : teachersSnapshot) {
+                                combinedList.add(document.getReference());
+                            }
+                        }
+                        if (studentsSnapshot != null) {
+                            for (QueryDocumentSnapshot document : studentsSnapshot) {
+                                combinedList.add(document.getReference());
+                            }
+                        }
+                        onCompleteListener.onComplete(Tasks.forResult(combinedList));
+                    } else {
+                        onCompleteListener.onComplete(Tasks.forException(task.getException()));
+                    }
+                });
+    }
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.user.views.institutionUser.UserCourseMainMenu">
+    tools:context=".view.user.views.institutionUser.CoordinatorCourseMainMenu">
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_usercourse"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:navGraph="@navigation/coordinatorcourse_navbar" />
+        app:navGraph="@navigation/coordinatorcourse_nav_main" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomActionBarUserCourse"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="1dp"
-        app:menu="@menu/coordinatorcourse_navbar"
+        app:menu="@menu/bottom_action_bar_menu_coordinator"
         android:backgroundTint="@color/baby_blue"
         />
 

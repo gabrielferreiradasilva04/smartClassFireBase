@@ -98,10 +98,10 @@ public class HomeFragment extends Fragment {
     }
     @NonNull
     private OnInstitutionItemClickListener institutionClickListener() {
-        return this::verirfyUserAccess;
+        return this::verifyAccess;
     }
 
-    private void verirfyUserAccess(Institution institution) {
+    private void verifyAccess(Institution institution) {
         assert FirebaseAuth.getInstance().getCurrentUser() != null;
         this.selectedInstitution = institution;
         viewModel.getInstitutionUserById(FirebaseAuth.getInstance().getCurrentUser().getUid(), institution.getId());

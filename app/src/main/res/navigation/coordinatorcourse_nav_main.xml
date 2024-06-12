@@ -3,31 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorcourse_navbar"
-    app:startDestination="@id/coordinatorcorses_home">
+    app:startDestination="@id/coordinatorcourses_members">
 
     <fragment
-        android:id="@+id/coordinatorcorses_tabletime"
-        android:name="com.gabriel.smartclass.view.user.fragments.institutionUser.userCourseTableTime"
-        android:label="fragment_user_course_table_time"
-        tools:layout="@layout/fragment_user_course_table_time" />
-    <fragment
-        android:id="@+id/coordinatorcorses_members"
+        android:id="@+id/coordinatorcourses_members"
         android:name="com.gabriel.smartclass.view.user.fragments.institutionUser.CoordinatorCourseMembers"
         android:label="fragment_coordinator_course_members"
         tools:layout="@layout/fragment_coordinator_course_members" />
     <fragment
-        android:id="@+id/coordinatorcorses_home"
-        android:name="com.gabriel.smartclass.view.user.fragments.institutionUser.UserCourseHome"
-        android:label="fragment_user_course_home"
-        tools:layout="@layout/fragment_user_course_home" />
-    <fragment
-        android:id="@+id/coordinatorcorses_subjects"
-        android:name="com.gabriel.smartclass.view.user.fragments.institutionUser.CoordinatorCourseSubjects"
-        android:label="fragment_coordinator_course_subjects"
-        tools:layout="@layout/fragment_coordinator_course_subjects" />
-    <fragment
-        android:id="@+id/coordinatorcorses_news"
+        android:id="@+id/coordinatorcourses_news"
         android:name="com.gabriel.smartclass.view.user.fragments.institutionUser.CoordinatorCourseNews"
         android:label="fragment_coordinator_course_news"
         tools:layout="@layout/fragment_coordinator_course_news" />
+    <fragment
+        android:id="@+id/coordinatorcourses_classes"
+        android:name="com.gabriel.smartclass.view.user.fragments.institutionUser.CoordinatorCourseClasses"
+        android:label="fragment_coordinator_course_classes"
+        tools:layout="@layout/fragment_coordinator_course_classes" />
 </navigation>

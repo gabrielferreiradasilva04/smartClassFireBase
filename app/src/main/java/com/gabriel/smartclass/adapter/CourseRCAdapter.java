@@ -22,14 +22,48 @@ import java.util.List;
 public class CourseRCAdapter extends RecyclerView.Adapter {
     private final MutableLiveData<List<Course>> mutableliveDataCourse;
     private final HashSet<String> tIds;
+    private boolean showOnlyCourseView;
+    private boolean enableCourseAccess;
     private DefaultClickListener<Course> clickListenerRemove;
     private DefaultClickListener<Course> clickListenerEdit;
     private DefaultClickListener<Course> clickListenerSubjects;
+    private DefaultClickListener<Course> clickListenerAccess;
 
+    public boolean isShowOnlyCourseView() {
+        return showOnlyCourseView;
+    }
+
+    public boolean isEnableCourseAccess() {
+        return enableCourseAccess;
+    }
+
+    public void setEnableCourseAccess(boolean enableCourseAccess) {
+        this.enableCourseAccess = enableCourseAccess;
+    }
+
+    public DefaultClickListener<Course> getClickListenerAccess() {
+        return clickListenerAccess;
+    }
+
+    public void setClickListenerAccess(DefaultClickListener<Course> clickListenerAccess) {
+        this.clickListenerAccess = clickListenerAccess;
+    }
 
     public CourseRCAdapter(){
         this.mutableliveDataCourse = new MutableLiveData<>(new ArrayList<>());
         this.tIds = new HashSet<>();
+    }
+
+    public void setShowOnlyCourseView(boolean showOnlyCourseView) {
+        this.showOnlyCourseView = showOnlyCourseView;
+    }
+
+    public boolean isShowOnlyMenuOptions() {
+        return showOnlyCourseView;
+    }
+
+    public void setShowOnlyMenuOptions(boolean showOnlyMenuOptions) {
+        this.showOnlyCourseView = showOnlyMenuOptions;
     }
 
     public DefaultClickListener<Course> getClickListenerEdit() {
@@ -82,11 +116,24 @@ public class CourseRCAdapter extends RecyclerView.Adapter {
             Button buttonSubjects = holder.itemView.findViewById(R.id.course_recycler_view_buttonsubjects);
             TextView textDescription = holder.itemView.findViewById(R.id.course_recyclerview_title);
             textDescription.setText(description);
-            if(clickListenerRemove != null && clickListenerEdit != null && clickListenerSubjects != null){
-                buttonRemoveItem.setOnClickListener(view -> clickListenerRemove.onClick(mutableliveDataCourse.getValue().get(position)));
-                buttonEditItem.setOnClickListener(view -> clickListenerEdit.onClick(mutableliveDataCourse.getValue().get(position)));
-                buttonSubjects.setOnClickListener(view -> clickListenerSubjects.onClick(mutableliveDataCourse.getValue().get(position)));
+            if(showOnlyCourseView){
+                buttonRemoveItem.setVisibility(View.GONE);
+                buttonEditItem.setVisibility(View.GONE);
+                buttonSubjects.setVisibility(View.GONE);
             }
+            if(!showOnlyCourseView){
+                if(clickListenerRemove != null && clickListenerEdit != null && clickListenerSubjects != null){
+                    buttonRemoveItem.setOnClickListener(view -> clickListenerRemove.onClick(mutableliveDataCourse.getValue().get(position)));
+                    buttonEditItem.setOnClickListener(view -> clickListenerEdit.onClick(mutableliveDataCourse.getValue().get(position)));
+                    buttonSubjects.setOnClickListener(view -> clickListenerSubjects.onClick(mutableliveDataCourse.getValue().get(position)));
+                }
+            }
+            if(enableCourseAccess){
+                if(clickListenerAccess != null){
+                    holder.itemView.setOnClickListener(view -> clickListenerAccess.onClick(mutableliveDataCourse.getValue().get(position)));
+                }
+            }
+
         }catch (NullPointerException e){
             Log.d("ADAPTER ERROR", "onBindViewHolder: valor nulo encontrado no adapter");
         }
