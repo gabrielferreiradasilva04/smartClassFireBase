@@ -52,9 +52,7 @@
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spinner_user_type_link"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_margin="40dp"
-                android:background="@drawable/background_spinner_layout"
+                style="@style/spinner_style"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

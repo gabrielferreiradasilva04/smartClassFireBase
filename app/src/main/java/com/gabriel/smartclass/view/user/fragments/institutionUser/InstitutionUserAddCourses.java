@@ -45,8 +45,6 @@ public class InstitutionUserAddCourses extends Fragment {
         super.onDestroy();
         this.viewModel.getSnackbarText().setValue(null);
         this.viewModel.getSnackbarText().removeObserver(this.snackBarObserve());
-        this.viewModel.setCourseAdapter(null);
-        this.viewModel = null;
     }
 
     public void initialize() {

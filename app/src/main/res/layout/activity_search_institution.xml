@@ -10,17 +10,25 @@
     <EditText
         android:id="@+id/name_To_Find_Institutions_Search"
         style="@style/Edit_Text_Forms"
-        android:drawableRight="@drawable/ic_search_black"
         android:textSize="16dp"
         android:inputType="text"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:hint="Digite o nome da Instituição"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/institutionsearch_buttonsearch"
         app:layout_constraintHorizontal_bias="0.64"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/institutionsearch_buttonsearch"
+        style="@style/Custom_ImageButtons"
+        android:src="@drawable/ic_search_black"
+        app:layout_constraintBottom_toBottomOf="@id/name_To_Find_Institutions_Search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/name_To_Find_Institutions_Search"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_institutionsFind"
@@ -36,7 +44,7 @@
     <include
         android:id="@+id/empty_container"
         layout="@layout/empty_request"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />

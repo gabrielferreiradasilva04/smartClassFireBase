@@ -15,6 +15,7 @@ import com.gabriel.smartclass.R;
 
 import com.gabriel.smartclass.model.Institution;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -41,6 +42,10 @@ public class InstitutionsAdapter extends RecyclerView.Adapter {
     public InstitutionsAdapter (List<Institution> institutions){
         this.institutionsMutableLiveData = new MutableLiveData<>();
         this.institutionsMutableLiveData.setValue(institutions);
+        itemIds = new HashSet<>();
+    }
+    public InstitutionsAdapter(){
+        this.institutionsMutableLiveData = new MutableLiveData<>(new ArrayList<>());
         itemIds = new HashSet<>();
     }
 

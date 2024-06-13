@@ -17,11 +17,12 @@ import java.util.HashMap;
 
 public class InstitutionDAO {
     private final FirebaseFirestore db ;
+    private final String SEARCHAUXSTRING = "\uffff";
+    private final String COLLECTION = Institution.class.getSimpleName();
     private Institution institution;
     public InstitutionDAO(){
         db = FirebaseFirestore.getInstance();
     }
-    private final String COLLECTION = Institution.class.getSimpleName();
 
     public void insert(Institution institution) throws Exception{
         db.collection(COLLECTION).add(institution);
@@ -38,7 +39,10 @@ public class InstitutionDAO {
         db.collection(COLLECTION).document(id).get().addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
     }
     public void getInstitutionByName(String name, OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
-        db.collection(COLLECTION).whereEqualTo("name", name).get().addOnCompleteListener(onCompleteListener);
+        db.collection(COLLECTION)
+                .whereGreaterThanOrEqualTo("name", name).whereLessThanOrEqualTo("name", name+SEARCHAUXSTRING).get()
+                .addOnCompleteListener(onCompleteListener)
+                .addOnFailureListener(onFailureListener);
 
     }
     public void getInstitutionByCNPJ(String cnpj,OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener){
