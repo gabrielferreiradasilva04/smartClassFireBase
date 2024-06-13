@@ -6,12 +6,9 @@
     android:layout_height="wrap_content"
     android:visibility="gone">
 
-    <ImageView
+    <View
         android:id="@+id/institution_link_request_adapter_main_container"
         style="@style/institution_link_requests_container"
-        android:src="@drawable/fundosolicitacoes"
-        android:clipToOutline="true"
-        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

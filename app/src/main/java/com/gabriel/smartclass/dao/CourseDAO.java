@@ -2,6 +2,7 @@ package com.gabriel.smartclass.dao;
 
 import com.gabriel.smartclass.model.Course;
 import com.gabriel.smartclass.model.Institution;
+import com.gabriel.smartclass.model.InstitutionUser;
 import com.gabriel.smartclass.model.Student;
 import com.gabriel.smartclass.model.Subject;
 import com.gabriel.smartclass.model.Teacher;
@@ -11,6 +12,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -24,6 +26,7 @@ public class CourseDAO {
     private final String SUBJECTSCOLLECTION = Subject.class.getSimpleName();
     private final String STUDENTSCOLLECION = Student.class.getSimpleName();
     private final String TEACHERSCOLLECTION = Teacher.class.getSimpleName();
+    private final String INSTITUTIONUSERCOLLECTION = InstitutionUser.class.getSimpleName();
     private final String SEARCHAUXSTRING = "\uffff";
 
     public void saveNewCourse(Course course, String institutionID, OnCompleteListener<DocumentReference> onCompleteListener, OnFailureListener onFailureListener){
@@ -140,5 +143,8 @@ public class CourseDAO {
                         onCompleteListener.onComplete(Tasks.forException(task.getException()));
                     }
                 });
+    }
+    public void getAllTeachersFromInstitution(String institutionID, OnCompleteListener<QuerySnapshot> onCompleteListener){
+        FirebaseFirestore.getInstance().collection(INSTITUTIONCOLLECTION).document(institutionID).collection(INSTITUTIONUSERCOLLECTION).whereEqualTo("userType_id", new UserTypeDAO().TEACHER_TYPE_REFERENCE).get().addOnCompleteListener(onCompleteListener);
     }
 }

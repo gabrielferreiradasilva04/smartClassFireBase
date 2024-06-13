@@ -1,11 +1,14 @@
 package com.gabriel.smartclass.viewModels;
 
+
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.gabriel.smartclass.adapter.InstitutionUserAdapter;
+import com.gabriel.smartclass.adapter.SimpleDefaultAdapter;
 import com.gabriel.smartclass.dao.CourseDAO;
 import com.gabriel.smartclass.dao.InstitutionUserDAO;
 import com.gabriel.smartclass.model.Course;
@@ -16,12 +19,17 @@ import com.google.firebase.firestore.DocumentReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
+@SuppressLint("NotifyDataSetChanged")
 public class CoordinatorCourseViewModel extends ViewModel {
     private InstitutionUser coordinator;
     private Course course;
     private Institution institution;
     private InstitutionUserAdapter membersAdapter = new InstitutionUserAdapter();
+    private final SimpleDefaultAdapter<InstitutionUser> membersSelectionAdapter = new SimpleDefaultAdapter<>();
+
+    public SimpleDefaultAdapter<InstitutionUser> getMembersSelectionAdapter() {
+        return membersSelectionAdapter;
+    }
 
     public InstitutionUserAdapter getMembersAdapter() {
         return membersAdapter;
@@ -54,7 +62,7 @@ public class CoordinatorCourseViewModel extends ViewModel {
     public void setCoordinator(InstitutionUser coordinator) {
         this.coordinator = coordinator;
     }
-    @SuppressLint("NotifyDataSetChanged")
+
     public void getCourseMembers(String institutionID, String courseID){
         MutableLiveData<List<InstitutionUser>> institutionUsers = new MutableLiveData<>();
         List<InstitutionUser> tempList = new ArrayList<>();
@@ -78,6 +86,12 @@ public class CoordinatorCourseViewModel extends ViewModel {
                     });
                 }
             }
+        });
+    }
+    public void getAllTeachers(String institutionID){
+        new CourseDAO().getAllTeachersFromInstitution(institutionID, task -> {
+            this.membersSelectionAdapter.getMutableLiveDataT().setValue(task.getResult().toObjects(InstitutionUser.class));
+            this.membersSelectionAdapter.notifyDataSetChanged();
         });
     }
 }

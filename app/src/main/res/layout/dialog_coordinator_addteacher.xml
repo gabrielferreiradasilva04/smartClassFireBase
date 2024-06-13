@@ -2,23 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/main_background">
-    <EditText
-        android:id="@+id/dialog_addteacher_teachername"
-        style="@style/Edit_Text_Forms"
-        android:hint="Nome do professor"/>
-
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/dialog_addteacher_searchbutton"
-        style="@style/Custom_ImageButtons"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
         android:layout_width="match_parent"
-        android:src="@drawable/baseline_search_24"
-        tools:ignore="SpeakableTextPresentCheck" />
+        android:textAlignment="center"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Professores"
+        android:textSize="22sp"
+        android:textStyle="bold"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/dialog_addteacher_recyclerview"
         android:layout_margin="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="250dp"/>
 </LinearLayout>

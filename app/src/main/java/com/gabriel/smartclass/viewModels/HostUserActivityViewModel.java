@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.gabriel.smartclass.adapter.InstitutionLinkRequestsAdapter;
 import com.gabriel.smartclass.adapter.InstitutionsAdapter;
 import com.gabriel.smartclass.dao.InstitutionDAO;
 import com.gabriel.smartclass.dao.InstitutionLinkRequestDAO;
@@ -62,6 +63,9 @@ public class HostUserActivityViewModel extends ViewModel {
     private InstitutionsAdapter userInstitutionsAdapter;
 //  institution User viriables
     private final MutableLiveData<InstitutionUser> institutionUserMutableLiveData = new MutableLiveData<>();
+    // institution link request variables
+    private InstitutionLinkRequestsAdapter institutionLinkRequestsAdapter = new InstitutionLinkRequestsAdapter();
+
 
     public MutableLiveData<InstitutionUser> getInstitutionUserMutableLiveData() {
         return institutionUserMutableLiveData;

@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -33,6 +34,8 @@ import java.util.HashMap;
 public class InstitutionHomeFragment extends Fragment {
     private FragmentInstitutionHomeBinding binding;
     private HostUserActivityViewModel viewModel;
+    Handler mHandler = new Handler();
+
 
     public InstitutionHomeFragment() {
 
@@ -57,6 +60,7 @@ public class InstitutionHomeFragment extends Fragment {
         viewModel.getInstitutionStatisticsLiveData().observe(getViewLifecycleOwner(), institutionStatisticsObserver());
         binding.institutionSwipeRefreshLayout.setOnRefreshListener(getOnRefreshListener());
         binding.institutionMenuButton.setOnClickListener(menuButtonClickListener());
+
     }
 
     @Override

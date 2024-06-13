@@ -2,8 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/main_background">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <EditText
         android:id="@+id/add_new_area_edtxt_description"
         style="@style/Edit_Text_Forms"

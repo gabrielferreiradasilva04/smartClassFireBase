@@ -19,7 +19,7 @@
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_constraintBottom_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="SpeakableTextPresentCheck">
 
@@ -28,27 +28,28 @@
                     android:layout_height="match_parent">
 
                     <!--alunos-->
+
                     <View
                         android:id="@+id/statistics_view"
-                        style="@style/SimpleViewContainer"
+                        style="@style/SimpleViewContainerCustom"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ProgressBar
                         android:id="@+id/progressbar_students"
                         style="@style/ProgressBar_Institution_menu"
-                        app:layout_constraintTop_toTopOf="@id/statistics_view"
+                        app:layout_constraintBottom_toBottomOf="@+id/divider_teachers"
                         app:layout_constraintStart_toStartOf="@id/statistics_view"
-                        />
+                        app:layout_constraintTop_toTopOf="@id/statistics_view" />
+
                     <TextView
                         android:id="@+id/students_title"
                         style="@style/ProgressBar_title"
+                        android:text="@string/progressbar_students_title"
                         app:layout_constraintStart_toEndOf="@id/progressbar_teachers"
                         app:layout_constraintTop_toTopOf="@id/statistics_view"
-                        android:text="@string/progressbar_students_title"
-                        />
+                        tools:ignore="TextSizeCheck" />
                     <TextView
                         android:id="@+id/students_body1"
                         style="@style/ProgressBar_TextBody"
@@ -82,19 +83,21 @@
                         app:layout_constraintEnd_toEndOf="@id/statistics_view"
                         app:layout_constraintTop_toBottomOf="@id/students_body2"
                         />
+
                     <ProgressBar
                         android:id="@+id/progressbar_teachers"
                         style="@style/ProgressBar_Institution_menu"
-                        app:layout_constraintTop_toBottomOf="@id/students_body2"
+                        app:layout_constraintBottom_toBottomOf="@+id/divider_coordinators"
                         app:layout_constraintStart_toStartOf="@id/statistics_view"
-                        />
+                        app:layout_constraintTop_toBottomOf="@id/students_body2" />
+
                     <TextView
                         android:id="@+id/teachers_title"
                         style="@style/ProgressBar_title"
+                        android:text="@string/progressbar_teachers_title"
                         app:layout_constraintStart_toEndOf="@id/progressbar_teachers"
                         app:layout_constraintTop_toBottomOf="@id/students_body2"
-                        android:text="@string/progressbar_teachers_title"
-                        />
+                        tools:ignore="TextSizeCheck" />
                     <TextView
                         android:id="@+id/teachers_body1"
                         style="@style/ProgressBar_TextBody"
@@ -127,19 +130,21 @@
                         app:layout_constraintEnd_toEndOf="@id/statistics_view"
                         app:layout_constraintTop_toBottomOf="@id/teachers_body2"
                         />
+
                     <ProgressBar
                         android:id="@+id/progressbar_coordinators"
                         style="@style/ProgressBar_Institution_menu"
-                        app:layout_constraintTop_toBottomOf="@id/teachers_body2"
+                        app:layout_constraintBottom_toBottomOf="@+id/divider_classrooms"
                         app:layout_constraintStart_toStartOf="@id/statistics_view"
-                        />
+                        app:layout_constraintTop_toBottomOf="@id/teachers_body2" />
+
                     <TextView
                         android:id="@+id/coordinators_title"
                         style="@style/ProgressBar_title"
+                        android:text="@string/progressbar_coordinators_title"
                         app:layout_constraintStart_toEndOf="@id/progressbar_coordinators"
                         app:layout_constraintTop_toBottomOf="@id/teachers_body2"
-                        android:text="@string/progressbar_coordinators_title"
-                        />
+                        tools:ignore="TextSizeCheck" />
                     <TextView
                         android:id="@+id/coordinators_body1"
                         style="@style/ProgressBar_TextBody"
@@ -172,19 +177,21 @@
                         app:layout_constraintEnd_toEndOf="@id/statistics_view"
                         app:layout_constraintTop_toBottomOf="@id/coordinators_body2"
                         />
+
                     <ProgressBar
                         android:id="@+id/progressbar_classrooms"
                         style="@style/ProgressBar_Institution_menu"
-                        app:layout_constraintTop_toBottomOf="@id/coordinators_body2"
+                        app:layout_constraintBottom_toBottomOf="@+id/divider_end"
                         app:layout_constraintStart_toStartOf="@id/statistics_view"
-                        />
+                        app:layout_constraintTop_toBottomOf="@id/coordinators_body2" />
+
                     <TextView
                         android:id="@+id/classrooms_title"
                         style="@style/ProgressBar_title"
+                        android:text="@string/progressbar_classrooms_title"
                         app:layout_constraintStart_toEndOf="@id/progressbar_classrooms"
                         app:layout_constraintTop_toBottomOf="@id/coordinators_body2"
-                        android:text="@string/progressbar_classrooms_title"
-                        />
+                        tools:ignore="TextSizeCheck" />
                     <TextView
                         android:id="@+id/classrooms_body1"
                         style="@style/ProgressBar_TextBody"
@@ -217,17 +224,17 @@
                         app:layout_constraintStart_toStartOf="@id/statistics_view"
                         app:layout_constraintEnd_toEndOf="@id/statistics_view"
                         app:layout_constraintTop_toBottomOf="@id/classrooms_body2"
-                        android:background="@color/azul_celeste"
-                        android:layout_height="2dp"
+                        android:background="@color/white"
+                        android:layout_height="1dp"
                         />
                     <!--cursos-->
                     <TextView
                         android:id="@+id/courses_title"
                         style="@style/ProgressBar_title"
+                        android:text="@string/courses_institution_mainmenu"
                         app:layout_constraintStart_toEndOf="@id/progressbar_classrooms"
                         app:layout_constraintTop_toBottomOf="@id/divider_end"
-                        android:text="@string/courses_institution_mainmenu"
-                        />
+                        tools:ignore="TextSizeCheck" />
                     <TextView
                         android:id="@+id/number_of_courses"
                         style="@style/courses_number"
@@ -238,10 +245,10 @@
                     <TextView
                         android:id="@+id/classrooms_title_bottom"
                         style="@style/ProgressBar_title"
+                        android:text="@string/classrooms_institution_mainmenu"
                         app:layout_constraintStart_toEndOf="@id/progressbar_classrooms"
                         app:layout_constraintTop_toBottomOf="@id/courses_title"
-                        android:text="@string/classrooms_institution_mainmenu"
-                        />
+                        tools:ignore="TextSizeCheck" />
                     <TextView
                         android:id="@+id/number_of_classrooms"
                         style="@style/courses_number"
@@ -286,23 +293,25 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </ScrollView>
-
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/institution_menu_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:backgroundTint="@color/azul_celeste"
+                android:src="@drawable/baseline_menu_open_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="SpeakableTextPresentCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/institution_menu_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/azul_celeste"
-        android:src="@drawable/baseline_menu_open_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
+
 
 
 

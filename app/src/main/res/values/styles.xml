@@ -11,11 +11,22 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:textColorHint">@color/black</item>
     </style>
+    <style name="Edit_Text_Forms_Outlined">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/bg_edittextform_outlined</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/black</item>
+    </style>
 
     <style name="Button_Confirm_Forms">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/button_confirm_forms</item>
+        <item name="android:background">@drawable/bg_main_button</item>
         <item name="android:padding">15dp</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_marginLeft">10dp</item>
@@ -57,8 +68,14 @@
     <style name="SimpleViewContainer">
         <item name="android:layout_height">630dp</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_margin">16dp</item>
         <item name="android:background">@drawable/simple_view_container</item>
+    </style>
+    <style name="SimpleViewContainerCustom">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="android:background">@drawable/bg_simpleview_gradient</item>
     </style>
 
     <style name="InstitutionsHomeText">
@@ -71,15 +88,15 @@
     </style>
 
     <style name="ProgressBar_Institution_menu" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
-        <item name="android:layout_marginTop">40dp</item>
-        <item name="android:layout_marginLeft">20dp</item>
-        <item name="android:progressDrawable">@drawable/progressbar_background</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:progressDrawable">@drawable/body_progressbar_institutionhome</item>
         <item name="android:layout_width">100dp</item>
-        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_height">100dp</item>
     </style>
 
     <style name="ProgressBar_title">
-        <item name="android:textSize">18dp</item>
+        <item name="android:textSize">14dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:layout_width">wrap_content</item>
@@ -91,7 +108,7 @@
     <style name="ProgressBar_TextBody">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">13dp</item>
+        <item name="android:textSize">12dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:layout_marginLeft">16dp</item>
@@ -103,7 +120,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">16dp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/azul_celeste</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:layout_marginTop">3dp</item>
         <item name="android:layout_marginLeft">16dp</item>
     </style>
@@ -120,7 +137,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">30dp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/azul_celeste</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:layout_marginTop">30dp</item>
         <item name="android:layout_marginLeft">50dp</item>
     </style>
@@ -194,6 +211,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
     <style name="spinner_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50dp</item>
@@ -201,7 +219,7 @@
         <item name="android:layout_marginStart">10dp</item>
         <item name="android:layout_marginEnd">10dp</item>
         <item name="android:dropDownSelector">@drawable/bg_textview_spinner</item>
-        <item name="android:background">@drawable/background_spinner_layout</item>
+        <item name="android:background">@drawable/bg_spinner_outlined</item>
     </style>
     <style name="textView_add_course_labels">
         <item name="android:layout_width">match_parent</item>

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/main_background"
     android:orientation="vertical"
     tools:context=".view.course.dialogs.EditCourseDialog">
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +24,7 @@
                     android:textSize="18dp"
                     android:textAlignment="center"
                     android:layout_margin="10dp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -34,7 +33,7 @@
                     app:layout_constraintEnd_toEndOf="parent"/>
                 <EditText
                     android:id="@+id/dialog_editCourse_edtxt_description"
-                    style="@style/Edit_Text_Forms"
+                    style="@style/Edit_Text_Forms_Outlined"
                     android:layout_height="150dp"
                     android:gravity="top"
                     android:hint="Descrição"
@@ -52,7 +51,7 @@
 
                 <EditText
                     android:id="@+id/dialog_editCourse_edtxt_duration"
-                    style="@style/Edit_Text_Forms"
+                    style="@style/Edit_Text_Forms_Outlined"
                     android:hint="Duração anos"
                     android:inputType="number"
                     app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +66,7 @@
 
                 <EditText
                     android:id="@+id/dialog_editCourse_division"
-                    style="@style/Edit_Text_Forms"
+                    style="@style/Edit_Text_Forms_Outlined"
                     android:hint="Divisão"
                     android:inputType="number"
                     app:layout_constraintStart_toStartOf="parent"
