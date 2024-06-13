@@ -25,11 +25,15 @@ public class CoordinatorCourseViewModel extends ViewModel {
     private Course course;
     private Institution institution;
     private InstitutionUserAdapter membersAdapter = new InstitutionUserAdapter();
+<<<<<<< HEAD
     private final SimpleDefaultAdapter<InstitutionUser> membersSelectionAdapter = new SimpleDefaultAdapter<>();
 
     public SimpleDefaultAdapter<InstitutionUser> getMembersSelectionAdapter() {
         return membersSelectionAdapter;
     }
+=======
+    private MutableLiveData<String> snackbarText = new MutableLiveData<>();
+>>>>>>> 7d5835ebebbc7da9e237d37e27977fe04d3a4c9f
 
     public InstitutionUserAdapter getMembersAdapter() {
         return membersAdapter;
@@ -85,6 +89,8 @@ public class CoordinatorCourseViewModel extends ViewModel {
                         }
                     });
                 }
+            }else{
+                snackbarText.setValue("Erro ao carregar membros de instituição");
             }
         });
     }
