@@ -55,7 +55,6 @@ public class CoordinatorCourseMembers extends Fragment {
         parentView.updateTitle("Membros");
         this.loadComponents();
         this.viewModel = new ViewModelProvider(requireActivity()).get(CoordinatorCourseViewModel.class);
-        this.viewModel.getCourseMembers(viewModel.getInstitution().getId(), viewModel.getCourse().getId());
         buildRecyclerView();
         this.menuButton.setOnClickListener(this::openMenuOptions);
     }
