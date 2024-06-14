@@ -71,14 +71,12 @@ public class CoordinatorCourseViewModel extends ViewModel {
             if (task.isSuccessful()) {
                 List<DocumentReference> documentReferences = task.getResult();
                 AtomicInteger pendingTasks = new AtomicInteger(documentReferences.size());
-
                 for (DocumentReference documentReference : documentReferences) {
                     new InstitutionUserDAO().getInstitutionUserByID(institutionID, documentReference.getId(), task1 -> {
                         if (task1.isSuccessful()) {
                             InstitutionUser institutionUser = task1.getResult().toObject(InstitutionUser.class);
                             tempList.add(institutionUser);
                         }
-
                         if (pendingTasks.decrementAndGet() == 0) {
                             institutionUsers.setValue(tempList);
                             this.membersAdapter.getInstitutionUsers().setValue(tempList);
@@ -92,6 +90,7 @@ public class CoordinatorCourseViewModel extends ViewModel {
         });
     }
     public void getAllTeachers(String institutionID){
+        this.membersSelectionAdapter.setAddAdapter(true);
         new CourseDAO().getAllTeachersFromInstitution(institutionID, task -> {
             this.membersSelectionAdapter.getMutableLiveDataT().setValue(task.getResult().toObjects(InstitutionUser.class));
             this.membersSelectionAdapter.notifyDataSetChanged();

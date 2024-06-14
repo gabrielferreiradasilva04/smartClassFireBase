@@ -1,6 +1,5 @@
 package com.gabriel.smartclass.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +25,24 @@ public class SimpleDefaultAdapter<T extends SimpleAuxEntity> extends RecyclerVie
     private final MutableLiveData<List<T>> mutableLiveDataT;
     private final HashSet<String> tIds;
     private boolean showUserDetails = false;
+    private boolean addAdapter = false;
     private DefaultClickListener<T> clickListener;
 
     public SimpleDefaultAdapter(){
         this.mutableLiveDataT = new MutableLiveData<>(new ArrayList<>());
         this.tIds = new HashSet<>();
+    }
+
+    public void setShowUserDetails(boolean showUserDetails) {
+        this.showUserDetails = showUserDetails;
+    }
+
+    public boolean isAddAdapter() {
+        return addAdapter;
+    }
+
+    public void setAddAdapter(boolean addAdapter) {
+        this.addAdapter = addAdapter;
     }
 
     public boolean isShowUserDetails() {
@@ -63,11 +75,14 @@ public class SimpleDefaultAdapter<T extends SimpleAuxEntity> extends RecyclerVie
             holder.itemView.setAlpha(0f);
             holder.itemView.animate().alpha(1f).setDuration(300).start();
             String description = mutableLiveDataT.getValue().get(position).getDescription();
-            ImageButton buttonRemoveItem = holder.itemView.findViewById(R.id.simple_recycler_view_buttonremove);
+            ImageButton buttonAction = holder.itemView.findViewById(R.id.simple_recycler_view_buttonAction);
             TextView textDescription = holder.itemView.findViewById(R.id.simple_recyclerview_title);
             textDescription.setText(description);
+            if(addAdapter){
+                buttonAction.setImageResource(R.drawable.add_icon);
+            }
             if(clickListener != null){
-                buttonRemoveItem.setOnClickListener(view ->{
+                buttonAction.setOnClickListener(view ->{
                     clickListener.onClick(mutableLiveDataT.getValue().get(position));
                 });
             }

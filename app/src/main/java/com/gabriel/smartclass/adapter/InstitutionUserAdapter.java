@@ -89,6 +89,7 @@ public class InstitutionUserAdapter extends RecyclerView.Adapter {
             if(this.clickListenerRemove != null){
                 buttonRemove.setOnClickListener(view -> clickListenerRemove.onClick(institutionUsers.getValue().get(position)));
             }
+            holder.itemView.setVisibility(View.VISIBLE);
         }
     }
     public void addItem(InstitutionUser user){
