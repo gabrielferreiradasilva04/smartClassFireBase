@@ -94,7 +94,7 @@ public class InstitutionUserAdapter extends RecyclerView.Adapter {
     public void addItem(InstitutionUser user){
         if(!this.ids.contains(user.getId())){
             this.institutionUsers.getValue().add(user);
-            this.notifyItemInserted(this.institutionUsers.getValue().indexOf(user));
+            this.notifyDataSetChanged();
         }
     }
     @SuppressLint("NotifyDataSetChanged")

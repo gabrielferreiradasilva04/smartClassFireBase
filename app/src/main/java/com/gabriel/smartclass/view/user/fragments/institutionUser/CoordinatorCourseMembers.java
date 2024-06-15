@@ -1,7 +1,6 @@
 package com.gabriel.smartclass.view.user.fragments.institutionUser;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,8 +19,6 @@ import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.EmptyRequestBinding;
 import com.gabriel.smartclass.databinding.FragmentCoordinatorCourseMembersBinding;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
-import com.gabriel.smartclass.view.course.views.MainCourses;
-import com.gabriel.smartclass.view.user.views.institution.InstitutionsMembersSearch;
 import com.gabriel.smartclass.view.user.views.institutionUser.CoordinatorCourseMainMenu;
 import com.gabriel.smartclass.viewModels.CoordinatorCourseViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -83,7 +80,12 @@ public class CoordinatorCourseMembers extends Fragment {
         inflater.inflate(R.menu.coordinator_course_addmembers, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(item -> {
             if(item.getItemId() == R.id.addmemebersmenu_teacher){
-                CoordinatorAddTeacherDialog dialog = new CoordinatorAddTeacherDialog();
+                AddMemberDialog dialog = new AddMemberDialog();
+                dialog.show(getParentFragmentManager(), dialog.getTag());
+            }
+            if(item.getItemId() == R.id.addmemebersmenu_student){
+                AddMemberDialog dialog = new AddMemberDialog();
+                dialog.setStudents(true);
                 dialog.show(getParentFragmentManager(), dialog.getTag());
             }
             return true;

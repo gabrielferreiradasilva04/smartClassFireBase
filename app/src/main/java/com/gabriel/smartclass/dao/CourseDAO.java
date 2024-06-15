@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.Firebase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -146,5 +147,21 @@ public class CourseDAO {
     }
     public void getAllTeachersFromInstitution(String institutionID, OnCompleteListener<QuerySnapshot> onCompleteListener){
         FirebaseFirestore.getInstance().collection(INSTITUTIONCOLLECTION).document(institutionID).collection(INSTITUTIONUSERCOLLECTION).whereEqualTo("userType_id", new UserTypeDAO().TEACHER_TYPE_REFERENCE).get().addOnCompleteListener(onCompleteListener);
+    }
+
+    public void getAllStudents(String institutionID, OnCompleteListener<List<InstitutionUser>> onCompleteListener) {
+        Task<QuerySnapshot> studentsTask = FirebaseFirestore.getInstance().collection(INSTITUTIONCOLLECTION).document(institutionID).collection(INSTITUTIONUSERCOLLECTION).whereEqualTo("userType_id", new UserTypeDAO().STUDENT_TYPE_REFERENCE).get();
+        Tasks.whenAllComplete(studentsTask).addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                List<InstitutionUser> institutionUserList = new ArrayList<>();
+                QuerySnapshot snapshot = studentsTask.getResult();
+                if(snapshot != null){
+                    institutionUserList = snapshot.toObjects(InstitutionUser.class);
+                }
+                onCompleteListener.onComplete(Tasks.forResult(institutionUserList));
+            }else{
+                onCompleteListener.onComplete(Tasks.forException(task.getException()));
+            }
+        });
     }
 }

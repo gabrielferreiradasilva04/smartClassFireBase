@@ -2,14 +2,13 @@ package com.gabriel.smartclass.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.gabriel.smartclass.model.baseEntitys.SimpleAuxEntity;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Course extends SimpleAuxEntity implements Parcelable {
@@ -20,8 +19,6 @@ public class Course extends SimpleAuxEntity implements Parcelable {
     private int division_of_the_school_year;
     private DocumentReference area_id;
     private DocumentReference coordinator_id;
-    private List<DocumentReference> students_id;
-    private List<DocumentReference> teachers_id;
     protected Course(Parcel in) {
         id = in.readString();
         name = in.readString();
@@ -38,22 +35,6 @@ public class Course extends SimpleAuxEntity implements Parcelable {
         dest.writeInt(division_of_the_school_year);
         dest.writeString(area_id.getPath());
         dest.writeString(coordinator_id.getPath());
-        if(students_id == null){
-            dest.writeInt(0);
-        }else{
-            dest.writeInt(students_id.size()); // tamanho da lista de alunos
-            for (DocumentReference students_id : students_id) { // lista de alunos/estudantes
-                dest.writeString(students_id.getPath());
-            }
-        }
-        if(teachers_id == null){
-            dest.writeInt(0);
-        }else{
-            dest.writeInt(teachers_id.size()); // tamnho da lista de professores
-            for (DocumentReference teachers_id : teachers_id) { //lista de professores
-                dest.writeString(teachers_id.getPath());
-            }
-        }
     }
 
     @Override
@@ -79,26 +60,7 @@ public class Course extends SimpleAuxEntity implements Parcelable {
             if (coordinatorReferenceString != null){
                 coordinator_id = FirebaseFirestore.getInstance().document(coordinatorReferenceString);
             }
-            int studentsSize = in.readInt(); //encontrar lista de estudantes do curso, sem restrição por sala
-            List<DocumentReference> students_id = new ArrayList<>();
-            for (int i = 0; i < studentsSize; i++) {
-                String studentPath = in.readString();
-                if(studentPath != null){
-                    DocumentReference studentReference = FirebaseFirestore.getInstance().document(studentPath);
-                    students_id.add(studentReference);
-                }
-            }
-
-            int teacherSize = in.readInt(); // encontrar lista de professroes do curso sem restrição por sala
-            List<DocumentReference> teachers_id = new ArrayList<>();
-            for (int j = 0; j < teacherSize; j++) {
-                String teacherPath = in.readString();
-                if (teacherPath != null) {
-                    DocumentReference teacherReference = FirebaseFirestore.getInstance().document(teacherPath);
-                    teachers_id.add(teacherReference);
-                }
-            }
-                return new Course(id, name, description, duration, division_of_the_school_year, coordinator_id, area_id, students_id, teachers_id);
+                return new Course(id, name, description, duration, division_of_the_school_year, coordinator_id, area_id);
         }
 
         @Override
@@ -163,21 +125,6 @@ public class Course extends SimpleAuxEntity implements Parcelable {
         this.division_of_the_school_year = division_of_the_school_year;
     }
 
-    public List<DocumentReference> getStudents_id() {
-        return students_id;
-    }
-
-    public void setStudents_id(List<DocumentReference> students_id) {
-        this.students_id = students_id;
-    }
-
-    public List<DocumentReference> getTeachers_id() {
-        return teachers_id;
-    }
-
-    public void setTeachers_id(List<DocumentReference> teachers_id) {
-        this.teachers_id = teachers_id;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -192,6 +139,7 @@ public class Course extends SimpleAuxEntity implements Parcelable {
         return Objects.hash(getId(), getName(), getDescription(), getDuration(), getDivision_of_the_school_year(), getArea_id(), getCoordinator_id());
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Course{" +
@@ -202,8 +150,6 @@ public class Course extends SimpleAuxEntity implements Parcelable {
                 ", division_of_the_school_year=" + division_of_the_school_year +
                 ", area_id=" + area_id +
                 ", coordinator_id=" + coordinator_id +
-                ", students_id=" + students_id +
-                ", teachers_id=" + teachers_id +
                 '}';
     }
 
@@ -220,7 +166,7 @@ public class Course extends SimpleAuxEntity implements Parcelable {
         this.division_of_the_school_year = division_of_the_school_year;
     }
 
-    public Course(String id, String name, String description, int duration, int division_of_the_school_year, DocumentReference area_id, DocumentReference coordinator_id, List<DocumentReference> students_id, List<DocumentReference> teachers_id) {
+    public Course(String id, String name, String description, int duration, int division_of_the_school_year, DocumentReference area_id, DocumentReference coordinator_id) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -228,7 +174,5 @@ public class Course extends SimpleAuxEntity implements Parcelable {
         this.division_of_the_school_year = division_of_the_school_year;
         this.area_id = area_id;
         this.coordinator_id = coordinator_id;
-        this.students_id = students_id;
-        this.teachers_id = teachers_id;
     }
 }

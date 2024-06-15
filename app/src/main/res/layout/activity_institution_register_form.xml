@@ -24,8 +24,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-
-
         />
 
     <ImageView
@@ -67,6 +65,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textCpnj_InstitutionRegister" />
+
     <EditText
         android:id="@+id/textConfirmPassword_InstitutionRegister"
         style="@style/Edit_Text_Forms"
@@ -101,5 +100,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textPassword_InstitutionRegister"
         app:layout_constraintVertical_bias="1.0" />
+
+    <CheckBox
+        android:id="@+id/checkBoxRegisterTerms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:text="Li e aceito os termos e condições"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textConfirmPassword_InstitutionRegister" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

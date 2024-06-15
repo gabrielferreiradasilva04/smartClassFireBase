@@ -63,6 +63,13 @@ public class ProfileFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        this.hostUserActivityViewModel.getSnackBarText().setValue(null);
+        this.hostUserActivityViewModel.getSnackBarText().removeObserver(this.observeSnackbar());
+    }
+
     private void defaultInitialize() {
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
         hostUserActivityViewModel = viewModelProvider.get(HostUserActivityViewModel.class);

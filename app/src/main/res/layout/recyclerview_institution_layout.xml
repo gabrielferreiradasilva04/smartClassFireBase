@@ -12,12 +12,11 @@
         android:layout_margin="16dp"
         android:layout_marginTop="28dp"
         android:background="@drawable/container_institutions_background"
+        android:elevation="15dp"
+        app:layout_constraintBottom_toTopOf="@id/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/divider"/>
-
-
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textInstitutionName_adapter"
@@ -25,6 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:elevation="16dp"
         app:layout_constraintEnd_toStartOf="@id/institutionProfilePicture"
         app:layout_constraintStart_toStartOf="@id/view_container"
         app:layout_constraintTop_toTopOf="@+id/view_container" />
@@ -33,6 +33,7 @@
         android:id="@+id/textInstitutionCNPJ_adapter"
         style="@style/TextView_Institutions_RecyclerView"
         android:layout_width="0dp"
+        android:elevation="16dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:text="TextView"
@@ -42,30 +43,29 @@
         app:layout_constraintTop_toBottomOf="@+id/textInstitutionName_adapter"
         tools:ignore="TextSizeCheck" />
 
-
     <ImageView
         android:id="@+id/divider"
         android:layout_width="match_parent"
+        android:elevation="16dp"
         android:layout_height="1dp"
         android:background="?actionBarDivider"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/institutionProfilePicture"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:elevation="16dp"
         android:layout_margin="16dp"
         android:background="@drawable/image_button_cicle"
+        android:clipToOutline="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@id/view_container"
         app:layout_constraintEnd_toEndOf="@id/view_container"
         app:layout_constraintTop_toTopOf="@id/view_container"
-        app:layout_constraintBottom_toBottomOf="@id/view_container"
-        android:scaleType="centerCrop"
-        android:clipToOutline="true"
         tools:ignore="SpeakableTextPresentCheck" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

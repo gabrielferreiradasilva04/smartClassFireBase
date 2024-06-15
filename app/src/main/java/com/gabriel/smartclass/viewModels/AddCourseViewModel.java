@@ -153,8 +153,6 @@ public class AddCourseViewModel extends ViewModel {
         DocumentReference coordinatorReference = fb.collection(Institution.class.getSimpleName()).document(institutionID).collection(InstitutionUser.class.getSimpleName()).document(coordinator.getId());
         course.setArea_id(areaReference);
         course.setCoordinator_id(coordinatorReference);
-        course.setStudents_id(students_id);
-        course.setTeachers_id(teachers_id);
         return course;
     }
 

@@ -64,4 +64,6 @@ public class InstitutionDAO {
         institutionRef.collection(Course.class.getSimpleName()).get().addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 
+
+
 }

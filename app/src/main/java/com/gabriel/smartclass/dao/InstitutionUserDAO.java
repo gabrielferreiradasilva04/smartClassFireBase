@@ -8,6 +8,8 @@ import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -80,5 +82,19 @@ public class InstitutionUserDAO {
     }
     public void getInstitutionUserByID(String institutionID ,String userId, OnCompleteListener<DocumentSnapshot> onCompleteListener){
         FirebaseFirestore.getInstance().collection(institutionsCollection).document(institutionID).collection(COLLECTION).document(userId).get().addOnCompleteListener(onCompleteListener);
+    }
+    public void convertStudentOrTeacherToInstitutionUser(String institutionID, String teacherOrStudentID, OnCompleteListener<InstitutionUser> onCompleteListener){
+        Task<DocumentSnapshot> documentSnapshotTask = FirebaseFirestore.getInstance().collection(institutionsCollection).document(institutionID).collection(COLLECTION).document(teacherOrStudentID).get();
+        Tasks.whenAllComplete(documentSnapshotTask).addOnCompleteListener(task -> {
+            InstitutionUser institutionUser;
+            if(task.isSuccessful()){
+                DocumentSnapshot snapshot = documentSnapshotTask.getResult();
+                institutionUser = snapshot.toObject(InstitutionUser.class);
+                onCompleteListener.onComplete(Tasks.forResult(institutionUser));
+            }else{
+                onCompleteListener.onComplete(Tasks.forException(task.getException()));
+            }
+        });
+
     }
 }

@@ -1,9 +1,6 @@
 package com.gabriel.smartclass.viewModels;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -20,7 +17,6 @@ import com.gabriel.smartclass.model.InstitutionUser;
 import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.model.UserType;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class InstitutionUserMainMenuViewModel extends ViewModel {
@@ -28,17 +24,12 @@ public class InstitutionUserMainMenuViewModel extends ViewModel {
     private final MutableLiveData<User> userByInstitutionUser = new MutableLiveData<>();
     private final MutableLiveData<UserType> userTypeByInstitutionUser = new MutableLiveData<>();
     private Institution currentInstitution;
-    private final MutableLiveData<Bitmap> userPicture = new MutableLiveData<>();
     private CourseRCAdapter courseAdapter;
     private final MutableLiveData<String> snackbarText = new MutableLiveData<>();
     private final CourseRCAdapter searchCoursesAdapter = new CourseRCAdapter();
 
     public InstitutionUser getCurrentInstitutionUser() {
         return currentInstitutionUser;
-    }
-
-    public void setCourseAdapter(CourseRCAdapter courseAdapter) {
-        this.courseAdapter = courseAdapter;
     }
 
     public CourseRCAdapter getSearchCoursesAdapter() {
@@ -65,9 +56,6 @@ public class InstitutionUserMainMenuViewModel extends ViewModel {
         return userTypeByInstitutionUser;
     }
 
-    public MutableLiveData<Bitmap> getUserPicture() {
-        return userPicture;
-    }
 
     public CourseRCAdapter getCourseAdapter() {
         return courseAdapter;
@@ -82,15 +70,8 @@ public class InstitutionUserMainMenuViewModel extends ViewModel {
             if (task.isComplete() && task.isSuccessful() && task1.isComplete() && task1.isSuccessful()) {
                 this.userByInstitutionUser.setValue(task.getResult().toObject(User.class));
                 this.userTypeByInstitutionUser.setValue(task1.getResult().toObject(UserType.class));
-                downloadUserPicutre(userByInstitutionUser.getValue());
             }
         }, e -> snackbarText.setValue("Erro ao recuperar dados do usuário")), e -> snackbarText.setValue("Erro ao recuperar dados do usuário"));
-    }
-
-    public void downloadUserPicutre(User user) {
-        if(user.getPhotoUrl() != null && !user.getPhotoUrl().equals(Uri.parse(""))){
-            new UserDAO().downloadImage(user.getEmail(), bytes -> this.userPicture.setValue(BitmapFactory.decodeByteArray(bytes, 0, bytes.length)), e -> snackbarText.setValue("Erro ao realizar o download da sua foto"));
-        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

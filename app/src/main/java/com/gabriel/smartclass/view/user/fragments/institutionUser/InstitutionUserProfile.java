@@ -1,7 +1,10 @@
 package com.gabriel.smartclass.view.user.fragments.institutionUser;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -9,16 +12,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-
+import com.bumptech.glide.Glide;
+import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.model.UserType;
 import com.gabriel.smartclass.view.user.views.institutionUser.InstitutionUserMainMenu;
 import com.gabriel.smartclass.viewModels.InstitutionUserMainMenuViewModel;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.Objects;
 
 public class InstitutionUserProfile extends Fragment {
     private com.gabriel.smartclass.databinding.FragmentInstitutionUserProfileBinding binding;
@@ -44,10 +46,8 @@ public class InstitutionUserProfile extends Fragment {
         super.onDestroy();
         this.viewModel.getSnackbarText().setValue(null);
         this.viewModel.getSnackbarText().removeObserver(this.snackbarObserver());
-        this.viewModel.getUserPicture().removeObserver(this.profilePictureObserver());
         this.viewModel.getUserTypeByInstitutionUser().removeObserver(this.userTypeObserver());
         this.viewModel.getUserByInstitutionUser().removeObserver(this.userObserver());
-        this.viewModel = null;
     }
 
     private void initialize(){
@@ -58,7 +58,6 @@ public class InstitutionUserProfile extends Fragment {
     }
     public void viewModelObservers(){
         this.viewModel.getUserByInstitutionUser().observe(getViewLifecycleOwner(), userObserver());
-        this.viewModel.getUserPicture().observe(getViewLifecycleOwner(), profilePictureObserver());
         this.viewModel.getUserTypeByInstitutionUser().observe(getViewLifecycleOwner(), userTypeObserver());
         this.edtxt_institutionName.setText(viewModel.getCurrentInstitution().getName());
         this.viewModel.getSnackbarText().observe(this.getViewLifecycleOwner(), snackbarObserver());
@@ -67,28 +66,22 @@ public class InstitutionUserProfile extends Fragment {
     @NonNull
     private Observer<User> userObserver() {
         return user -> {
-            this.edtxt_username.setText(user.getName());
-        };
-    }
-
-    @NonNull
-    private Observer<Bitmap> profilePictureObserver() {
-        return bitmap -> {
-            this.imageButton.setImageBitmap(bitmap);
+            if(user != null){
+                this.edtxt_username.setText(user.getName());
+                Glide.with(this.requireContext()).load(Objects.requireNonNull(viewModel.getUserByInstitutionUser().getValue()).getPhotoUrl()).error(R.drawable.icone_smarclass_sem_fundo).placeholder(R.drawable.icone_smarclass_sem_fundo).into(this.imageButton);
+            }
         };
     }
 
     @NonNull
     private Observer<UserType> userTypeObserver() {
-        return userType -> {
-            this.edtxt_userType.setText(userType.getDescription());
-        };
+        return userType -> this.edtxt_userType.setText(userType.getDescription());
     }
 
     private Observer<? super String> snackbarObserver() {
         return text ->{
           if(text != null && !text.equals("")){
-              Snackbar.make(getContext(), binding.institutionUserMainmenuProfilePicture, text, Snackbar.LENGTH_SHORT);
+              Snackbar.make(getContext(), binding.institutionUserMainmenuProfilePicture, text, Snackbar.LENGTH_SHORT).show();
           }
         };
     }

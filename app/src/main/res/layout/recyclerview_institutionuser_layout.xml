@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/recyclerview_institutionuserlayout_name"
         android:textSize="16dp"
-        android:textStyle="bold"
+        android:textColor="@color/black"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
