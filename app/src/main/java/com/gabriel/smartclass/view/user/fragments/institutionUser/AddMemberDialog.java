@@ -20,6 +20,8 @@ import com.gabriel.smartclass.model.InstitutionUser;
 import com.gabriel.smartclass.viewModels.CoordinatorCourseViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
+
 public class AddMemberDialog extends DialogFragment {
     DialogCoordinatorAddteacherBinding binding;
     private CoordinatorCourseViewModel viewModel;
@@ -57,11 +59,13 @@ public class AddMemberDialog extends DialogFragment {
     public void onDestroy() {
         super.onDestroy();
         this.viewModel.getSnackbarText().removeObserver(this.snackbarobserver());
+        this.viewModel.getMembersSelectionAdapter().getMutableLiveDataT().setValue(new ArrayList<>());
         this.viewModel.getSnackbarText().setValue(null);
     }
 
     public void initializeTeachers(){
         loadComponents();
+        binding.title.setText("Professores");
         this.viewModel = new ViewModelProvider(requireActivity()).get(CoordinatorCourseViewModel.class);
         this.viewModel.getSnackbarText().observe(getViewLifecycleOwner(), this.snackbarobserver());
         buildRecyclerViewTeachers();

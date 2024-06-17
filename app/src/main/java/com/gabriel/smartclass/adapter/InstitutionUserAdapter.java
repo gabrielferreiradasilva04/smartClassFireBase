@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+@SuppressLint("NotifyDataSetChanged")
 
 public class InstitutionUserAdapter extends RecyclerView.Adapter {
     private MutableLiveData<List<InstitutionUser>> institutionUsers;

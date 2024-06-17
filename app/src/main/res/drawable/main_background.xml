@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <gradient
-        android:startColor="@color/azul_celeste"
-        android:centerColor="@color/azul_celeste"
-        android:endColor="@color/azul_marinho"
-        android:angle="-45"
-        >
-    </gradient>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <gradient
+                android:angle="-45"
+                android:centerColor="@color/azul_celeste"
+                android:endColor="@color/azul_marinho"
+                android:startColor="@color/azul_celeste" />
+        </shape> <!-- Substitua pela sua cor de fundo desejada -->
+    </item>
 
-</shape>
+    <item>
+        <bitmap
+            android:alpha="0.3"
+            android:gravity="center"
+            android:src="@drawable/icone_smarclass_sem_fundo" />
+    </item>
+</layer-list>

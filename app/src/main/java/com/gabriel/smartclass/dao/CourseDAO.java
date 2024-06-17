@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Firebase;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -20,6 +21,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class CourseDAO {
     private final String COLLECTION = Course.class.getSimpleName();
@@ -160,7 +162,30 @@ public class CourseDAO {
                 }
                 onCompleteListener.onComplete(Tasks.forResult(institutionUserList));
             }else{
-                onCompleteListener.onComplete(Tasks.forException(task.getException()));
+                onCompleteListener.onComplete(Tasks.forException(Objects.requireNonNull(task.getException())));
+            }
+        });
+    }
+    public void getStudentByID(String institutionID, String courseID, String userid, OnCompleteListener<Student> onCompleteListener){
+        Task<DocumentSnapshot> studentTask = FirebaseFirestore.getInstance().collection(INSTITUTIONCOLLECTION).document(institutionID).collection(COLLECTION).document(courseID).collection(STUDENTSCOLLECION).document(userid).get();
+        Tasks.whenAllComplete(studentTask).addOnCompleteListener(task -> {
+           if(task.isSuccessful()){
+               Student student = studentTask.getResult().toObject(Student.class);
+               onCompleteListener.onComplete(Tasks.forResult(student));
+           }else{
+               onCompleteListener.onComplete(Tasks.forException(Objects.requireNonNull(task.getException())));
+           }
+        });
+
+    }
+    public void getTeacherByID(String institutionID, String courseID, String userid, OnCompleteListener<Teacher> onCompleteListener){
+        Task<DocumentSnapshot> teacherTask = FirebaseFirestore.getInstance().collection(INSTITUTIONCOLLECTION).document(institutionID).collection(COLLECTION).document(courseID).collection(TEACHERSCOLLECTION).document(userid).get();
+        Tasks.whenAllComplete(teacherTask).addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                Teacher teacher = teacherTask.getResult().toObject(Teacher.class);
+                onCompleteListener.onComplete(Tasks.forResult(teacher));
+            }else{
+                onCompleteListener.onComplete(Tasks.forException(Objects.requireNonNull(task.getException())));
             }
         });
     }

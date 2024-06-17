@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="64dp"
-        android:layout_height="60dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_marginTop="272dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -18,8 +18,10 @@
 
     <TextView
         android:id="@+id/textView2"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:layout_marginTop="16dp"
         android:text="Nada para mostrar aqui!"
         android:textSize="18dp"
@@ -30,6 +32,8 @@
 
     <TextView
         android:id="@+id/textView3"
+        android:textStyle="bold"
+        android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"

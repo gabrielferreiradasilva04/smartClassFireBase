@@ -11,7 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class CourseMember extends SimpleAuxEntity implements Parcelable {
     private String id;
     private String description;
-    private DocumentReference institutionUserReference;
+    private DocumentReference mainUserReference;
 
     protected CourseMember(Parcel in) {
         id = in.readString();
@@ -22,7 +22,7 @@ public class CourseMember extends SimpleAuxEntity implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(description);
-        dest.writeString(institutionUserReference.getPath());
+        dest.writeString(mainUserReference.getPath());
     }
 
     @Override
@@ -67,18 +67,18 @@ public class CourseMember extends SimpleAuxEntity implements Parcelable {
         this.description = description;
     }
 
-    public DocumentReference getInstitutionUserReference() {
-        return institutionUserReference;
+    public DocumentReference getMainUserReference() {
+        return mainUserReference;
     }
 
-    public void setInstitutionUserReference(DocumentReference institutionUserReference) {
-        this.institutionUserReference = institutionUserReference;
+    public void setMainUserReference(DocumentReference mainUserReference) {
+        this.mainUserReference = mainUserReference;
     }
 
     public CourseMember(String id, String description, DocumentReference institutionUserReference) {
         this.id = id;
         this.description = description;
-        this.institutionUserReference = institutionUserReference;
+        this.mainUserReference = institutionUserReference;
     }
 
     public CourseMember() {
