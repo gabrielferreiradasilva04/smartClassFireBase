@@ -20,7 +20,28 @@
     <color name="azul_canario">#00FFFF</color>
     <color name="azul_cravo">#4B0082</color>
     <color name="azul_ardosia">#6A5ACD</color>
-<!--   tons de verde-->
+    <color name="azul_alice">#F0F8FF</color>
+    <color name="azul_aquamarine">#7FFFD4</color>
+    <color name="azul_aço">#4682B4</color>
+    <color name="azul_bermuda">#7FCDCD</color>
+    <color name="azul_carolina">#56A0D3</color>
+    <color name="azul_cobalto">#0047AB</color>
+    <color name="azul_ciano">#00FFFF</color>
+    <color name="azul_de_prússia">#003153</color>
+    <color name="azul_egípcio">#1034A6</color>
+    <color name="azul_elfo">#1C39BB</color>
+    <color name="azul_esverdeado">#0D98BA</color>
+    <color name="azul_floral">#B0E0E6</color>
+    <color name="azul_glacial">#E0FFFF</color>
+    <color name="azul_horizonte">#0066CC</color>
+    <color name="azul_klein">#002FA7</color>
+    <color name="azul_lavanda">#E6E6FA</color>
+    <color name="azul_majorelle">#6050DC</color>
+    <color name="azul_média_noite">#191970</color>
+    <color name="azul_neon">#4D4DFF</color>
+    <color name="azul_zaffre">#0014A8</color>
+
+    <!--   tons de verde-->
     <color name="verde_esmeralda">#00FF00</color>
     <color name="verde_folha">#7CFC00</color>
     <color name="verde_grama">#32CD32</color>

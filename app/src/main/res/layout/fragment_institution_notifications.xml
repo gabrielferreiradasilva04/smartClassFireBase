@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.user.fragments.institution.InstitutionLinkRequestFragment"
-    android:background="@drawable/main_background">
+    android:background="@drawable/fundoapp">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/institution_notifications_swiperefresh"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.user.views.institution.InstitutionsSearch"
-    android:background="@drawable/main_background">
+    android:background="@drawable/fundoapp">
 
     <EditText
         android:id="@+id/name_To_Find_Institutions_Search"
