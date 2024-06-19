@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.user.views.institution.InstitutionsSearch"
-    android:background="@drawable/fundoapp">
+    tools:context=".view.user.views.institution.InstitutionsSearch">
 
     <EditText
         android:id="@+id/name_To_Find_Institutions_Search"

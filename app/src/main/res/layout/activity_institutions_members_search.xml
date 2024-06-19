@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.user.views.institution.InstitutionsMembersSearch"
-    android:background="@drawable/fundoapp">
+    tools:context=".view.user.views.institution.InstitutionsMembersSearch">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

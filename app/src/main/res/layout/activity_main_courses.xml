@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fundoapp"
     tools:context=".view.course.views.MainCourses">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -15,8 +14,8 @@
             android:id="@+id/main_course_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/azul_bebe"
             app:tabGravity="fill"
-            android:backgroundTint="@color/azul_petroleo"
             app:tabMode="fixed"
             app:tabTextColor="@color/white"
             tools:ignore="SpeakableTextPresentCheck" />

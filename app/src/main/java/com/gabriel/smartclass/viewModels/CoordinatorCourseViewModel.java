@@ -110,24 +110,24 @@ public class CoordinatorCourseViewModel extends ViewModel {
                 teacher.setDescription(institutionUser.getDescription());
                 teacher.setMainUserReference(institutionUser.getUser_id());
                 new CourseDAO().addTeacher(this.institution.getId(), this.course.getId(), teacher, unused -> {
-                    if(unused.isSuccessful()){
+                    if (unused.isSuccessful()) {
                         this.membersAdapter.addItem(institutionUser);
 
-                    }else{
+                    } else {
                         snackbarText.setValue("Ocorreu um erro ao adicionar o professor ao curso");
                     }
                 }, e -> {
                     snackbarText.setValue("Ocorreu um erro inesperado, tente novamente mais tarde");
                 });
-            }else{
+            } else {
                 Student student = new Student();
                 student.setId(institutionUser.getId());
                 student.setDescription(institutionUser.getDescription());
                 student.setMainUserReference(institutionUser.getUser_id());
-                new CourseDAO().addStudent(this.institution.getId(), this.course.getId(), student, unused ->{
-                    if(unused.isSuccessful()){
+                new CourseDAO().addStudent(this.institution.getId(), this.course.getId(), student, unused -> {
+                    if (unused.isSuccessful()) {
                         this.membersAdapter.addItem(institutionUser);
-                    }else{
+                    } else {
                         snackbarText.setValue("Ocorreu um erro ao adicionar o estudante ao curso");
                     }
                 }, e -> snackbarText.setValue("Ocorreu um erro inesperado, tente novamente mais tarde"));
@@ -137,53 +137,57 @@ public class CoordinatorCourseViewModel extends ViewModel {
         }
 
     }
-    public void RemoveMemberFromCourse(InstitutionUser institutionUser){
-        CourseDAO courseDAO = new CourseDAO();
-        this.membersAdapter.removeItem(institutionUser);
-        this.membersAdapter.notifyDataSetChanged();
-//        if(institutionUser.getUserType_id().equals(new UserTypeDAO().STUDENT_TYPE_REFERENCE)){
-//            if(this.membersAdapter.getInstitutionUsers().getValue().contains(institutionUser)){
-//                courseDAO.getStudentByID(institution.getId(), course.getId(), institutionUser.getId(), task -> {
-//                    if(task.isComplete() && task.isSuccessful()){
-//                        Student student = task.getResult();
-//                        if(student!=null){
-//                            courseDAO.removeStudent(this.institution.getId(), this.course.getId(), student, taskRemoveStudent ->{
-//                             if(task.isSuccessful()){
-//                                 snackbarText.setValue("Estudante Removido do Curso");
-//                             }else{
-//                                 snackbarText.setValue("Ocorreu um erro ao remover o membro do curso, tente novamente mais tarde...");
-//                                 this.membersAdapter.removeItem(institutionUser);
-//                             }
-//                            }, eRemoveStudent ->snackbarText.setValue("Ocorreu um erro inesperado, não sabemos o que aconteceu, mas estamos trabalhando nisso..."));
-//                        }
-//                    }
-//                });
-//            }else{
-//                courseDAO.getTeacherByID(institution.getId(), course.getId(), institutionUser.getId(), task -> {
-//                    if(task.isComplete() && task.isSuccessful()){
-//                        Teacher teacher = task.getResult();
-//                        if(teacher != null){
-//                            courseDAO.removeTeacher(this.institution.getId(), this.course.getId(), teacher, taskRemoveTeacher ->{
-//                                snackbarText.setValue("Professor removido do curso");
-//                                this.membersAdapter.removeItem(institutionUser);
-//                            }, eRemoveTeacher -> snackbarText.setValue("Ocorreu um erro ao remover o membro do curso, tente novamente mais tarde.."));
-//                        }
-//                    }else{
-//                        snackbarText.setValue("Ocorreu um erro inesperado, mas já estamos trabalhando nisso...");
-//                    }
-//                });
-//            }
-//        }
 
+    public void removeMemberFromCourse(InstitutionUser institutionUser) {
+        CourseDAO courseDAO = new CourseDAO();
+        if (this.membersAdapter.getInstitutionUsers().getValue().contains(institutionUser)) {
+            if (institutionUser.getUserType_id().equals(new UserTypeDAO().STUDENT_TYPE_REFERENCE)) {
+                removeStudent(institutionUser, courseDAO);
+            }
+            removeTeacher(institutionUser, courseDAO);
+        }
+    }
+
+    private void removeTeacher(InstitutionUser institutionUser, CourseDAO courseDAO) {
+        courseDAO.getTeacherByID(institution.getId(), course.getId(), institutionUser.getId(), task -> {
+            if (task.isComplete() && task.isSuccessful()) {
+                Teacher teacher = task.getResult();
+                if (teacher != null) {
+                    courseDAO.removeTeacher(this.institution.getId(), this.course.getId(), teacher, taskRemoveTeacher -> {
+                        snackbarText.setValue("Professor removido do curso");
+                        this.membersAdapter.removeItem(institutionUser);
+                    }, eRemoveTeacher -> snackbarText.setValue("Ocorreu um erro ao remover o membro do curso, tente novamente mais tarde.."));
+                }
+            } else {
+                snackbarText.setValue("Ocorreu um erro inesperado, mas já estamos trabalhando nisso...");
+            }
+        });
+    }
+    private void removeStudent(InstitutionUser institutionUser, CourseDAO courseDAO) {
+        courseDAO.getStudentByID(institution.getId(), course.getId(), institutionUser.getId(), task -> {
+            if (task.isComplete() && task.isSuccessful()) {
+                Student student = task.getResult();
+                if (student != null) {
+                    courseDAO.removeStudent(this.institution.getId(), this.course.getId(), student, taskRemoveStudent -> {
+                        if (task.isSuccessful()) {
+                            snackbarText.setValue("Estudante Removido do Curso");
+                            this.membersAdapter.removeItem(institutionUser);
+                        } else {
+                            snackbarText.setValue("Ocorreu um erro ao remover o membro do curso, tente novamente mais tarde...");
+                        }
+                    }, eRemoveStudent -> snackbarText.setValue("Ocorreu um erro inesperado, não sabemos o que aconteceu, mas estamos trabalhando nisso..."));
+                }
+            }
+        });
     }
 
     public void getAllStudents() {
         this.membersSelectionAdapter.setAddAdapter(true);
         new CourseDAO().getAllStudents(this.institution.getId(), task -> {
-            if(task.isSuccessful()){
+            if (task.isSuccessful()) {
                 this.membersSelectionAdapter.getMutableLiveDataT().setValue(task.getResult());
                 this.membersSelectionAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 snackbarText.setValue("Ocorreu um erro ao buscar os alunos deste curso. Tente novamente mais tarde!");
             }
         });

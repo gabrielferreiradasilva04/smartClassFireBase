@@ -30,7 +30,7 @@ public class CourseFragmentAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position){
         String title = null;
         if(position == 0){
-            title = "Adicionar Curso";
+            title = "Adicionar";
         }
         if(position == 1){
             title = "Consultar";

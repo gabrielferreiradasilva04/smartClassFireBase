@@ -3,15 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <ImageView
+    <View
         android:id="@+id/course_recycler_view_mainview"
-        style="@style/SimpleViewContainer"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:minHeight="150dp"
-        android:clipToOutline="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/fundocursos"
+        style="@style/coursecontainer"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
