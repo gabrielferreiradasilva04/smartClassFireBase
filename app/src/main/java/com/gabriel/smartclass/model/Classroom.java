@@ -24,7 +24,6 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
     private List<DocumentReference> teachers_id;
     private List<DocumentReference> subjects_id;
     private List<DocumentReference> teacher_subject;
-    private HashMap<String, DocumentReference> timeTable;
     private DocumentReference location_id;
 
     protected Classroom(Parcel in) {
@@ -53,11 +52,6 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
         dest.writeInt(teacher_subject.size()); //tamanho da lista do relacionamento entre professores e matérias
         for (DocumentReference teacher_subject : teacher_subject) {//lista de professores e materias
             dest.writeString(teacher_subject.getPath());
-        }
-        dest.writeInt(timeTable.size()); //tamanho do map da grade horária
-        for (Map.Entry<String, DocumentReference> entry : timeTable.entrySet()) {
-            dest.writeString(entry.getKey());
-            dest.writeString(entry.getValue().getPath());
         }
         dest.writeString(location_id != null ? location_id.getPath() : null);
     }
@@ -114,19 +108,10 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
                 }
             }
 
-            int timeTableSize = in.readInt();
-            HashMap<String, DocumentReference> timeTable = new HashMap<>();
-            for (int m = 0; m < timeTableSize; m++) {
-                String key = in.readString();
-                String subjectPath = in.readString();
-                if(key != null && subjectPath != null){
-                    timeTable.put(key, FirebaseFirestore.getInstance().document(subjectPath));
-                }
-            }
             String locationPath = in.readString();
             DocumentReference location_id = (locationPath != null) ? FirebaseFirestore.getInstance().document(locationPath) : null;
 
-            return new Classroom(id, description, period, students_id, teachers_id, subjects_id, teacher_subject, timeTable, location_id);
+            return new Classroom(id, description, period, students_id, teachers_id, subjects_id, teacher_subject, location_id);
         }
 
         @Override
@@ -185,13 +170,6 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
         this.subjects_id = subjects_id;
     }
 
-    public HashMap<String, DocumentReference> getTimeTable() {
-        return timeTable;
-    }
-
-    public void setTimeTable(HashMap<String, DocumentReference> timeTable) {
-        this.timeTable = timeTable;
-    }
 
     public List<DocumentReference> getTeacher_subject() {
         return teacher_subject;
@@ -209,7 +187,7 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
         this.location_id = location_id;
     }
 
-    public Classroom(String id, String description, int period, List<DocumentReference> students_id, List<DocumentReference> teachers_id, List<DocumentReference> subjects_id, List<DocumentReference> teacher_subject, HashMap<String, DocumentReference> timeTable, DocumentReference location_id) {
+    public Classroom(String id, String description, int period, List<DocumentReference> students_id, List<DocumentReference> teachers_id, List<DocumentReference> subjects_id, List<DocumentReference> teacher_subject, DocumentReference location_id) {
         this.id = id;
         this.description = description;
         this.period = period;
@@ -217,7 +195,6 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
         this.teachers_id = teachers_id;
         this.subjects_id = subjects_id;
         this.teacher_subject = teacher_subject;
-        this.timeTable = timeTable;
         this.location_id = location_id;
     }
 
@@ -229,12 +206,12 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
         if (this == o) return true;
         if (!(o instanceof Classroom)) return false;
         Classroom classroom = (Classroom) o;
-        return getPeriod() == classroom.getPeriod() && Objects.equals(getId(), classroom.getId()) && Objects.equals(getDescription(), classroom.getDescription()) && Objects.equals(getStudents_id(), classroom.getStudents_id()) && Objects.equals(getTeachers_id(), classroom.getTeachers_id()) && Objects.equals(getSubjects_id(), classroom.getSubjects_id()) && Objects.equals(getTeacher_subject(), classroom.getTeacher_subject()) && Objects.equals(getTimeTable(), classroom.getTimeTable());
+        return getPeriod() == classroom.getPeriod() && Objects.equals(getId(), classroom.getId()) && Objects.equals(getDescription(), classroom.getDescription()) && Objects.equals(getStudents_id(), classroom.getStudents_id()) && Objects.equals(getTeachers_id(), classroom.getTeachers_id()) && Objects.equals(getSubjects_id(), classroom.getSubjects_id()) && Objects.equals(getTeacher_subject(), classroom.getTeacher_subject()) && Objects.equals(getLocation_id(), classroom.getLocation_id());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getDescription(), getPeriod(), getStudents_id(), getTeachers_id(), getSubjects_id(), getTeacher_subject(), getTimeTable());
+        return Objects.hash(getId(), getDescription(), getPeriod(), getStudents_id(), getTeachers_id(), getSubjects_id(), getTeacher_subject(), getLocation_id());
     }
 
     @NonNull
@@ -247,7 +224,6 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
                 ", students_id=" + students_id +
                 ", teachers_id=" + teachers_id +
                 ", subjects_id=" + subjects_id +
-                ", timeTable=" + timeTable +
                 '}';
     }
 }
