@@ -1,5 +1,6 @@
 package com.gabriel.smartclass.view.user.fragments.institutionUser;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,10 @@ public class CoordinatorCourseClasses extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.binding = FragmentCoordinatorCourseClassesBinding.inflate(inflater, container, false);
+        binding.buttonadd.setOnClickListener(view ->{
+            Intent i = new Intent(getContext(), CreateClassroom.class);
+            startActivity(i);
+        });
 
         return this.binding.getRoot();
     }

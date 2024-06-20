@@ -23,8 +23,7 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
     private List<DocumentReference> students_id;
     private List<DocumentReference> teachers_id;
     private List<DocumentReference> subjects_id;
-    private List<DocumentReference> teacher_subject;
-    private DocumentReference location_id;
+    private TimeTable timeTable;
 
     protected Classroom(Parcel in) {
         id = in.readString();
@@ -49,11 +48,6 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
         for (DocumentReference subjects_id : subjects_id) { //lista de materias
             dest.writeString(subjects_id.getPath());
         }
-        dest.writeInt(teacher_subject.size()); //tamanho da lista do relacionamento entre professores e matérias
-        for (DocumentReference teacher_subject : teacher_subject) {//lista de professores e materias
-            dest.writeString(teacher_subject.getPath());
-        }
-        dest.writeString(location_id != null ? location_id.getPath() : null);
     }
 
     @Override
@@ -97,21 +91,7 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
                     subjects_id.add(subjectReference);
                 }
             }
-
-            int teacher_subjectSize = in.readInt();
-            List<DocumentReference> teacher_subject = new ArrayList<>();
-            for (int l = 0; l < teacher_subjectSize; l++) {
-                String teacher_subjectPath = in.readString();
-                if (teacher_subjectPath != null) {
-                    DocumentReference teacher_subjectReference = FirebaseFirestore.getInstance().document(teacher_subjectPath);
-                    teacher_subject.add(teacher_subjectReference);
-                }
-            }
-
-            String locationPath = in.readString();
-            DocumentReference location_id = (locationPath != null) ? FirebaseFirestore.getInstance().document(locationPath) : null;
-
-            return new Classroom(id, description, period, students_id, teachers_id, subjects_id, teacher_subject, location_id);
+            return new Classroom(id, description, period, students_id, teachers_id, subjects_id);
         }
 
         @Override
@@ -119,6 +99,14 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
             return new Classroom[size];
         }
     };
+
+    public TimeTable getTimeTable() {
+        return timeTable;
+    }
+
+    public void setTimeTable(TimeTable timeTable) {
+        this.timeTable = timeTable;
+    }
 
     @Override
     public String getId() {
@@ -171,31 +159,14 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
     }
 
 
-    public List<DocumentReference> getTeacher_subject() {
-        return teacher_subject;
-    }
 
-    public void setTeacher_subject(List<DocumentReference> teacher_subject) {
-        this.teacher_subject = teacher_subject;
-    }
-
-    public DocumentReference getLocation_id() {
-        return location_id;
-    }
-
-    public void setLocation_id(DocumentReference location_id) {
-        this.location_id = location_id;
-    }
-
-    public Classroom(String id, String description, int period, List<DocumentReference> students_id, List<DocumentReference> teachers_id, List<DocumentReference> subjects_id, List<DocumentReference> teacher_subject, DocumentReference location_id) {
+    public Classroom(String id, String description, int period, List<DocumentReference> students_id, List<DocumentReference> teachers_id, List<DocumentReference> subjects_id) {
         this.id = id;
         this.description = description;
         this.period = period;
         this.students_id = students_id;
         this.teachers_id = teachers_id;
         this.subjects_id = subjects_id;
-        this.teacher_subject = teacher_subject;
-        this.location_id = location_id;
     }
 
     public Classroom() {
@@ -206,12 +177,12 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
         if (this == o) return true;
         if (!(o instanceof Classroom)) return false;
         Classroom classroom = (Classroom) o;
-        return getPeriod() == classroom.getPeriod() && Objects.equals(getId(), classroom.getId()) && Objects.equals(getDescription(), classroom.getDescription()) && Objects.equals(getStudents_id(), classroom.getStudents_id()) && Objects.equals(getTeachers_id(), classroom.getTeachers_id()) && Objects.equals(getSubjects_id(), classroom.getSubjects_id()) && Objects.equals(getTeacher_subject(), classroom.getTeacher_subject()) && Objects.equals(getLocation_id(), classroom.getLocation_id());
+        return getPeriod() == classroom.getPeriod() && Objects.equals(getId(), classroom.getId()) && Objects.equals(getDescription(), classroom.getDescription()) && Objects.equals(getStudents_id(), classroom.getStudents_id()) && Objects.equals(getTeachers_id(), classroom.getTeachers_id()) && Objects.equals(getSubjects_id(), classroom.getSubjects_id()) && Objects.equals(getTimeTable(), classroom.getTimeTable());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getDescription(), getPeriod(), getStudents_id(), getTeachers_id(), getSubjects_id(), getTeacher_subject(), getLocation_id());
+        return Objects.hash(getId(), getDescription(), getPeriod(), getStudents_id(), getTeachers_id(), getSubjects_id(), getTimeTable());
     }
 
     @NonNull
