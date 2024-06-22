@@ -6,6 +6,6 @@
     <style name="Theme.SmartClass" parent="Base.Theme.SmartClass">
         <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView.Colored</item>
         <item name="android:windowBackground">@drawable/fundoapp</item>
-        <item name="colorPrimary">@color/azul_aço</item>
+        <item name="colorPrimary">@color/azul_cobalto</item>
     </style>
 </resources>

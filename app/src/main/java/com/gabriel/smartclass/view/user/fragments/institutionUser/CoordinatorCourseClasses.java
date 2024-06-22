@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.FragmentCoordinatorCourseClassesBinding;
+import com.gabriel.smartclass.view.user.views.institutionUser.CoordinatorCourseMainMenu;
 
 public class CoordinatorCourseClasses extends Fragment {
     private FragmentCoordinatorCourseClassesBinding binding;
@@ -23,11 +24,15 @@ public class CoordinatorCourseClasses extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.binding = FragmentCoordinatorCourseClassesBinding.inflate(inflater, container, false);
-        binding.buttonadd.setOnClickListener(view ->{
-            Intent i = new Intent(getContext(), CreateClassroom.class);
-            startActivity(i);
-        });
 
         return this.binding.getRoot();
+    }
+    public void initialize(){
+        this.buildMenu();
+    }
+
+    private void buildMenu() {
+        CoordinatorCourseMainMenu main = (CoordinatorCourseMainMenu) this.getActivity();
+        main.updateTitle("Classes");
     }
 }
