@@ -4,16 +4,9 @@
         <shape>
             <gradient
                 android:angle="-45"
-                android:centerColor="@color/azul_celeste"
-                android:endColor="@color/azul_marinho"
-                android:startColor="@color/azul_celeste" />
+                android:centerColor="@color/azul_marinho"
+                android:endColor="@color/azul_esverdeado"
+                android:startColor="@color/azul_esverdeado" />
         </shape> <!-- Substitua pela sua cor de fundo desejada -->
-    </item>
-
-    <item>
-        <bitmap
-            android:alpha="0.3"
-            android:gravity="center"
-            android:src="@drawable/icone_smarclass_sem_fundo" />
     </item>
 </layer-list>
