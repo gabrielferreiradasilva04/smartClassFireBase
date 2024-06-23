@@ -8,9 +8,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.gabriel.smartclass.adapter.InstitutionUserAdapter;
 import com.gabriel.smartclass.adapter.SimpleDefaultAdapter;
+import com.gabriel.smartclass.dao.ClassroomDAO;
 import com.gabriel.smartclass.dao.CourseDAO;
 import com.gabriel.smartclass.dao.InstitutionUserDAO;
 import com.gabriel.smartclass.dao.UserTypeDAO;
+import com.gabriel.smartclass.model.Classroom;
 import com.gabriel.smartclass.model.Course;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionUser;
@@ -29,6 +31,15 @@ public class CoordinatorCourseViewModel extends ViewModel {
     private Institution institution;
     private InstitutionUserAdapter membersAdapter = new InstitutionUserAdapter();
     private final SimpleDefaultAdapter<InstitutionUser> membersSelectionAdapter = new SimpleDefaultAdapter<>();
+    private final SimpleDefaultAdapter<Classroom> classroomAdapter = new SimpleDefaultAdapter<>();
+
+    public void setSnackbarText(MutableLiveData<String> snackbarText) {
+        this.snackbarText = snackbarText;
+    }
+
+    public SimpleDefaultAdapter<Classroom> getClassroomAdapter() {
+        return classroomAdapter;
+    }
 
     public MutableLiveData<String> getSnackbarText() {
         return snackbarText;
@@ -189,6 +200,16 @@ public class CoordinatorCourseViewModel extends ViewModel {
                 this.membersSelectionAdapter.notifyDataSetChanged();
             } else {
                 snackbarText.setValue("Ocorreu um erro ao buscar os alunos deste curso. Tente novamente mais tarde!");
+            }
+        });
+    }
+    public void getClassrooms(){
+        new ClassroomDAO().getAllClassrooms(this.institution.getId(), this.course.getId(), courseTask ->{
+            if(courseTask.isSuccessful()){
+                this.classroomAdapter.getMutableLiveDataT().setValue(courseTask.getResult());
+                this.classroomAdapter.notifyDataSetChanged();
+            }else{
+                snackbarText.setValue("Ops, ocorreu um erro inesperado, tente novamente mais tarde");
             }
         });
     }

@@ -1,4 +1,4 @@
-package com.gabriel.smartclass.view.user.fragments.institutionUser;
+package com.gabriel.smartclass.view.user.views.institutionUser;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;

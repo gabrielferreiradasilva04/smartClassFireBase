@@ -17,7 +17,7 @@
         android:theme="@style/Theme.SmartClass"
         tools:targetApi="31">
         <activity
-            android:name=".view.user.fragments.institutionUser.CreateClassroom"
+            android:name=".view.user.views.institutionUser.CreateClassroom"
             android:exported="false" />
         <activity
             android:name=".view.user.views.institutionUser.CoordinatorCourseMainMenu"
