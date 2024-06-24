@@ -1,26 +1,22 @@
 package com.gabriel.smartclass.view.user.fragments.institutionUser;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.gabriel.smartclass.databinding.EmptyRequestBinding;
 import com.gabriel.smartclass.databinding.FragmentInstitutionUserAddCoursesBinding;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
 import com.gabriel.smartclass.viewModels.InstitutionUserMainMenuViewModel;
-import com.google.android.material.snackbar.Snackbar;
 
 public class InstitutionUserAddCourses extends Fragment {
     private FragmentInstitutionUserAddCoursesBinding binding;
@@ -43,8 +39,7 @@ public class InstitutionUserAddCourses extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.viewModel.getSnackbarText().setValue(null);
-        this.viewModel.getSnackbarText().removeObserver(this.snackBarObserve());
+        this.viewModel.getSnackbarText().setValue("");
     }
 
     public void initialize() {
@@ -74,18 +69,6 @@ public class InstitutionUserAddCourses extends Fragment {
     }
 
     public void componentsListener() {
-        this.searchButton.setOnClickListener(view -> {
-            this.viewModel.searchCourses(viewModel.getCurrentInstitution().getId(), this.title.getText().toString());
-        });
-        this.viewModel.getSnackbarText().observe(this.getViewLifecycleOwner(), this.snackBarObserve());
-    }
-
-    @NonNull
-    private Observer<String> snackBarObserve() {
-        return text -> {
-            if (text != null && !text.equals("")) {
-                Snackbar.make(getContext(), binding.useraddcoursesRecyclerview, text, Snackbar.LENGTH_SHORT).show();
-            }
-        };
+        this.searchButton.setOnClickListener(view -> this.viewModel.searchCourses(viewModel.getCurrentInstitution().getId(), this.title.getText().toString()));
     }
 }

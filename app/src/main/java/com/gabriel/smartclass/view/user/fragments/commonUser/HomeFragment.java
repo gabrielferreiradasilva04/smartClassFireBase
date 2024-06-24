@@ -1,7 +1,14 @@
 package com.gabriel.smartclass.view.user.fragments.commonUser;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -9,22 +16,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
+import com.gabriel.smartclass.adapter.interfaces.OnInstitutionItemClickListener;
 import com.gabriel.smartclass.dao.InstitutionUserDAO;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionUser;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
-import com.gabriel.smartclass.view.user.views.institution.InstitutionsSearch;
 import com.gabriel.smartclass.view.user.views.commonUser.CommonUserMainMenu;
+import com.gabriel.smartclass.view.user.views.institution.InstitutionsSearch;
 import com.gabriel.smartclass.view.user.views.institutionUser.InstitutionUserMainMenu;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
-import com.gabriel.smartclass.adapter.interfaces.OnInstitutionItemClickListener;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 
@@ -50,8 +50,7 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         viewModel.getInstitutionUserMutableLiveData().removeObserver(institutionUserObserver());
         viewModel.getInstitutionUserMutableLiveData().setValue(null);
-        viewModel.getSnackBarText().removeObserver(snackbarObserver());
-        viewModel.getSnackBarText().setValue(null);
+        viewModel.getSnackBarText().setValue("");
     }
 
     private void initialize() {
@@ -62,20 +61,10 @@ public class HomeFragment extends Fragment {
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
         viewModel = viewModelProvider.get(HostUserActivityViewModel.class);
         viewModel.getInstitutionUserMutableLiveData().observe(getViewLifecycleOwner(), institutionUserObserver());
-        viewModel.getSnackBarText().observe(getViewLifecycleOwner(), snackbarObserver());
         binding.buttonAddInstitutionUserInstitutions.setOnClickListener(searchForInstitutions());
         loadUserInstitutions();
         refresh();
     }
-
-    private Observer<? super String> snackbarObserver() {
-        return text ->{
-            if(text != null){
-                Snackbar.make(binding.institutionsRecyclerViewHomeFragment, text, Snackbar.LENGTH_SHORT).show();
-            }
-        };
-    }
-
     private void loadUserInstitutions() {
         viewModel.getUserInstitutionsAdapter().setItemClickListener(institutionClickListener());
         recyclerViewInstitutions = binding.institutionsRecyclerViewHomeFragment;

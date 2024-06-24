@@ -1,11 +1,11 @@
 package com.gabriel.smartclass.view.user.views;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.view.auth.LoginForm;
@@ -23,6 +23,6 @@ public class Loading extends AppCompatActivity {
             startActivity(intent);
             // Finalizar a LoadingActivity
             finish();
-        }, 5000); // 3000 milissegundos = 3 segundos
+        }, 3000); // 3000 milissegundos = 3 segundos
     }
 }

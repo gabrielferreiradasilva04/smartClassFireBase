@@ -32,6 +32,7 @@ public class CoordinatorCourseViewModel extends ViewModel {
     private InstitutionUserAdapter membersAdapter = new InstitutionUserAdapter();
     private final SimpleDefaultAdapter<InstitutionUser> membersSelectionAdapter = new SimpleDefaultAdapter<>();
     private final SimpleDefaultAdapter<Classroom> classroomAdapter = new SimpleDefaultAdapter<>();
+    private MutableLiveData<String> snackbarText = new MutableLiveData<>();
 
     public void setSnackbarText(MutableLiveData<String> snackbarText) {
         this.snackbarText = snackbarText;
@@ -49,7 +50,7 @@ public class CoordinatorCourseViewModel extends ViewModel {
         return membersSelectionAdapter;
     }
 
-    private MutableLiveData<String> snackbarText = new MutableLiveData<>();
+
 
     public InstitutionUserAdapter getMembersAdapter() {
         return membersAdapter;
@@ -194,7 +195,7 @@ public class CoordinatorCourseViewModel extends ViewModel {
 
     public void getAllStudents() {
         this.membersSelectionAdapter.setAddAdapter(true);
-        new CourseDAO().getAllStudents(this.institution.getId(), task -> {
+        new CourseDAO().getStudentsAsInstitutionUser(this.institution.getId(), task -> {
             if (task.isSuccessful()) {
                 this.membersSelectionAdapter.getMutableLiveDataT().setValue(task.getResult());
                 this.membersSelectionAdapter.notifyDataSetChanged();

@@ -1,12 +1,14 @@
 package com.gabriel.smartclass.view.user.views.institution;
+
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.view.Menu;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.annotation.SuppressLint;
-import android.os.Bundle;
-import android.view.Menu;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.SimpleDefaultAdapter;
@@ -37,7 +39,7 @@ public class InstitutionsMembersSearch extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         this.viewModel.getSnackBarText().removeObserver(snackBarObserver());
-        this.viewModel.getSnackBarText().setValue(null);
+        this.viewModel.getSnackBarText().setValue("");
         this.viewModel.getInstitutionUserMutableLiveData().removeObserver(institutionUsersObserver());
         this.adapter.setClickListener(null);
     }

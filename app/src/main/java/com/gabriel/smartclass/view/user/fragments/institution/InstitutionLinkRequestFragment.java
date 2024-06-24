@@ -11,7 +11,6 @@ import android.widget.PopupMenu;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,7 +27,6 @@ import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
 import com.gabriel.smartclass.viewModels.InstitutionLinkRequestsFragmentViewModel;
 import com.gabriel.smartclass.viewModels.factorys.InstitutionLinkRequestsViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
@@ -58,8 +56,7 @@ public class InstitutionLinkRequestFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        viewModel.getSnackBarText().removeObserver(observeSnackbar());
-        viewModel.getSnackBarText().setValue(null);
+        viewModel.getSnackBarText().setValue("");
     }
 
     private void initialize(){
@@ -71,7 +68,6 @@ public class InstitutionLinkRequestFragment extends Fragment {
         buildRecyclerView();
         refresh();
         actionButton.setOnClickListener(openMenu());
-        viewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
     }
 
     private void loadComponents(){
@@ -130,14 +126,6 @@ public class InstitutionLinkRequestFragment extends Fragment {
             EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(binding.institutionNotificationsRecyclerView, viewEmpty.getRoot());
             viewModel.getAdapter().registerAdapterDataObserver(observer);
             viewModel.getAdapter().notifyDataSetChanged();
-    }
-    @NonNull
-    private Observer<String> observeSnackbar() {
-        return s -> {
-            if (s != null) {
-               Snackbar.make(binding.institutionNotificationsRecyclerView, s, Snackbar.LENGTH_SHORT).show();
-            }
-        };
     }
     private void getPendingNotificationsIndex() {
         Stream<InstitutionLinkRequest> pendingNotifications = viewModel.getAdapter().getInstitutionLinkRequestMutableLiveData().getValue()

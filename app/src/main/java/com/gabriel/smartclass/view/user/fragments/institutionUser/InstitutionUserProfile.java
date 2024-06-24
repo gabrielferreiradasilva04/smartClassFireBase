@@ -18,7 +18,6 @@ import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.model.UserType;
 import com.gabriel.smartclass.view.user.views.institutionUser.InstitutionUserMainMenu;
 import com.gabriel.smartclass.viewModels.InstitutionUserMainMenuViewModel;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 
@@ -44,8 +43,7 @@ public class InstitutionUserProfile extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.viewModel.getSnackbarText().setValue(null);
-        this.viewModel.getSnackbarText().removeObserver(this.snackbarObserver());
+        this.viewModel.getSnackbarText().setValue("");
         this.viewModel.getUserTypeByInstitutionUser().removeObserver(this.userTypeObserver());
         this.viewModel.getUserByInstitutionUser().removeObserver(this.userObserver());
     }
@@ -60,7 +58,6 @@ public class InstitutionUserProfile extends Fragment {
         this.viewModel.getUserByInstitutionUser().observe(getViewLifecycleOwner(), userObserver());
         this.viewModel.getUserTypeByInstitutionUser().observe(getViewLifecycleOwner(), userTypeObserver());
         this.edtxt_institutionName.setText(viewModel.getCurrentInstitution().getName());
-        this.viewModel.getSnackbarText().observe(this.getViewLifecycleOwner(), snackbarObserver());
     }
 
     @NonNull
@@ -76,14 +73,6 @@ public class InstitutionUserProfile extends Fragment {
     @NonNull
     private Observer<UserType> userTypeObserver() {
         return userType -> this.edtxt_userType.setText(userType.getDescription());
-    }
-
-    private Observer<? super String> snackbarObserver() {
-        return text ->{
-          if(text != null && !text.equals("")){
-              Snackbar.make(getContext(), binding.institutionUserMainmenuProfilePicture, text, Snackbar.LENGTH_SHORT).show();
-          }
-        };
     }
 
     private void buildViewModel() {

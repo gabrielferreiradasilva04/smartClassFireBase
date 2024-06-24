@@ -1,24 +1,21 @@
 package com.gabriel.smartclass.view.course.views;
 
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.interfaces.DefaultClickListener;
 import com.gabriel.smartclass.databinding.ActivityAddSubjectsOnCourseBinding;
-import com.gabriel.smartclass.model.Course;
 import com.gabriel.smartclass.model.Subject;
 import com.gabriel.smartclass.viewModels.AddSubjectsOnCourseViewModel;
 import com.gabriel.smartclass.viewModels.factorys.AddSubjectsOnCourseViewModelFactory;
@@ -46,7 +43,7 @@ public class AddSubjectsOnCourse extends AppCompatActivity {
         viewModel.getSnackBarText().removeObserver(snackbarObserve());
         this.recyclerView.setAdapter(null);
         this.saveButton.setOnClickListener(null);
-        viewModel.getSnackBarText().setValue(null);
+        viewModel.getSnackBarText().setValue("");
     }
     public void loadComponents() {
         this.textDescription = binding.addsubjectsOncourseDescription;

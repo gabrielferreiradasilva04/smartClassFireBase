@@ -3,16 +3,14 @@ package com.gabriel.smartclass.view.user.fragments.institutionUser;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.gabriel.smartclass.databinding.EmptyRequestBinding;
 import com.gabriel.smartclass.databinding.FragmentCoordinatorCourseClassesBinding;
@@ -20,7 +18,6 @@ import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
 import com.gabriel.smartclass.view.user.views.institutionUser.CoordinatorCourseMainMenu;
 import com.gabriel.smartclass.view.user.views.institutionUser.CreateClassroom;
 import com.gabriel.smartclass.viewModels.CoordinatorCourseViewModel;
-import com.google.android.material.snackbar.Snackbar;
 
 public class CoordinatorCourseClasses extends Fragment {
     private FragmentCoordinatorCourseClassesBinding binding;
@@ -46,8 +43,7 @@ public class CoordinatorCourseClasses extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        this.viewModel.getSnackbarText().setValue(null);
-        this.viewModel.getSnackbarText().removeObserver(this.snackbarObserver());
+        this.viewModel.getSnackbarText().setValue("");
     }
 
     public void initialize(){
@@ -56,15 +52,6 @@ public class CoordinatorCourseClasses extends Fragment {
         this.getViewModel();
         this.viewModel.getClassrooms();
         this.buildRecyclerView();
-        this.viewModel.getSnackbarText().observe(getViewLifecycleOwner(), snackbarObserver());
-    }
-
-    private Observer<? super String> snackbarObserver() {
-        return text ->{
-          if(text!=null && !text.equals("")){
-              Snackbar.make(getContext(), binding.recyclerviewclasses, text, Snackbar.LENGTH_SHORT).show();
-          }
-        };
     }
 
     private void buildRecyclerView() {
@@ -75,13 +62,15 @@ public class CoordinatorCourseClasses extends Fragment {
 
     private void buildMenu() {
         CoordinatorCourseMainMenu main = (CoordinatorCourseMainMenu) this.getActivity();
+        assert main != null;
         main.updateTitle("Classes");
     }
     private void buttonListeners(){
         binding.buttonadd.setOnClickListener(view ->{
             Intent i = new Intent(this.getContext(), CreateClassroom.class);
+            i.putExtra("institution", this.viewModel.getInstitution());
+            i.putExtra("course", this.viewModel.getCourse());
             startActivity(i);
-            getActivity().finish();
         });
     }
     private void getViewModel(){

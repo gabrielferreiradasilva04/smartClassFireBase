@@ -1,20 +1,21 @@
 package com.gabriel.smartclass.view.user.views.institution;
 
+import android.os.Bundle;
+import android.view.Menu;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavHost;
 import androidx.navigation.ui.NavigationUI;
-import android.os.Bundle;
-import android.view.Menu;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.ActivityInstitutionMainMenuBinding;
 import com.gabriel.smartclass.view.base.BaseActivity;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
-import com.gabriel.smartclass.viewModels.InstitutionLinkRequestsFragmentViewModel;
 import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,13 +43,22 @@ public class InstitutionMainMenu extends BaseActivity {
         viewModel.loadUserPicture();
         viewModel.syncInstitutionInRealTime();
         viewModel.listenerLinkRequestsPending(notificationsNumber,this);
+        viewModel.getSnackBarText().observe(this, this.snackbarObserver());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         notificationsNumber.removeObserver(notificationsObserve());
-
+        this.viewModel.getSnackBarText().setValue("");
+        this.viewModel.getSnackBarText().removeObserver(this.snackbarObserver());
+    }
+    private Observer<? super String> snackbarObserver() {
+        return text ->{
+            if(text != null && !text.equals("")){
+                Snackbar.make(binding.bottomActionBarInstitutions, text, Snackbar.LENGTH_SHORT).show();
+            }
+        };
     }
 
     private Observer<? super AtomicInteger> notificationsObserve() {

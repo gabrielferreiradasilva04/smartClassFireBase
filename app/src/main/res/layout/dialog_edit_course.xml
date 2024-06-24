@@ -97,7 +97,9 @@
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/dialog_editCourse_coordinator_spinner"
                     style="@style/spinner_style"
+                    android:layout_marginTop="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/dialog_editCourse_label_coordinator" />
 
