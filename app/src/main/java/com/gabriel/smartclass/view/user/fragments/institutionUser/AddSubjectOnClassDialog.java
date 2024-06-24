@@ -31,16 +31,18 @@ public class AddSubjectOnClassDialog extends DialogFragment {
         this.initialize();
         return binding.getRoot();
     }
+
     public void onResume() {
         super.onResume();
         getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
     }
-    public void initialize(){
+
+    public void initialize() {
         buildViewModel();
         viewModel.getCourseSubjects(this.getContext());
         viewModel.getCourseTeachers(this.getContext());
         loadSpinners();
-        binding.buttoncreateSubject.setOnClickListener(view ->{
+        binding.buttoncreateSubject.setOnClickListener(view -> {
             this.createSubject();
         });
     }
@@ -48,24 +50,25 @@ public class AddSubjectOnClassDialog extends DialogFragment {
     private void createSubject() {
         Teacher teacher = (Teacher) binding.spinnerTeacher.getSelectedItem();
         Subject subject = (Subject) binding.spinnerSubject.getSelectedItem();
-        viewModel.createClassroomSubject(subject, teacher);
+        if (subject != null && teacher != null) {
+            viewModel.createClassroomSubject(subject, teacher);
+        }
+
     }
-
-
-    public void buildViewModel(){
+    public void buildViewModel() {
         this.viewModel = new ViewModelProvider(requireActivity()).get(CreateClassroomViewModel.class);
         this.viewModel.getSnackbarText().observe(getViewLifecycleOwner(), this.snackbarObserver());
     }
 
     private Observer<? super String> snackbarObserver() {
-        return text ->{
-            if(text != null && !text.equals("")){
+        return text -> {
+            if (text != null && !text.equals("")) {
                 Snackbar.make(binding.buttoncreateSubject, text, Snackbar.LENGTH_SHORT).show();
             }
         };
     }
 
-    public void loadSpinners(){
+    public void loadSpinners() {
         this.viewModel.getSubjectSpinnerAdapter().registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
