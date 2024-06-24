@@ -1,20 +1,21 @@
 package com.gabriel.smartclass.view.user.views.institutionUser;
 
+import android.os.Bundle;
+import android.view.Menu;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavHost;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-
-import android.os.Bundle;
-import android.view.Menu;
-
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.ActivityCoordinatorCourseMainMenuBinding;
 import com.gabriel.smartclass.viewModels.CoordinatorCourseViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 
@@ -37,6 +38,8 @@ public class CoordinatorCourseMainMenu extends AppCompatActivity {
         this.viewModel.setCourse(getIntent().getParcelableExtra("course"));
         this.viewModel.setInstitution(getIntent().getParcelableExtra("institution"));
         this.viewModel.getCourseMembers(this.viewModel.getInstitution().getId(), this.viewModel.getCourse().getId());
+        this.viewModel.getSnackbarText().observe(this, this.snackbarObserver());
+        this.viewModel.getClassrooms();
     }
     public void updateTitle(String title){
         Objects.requireNonNull(getSupportActionBar()).setTitle(title);
@@ -50,6 +53,13 @@ public class CoordinatorCourseMainMenu extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu_action_bar, menu);
         return true;
+    }
+    private Observer<? super String> snackbarObserver() {
+        return text ->{
+            if(text != null && !text.equals("")){
+                Snackbar.make(binding.bottomActionBarUserCourse, text, Snackbar.LENGTH_SHORT).show();
+            }
+        };
     }
 
     @Override

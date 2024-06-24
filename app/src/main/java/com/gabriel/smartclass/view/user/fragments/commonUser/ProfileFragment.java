@@ -9,13 +9,6 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -27,10 +20,16 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.utilities.listeners.CapacityTextListener;
-import com.gabriel.smartclass.view.user.views.institution.InstitutionMainMenu;
 import com.gabriel.smartclass.view.user.views.commonUser.CommonUserMainMenu;
+import com.gabriel.smartclass.view.user.views.institution.InstitutionMainMenu;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -67,13 +66,13 @@ public class ProfileFragment extends Fragment {
     public void onPause() {
         super.onPause();
         this.hostUserActivityViewModel.getSnackBarText().setValue(null);
-        this.hostUserActivityViewModel.getSnackBarText().removeObserver(this.observeSnackbar());
+//        this.hostUserActivityViewModel.getSnackBarText().removeObserver(this.observeSnackbar());
     }
 
     private void defaultInitialize() {
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
         hostUserActivityViewModel = viewModelProvider.get(HostUserActivityViewModel.class);
-        hostUserActivityViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
+//        hostUserActivityViewModel.getSnackBarText().observe(getViewLifecycleOwner(), observeSnackbar());
         binding.changePasswordProfile.setOnClickListener(clickListenerOpenPasswordDialog());
         hostUserActivityViewModel.getProfilePictureLiveData().observe(getViewLifecycleOwner(), observeProfilePicture());
     }
@@ -128,8 +127,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        hostUserActivityViewModel.getSnackBarText().removeObserver(observeSnackbar());
-        hostUserActivityViewModel.getSnackBarText().setValue(null);
+        hostUserActivityViewModel.getSnackBarText().setValue("");
         hostUserActivityViewModel.getProfilePictureLiveData().removeObserver(observeProfilePicture());
 
     }
@@ -327,18 +325,6 @@ public class ProfileFragment extends Fragment {
         View view = binding.viewLoading;
         hostUserActivityViewModel.updateInstitutionProfile(displayName, email, bitmap, progressBar, view, maxTeachers, maxStudents, maxCoordinators, maxClassrooms);
     }
-
-    @NonNull
-    private Observer<String> observeSnackbar() {
-        return s -> {
-            if (s != null) {
-                Snackbar snackbar = Snackbar.make(binding.saveChangesProfile, s, Snackbar.LENGTH_SHORT);
-                snackbar.show();
-            }
-
-        };
-    }
-
     @NonNull
     private Observer<Bitmap> observeProfilePicture() {
         return bitmap -> binding.profilePicture.setImageBitmap(bitmap);

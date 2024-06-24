@@ -6,13 +6,13 @@ import android.annotation.SuppressLint;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.gabriel.smartclass.adapter.ClassroomAdapter;
 import com.gabriel.smartclass.adapter.InstitutionUserAdapter;
 import com.gabriel.smartclass.adapter.SimpleDefaultAdapter;
 import com.gabriel.smartclass.dao.ClassroomDAO;
 import com.gabriel.smartclass.dao.CourseDAO;
 import com.gabriel.smartclass.dao.InstitutionUserDAO;
 import com.gabriel.smartclass.dao.UserTypeDAO;
-import com.gabriel.smartclass.model.Classroom;
 import com.gabriel.smartclass.model.Course;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionUser;
@@ -31,13 +31,14 @@ public class CoordinatorCourseViewModel extends ViewModel {
     private Institution institution;
     private InstitutionUserAdapter membersAdapter = new InstitutionUserAdapter();
     private final SimpleDefaultAdapter<InstitutionUser> membersSelectionAdapter = new SimpleDefaultAdapter<>();
-    private final SimpleDefaultAdapter<Classroom> classroomAdapter = new SimpleDefaultAdapter<>();
+    private final ClassroomAdapter classroomAdapter = new ClassroomAdapter();
+    private MutableLiveData<String> snackbarText = new MutableLiveData<>();
 
     public void setSnackbarText(MutableLiveData<String> snackbarText) {
         this.snackbarText = snackbarText;
     }
 
-    public SimpleDefaultAdapter<Classroom> getClassroomAdapter() {
+    public ClassroomAdapter getClassroomAdapter() {
         return classroomAdapter;
     }
 
@@ -49,7 +50,7 @@ public class CoordinatorCourseViewModel extends ViewModel {
         return membersSelectionAdapter;
     }
 
-    private MutableLiveData<String> snackbarText = new MutableLiveData<>();
+
 
     public InstitutionUserAdapter getMembersAdapter() {
         return membersAdapter;
@@ -194,7 +195,7 @@ public class CoordinatorCourseViewModel extends ViewModel {
 
     public void getAllStudents() {
         this.membersSelectionAdapter.setAddAdapter(true);
-        new CourseDAO().getAllStudents(this.institution.getId(), task -> {
+        new CourseDAO().getStudentsAsInstitutionUser(this.institution.getId(), task -> {
             if (task.isSuccessful()) {
                 this.membersSelectionAdapter.getMutableLiveDataT().setValue(task.getResult());
                 this.membersSelectionAdapter.notifyDataSetChanged();
@@ -206,7 +207,7 @@ public class CoordinatorCourseViewModel extends ViewModel {
     public void getClassrooms(){
         new ClassroomDAO().getAllClassrooms(this.institution.getId(), this.course.getId(), courseTask ->{
             if(courseTask.isSuccessful()){
-                this.classroomAdapter.getMutableLiveDataT().setValue(courseTask.getResult());
+                this.classroomAdapter.getClassrooms().setValue(courseTask.getResult());
                 this.classroomAdapter.notifyDataSetChanged();
             }else{
                 snackbarText.setValue("Ops, ocorreu um erro inesperado, tente novamente mais tarde");

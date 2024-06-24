@@ -1,5 +1,6 @@
 package com.gabriel.smartclass.view.user.fragments.institutionUser;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,16 +22,13 @@ import com.gabriel.smartclass.viewModels.CoordinatorCourseViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AddMemberDialog extends DialogFragment {
     DialogCoordinatorAddteacherBinding binding;
     private CoordinatorCourseViewModel viewModel;
     private RecyclerView recyclerView;
     private boolean isStudents = false;
-
-    public boolean isStudents() {
-        return isStudents;
-    }
 
     public void setStudents(boolean students) {
         isStudents = students;
@@ -40,19 +38,19 @@ public class AddMemberDialog extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DialogCoordinatorAddteacherBinding.inflate(inflater, container, false);
+        this.viewModel = new ViewModelProvider(requireActivity()).get(CoordinatorCourseViewModel.class);
         if(!this.isStudents){
             initializeTeachers();
         }else{
             initializeStudents();
         }
-
         return binding.getRoot();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
     }
 
     @Override
@@ -60,20 +58,21 @@ public class AddMemberDialog extends DialogFragment {
         super.onDestroy();
         this.viewModel.getSnackbarText().removeObserver(this.snackbarobserver());
         this.viewModel.getMembersSelectionAdapter().getMutableLiveDataT().setValue(new ArrayList<>());
-        this.viewModel.getSnackbarText().setValue(null);
+        this.viewModel.getSnackbarText().setValue("");
     }
 
+    @SuppressLint("SetTextI18n")
     public void initializeTeachers(){
         loadComponents();
         binding.title.setText("Professores");
-        this.viewModel = new ViewModelProvider(requireActivity()).get(CoordinatorCourseViewModel.class);
         this.viewModel.getSnackbarText().observe(getViewLifecycleOwner(), this.snackbarobserver());
         buildRecyclerViewTeachers();
     }
+    @SuppressLint("SetTextI18n")
     public void initializeStudents(){
         loadComponents();
         binding.title.setText("Estudantes");
-        this.viewModel = new ViewModelProvider(requireActivity()).get(CoordinatorCourseViewModel.class);
+
         this.viewModel.getSnackbarText().observe(getViewLifecycleOwner(), this.snackbarobserver());
         buildRecyclerViewStudents();
     }
@@ -87,9 +86,7 @@ public class AddMemberDialog extends DialogFragment {
     }
 
     private DefaultClickListener<InstitutionUser> addMemberListener() {
-        return institutionUser -> {
-            this.viewModel.addNewMemberOnCourse(institutionUser, this.isStudents);
-        };
+        return institutionUser -> this.viewModel.addNewMemberOnCourse(institutionUser, this.isStudents);
     }
 
     public void buildRecyclerViewTeachers(){

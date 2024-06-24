@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/text_description_rcclassroom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/buttonTimetable"
+        style="@style/Custom_ImageButtons"
+        android:src="@drawable/baseline_calendar_month_24"
+        app:layout_constraintEnd_toStartOf="@+id/edit_rcclassroom"
+        app:layout_constraintTop_toBottomOf="@+id/text_description_rcclassroom"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/edit_rcclassroom"
+        style="@style/Custom_ImageButtons"
+        android:src="@drawable/ic_edit"
+        app:layout_constraintEnd_toStartOf="@+id/buttondelete_rcclassroom"
+        app:layout_constraintTop_toBottomOf="@+id/text_description_rcclassroom"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/buttondelete_rcclassroom"
+        style="@style/Custom_ImageButtons"
+        android:src="@drawable/sharp_restore_from_trash_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_description_rcclassroom"
+        tools:ignore="SpeakableTextPresentCheck" />
+    <View
+        style="@style/divider"
+        app:layout_constraintTop_toBottomOf="@id/buttondelete_rcclassroom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

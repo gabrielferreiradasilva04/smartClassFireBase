@@ -1,19 +1,21 @@
 package com.gabriel.smartclass.view.user.views.commonUser;
 
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.view.Menu;
+
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavHost;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import android.annotation.SuppressLint;
-import android.os.Bundle;
-import android.view.Menu;
-
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.ActivityCommonuserMainmenuBinding;
 import com.gabriel.smartclass.view.base.BaseActivity;
 import com.gabriel.smartclass.viewModels.HostUserActivityViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 public class CommonUserMainMenu extends BaseActivity {
     private ActivityCommonuserMainmenuBinding binding;
@@ -30,13 +32,28 @@ public class CommonUserMainMenu extends BaseActivity {
         initialize();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.hostUserActivityViewModel.getSnackBarText().removeObserver(snackbarObserver());
+    }
+
     private void initialize() {
         ViewModelProvider viewModelProvider = new ViewModelProvider(this);
         hostUserActivityViewModel = viewModelProvider.get(HostUserActivityViewModel.class);
         hostUserActivityViewModel.getUserInstitutions();
         hostUserActivityViewModel.loadUserPicture();
+        hostUserActivityViewModel.getSnackBarText().observe(this, snackbarObserver());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         navigation();
+    }
+
+    private Observer<? super String> snackbarObserver() {
+        return text ->{
+            if(text != null && !text.equals("")){
+                Snackbar.make(binding.bottomActionBarStudents, text, Snackbar.LENGTH_SHORT).show();
+            }
+        };
     }
 
     public void updateTitle(String title){
