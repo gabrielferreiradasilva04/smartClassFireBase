@@ -39,6 +39,7 @@ public class CoordinatorCourseMainMenu extends AppCompatActivity {
         this.viewModel.setInstitution(getIntent().getParcelableExtra("institution"));
         this.viewModel.getCourseMembers(this.viewModel.getInstitution().getId(), this.viewModel.getCourse().getId());
         this.viewModel.getSnackbarText().observe(this, this.snackbarObserver());
+        this.viewModel.getClassrooms();
     }
     public void updateTitle(String title){
         Objects.requireNonNull(getSupportActionBar()).setTitle(title);

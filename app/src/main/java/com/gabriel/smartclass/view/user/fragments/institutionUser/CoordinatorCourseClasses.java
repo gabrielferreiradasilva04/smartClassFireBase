@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.gabriel.smartclass.databinding.EmptyRequestBinding;
 import com.gabriel.smartclass.databinding.FragmentCoordinatorCourseClassesBinding;
@@ -50,8 +51,8 @@ public class CoordinatorCourseClasses extends Fragment {
         this.buildMenu();
         this.buttonListeners();
         this.getViewModel();
-        this.viewModel.getClassrooms();
         this.buildRecyclerView();
+        this.refresh();
     }
 
     private void buildRecyclerView() {
@@ -83,6 +84,15 @@ public class CoordinatorCourseClasses extends Fragment {
         EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(binding.recyclerviewclasses, viewEmpty.getRoot());
         viewModel.getClassroomAdapter().registerAdapterDataObserver(observer);
         viewModel.getClassroomAdapter().notifyDataSetChanged();
+    }
+    public void refresh(){
+        binding.refreshlayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                viewModel.getClassrooms();
+                binding.refreshlayout.setRefreshing(false);
+            }
+        });
     }
 
 }

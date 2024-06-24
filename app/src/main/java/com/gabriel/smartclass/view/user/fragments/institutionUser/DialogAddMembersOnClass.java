@@ -6,14 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 
 import com.gabriel.smartclass.databinding.DialogAddmembersOnclassBinding;
 import com.gabriel.smartclass.viewModels.CreateClassroomViewModel;
@@ -60,7 +58,7 @@ public class DialogAddMembersOnClass extends DialogFragment {
 
     public void onResume() {
         super.onResume();
-        getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
     }
     @Override
     public void onDestroy() {

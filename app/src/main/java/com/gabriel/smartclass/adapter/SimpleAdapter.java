@@ -58,6 +58,9 @@ public class SimpleAdapter<T extends CourseMember> extends RecyclerView.Adapter 
         String description = mutableLiveDataT.getValue().get(position).getDescription();
         TextView textDescription = holder.itemView.findViewById(R.id.description);
         textDescription.setText(description);
+        if(clickListener != null){
+            holder.itemView.setOnClickListener(view -> clickListener.onClick(this.getMutableLiveDataT().getValue().get(position)));
+        }
         holder.itemView.setVisibility(View.VISIBLE);
     }
 

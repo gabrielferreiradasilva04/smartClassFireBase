@@ -15,8 +15,6 @@ import com.gabriel.smartclass.adapter.ViewHolders.DefaultViewHolder;
 import com.gabriel.smartclass.adapter.interfaces.DefaultClickListener;
 import com.gabriel.smartclass.model.ClassroomSubject;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -81,7 +79,7 @@ public class ClassroomSubjectsAdapter extends RecyclerView.Adapter{
     public void addItem(ClassroomSubject classroomSubject){
         if(!this.ids.contains(classroomSubject.getId())){
             this.getClassroomSubjects().getValue().add(classroomSubject);
-            this.notifyItemChanged(this.getClassroomSubjects().getValue().indexOf(classroomSubject));
+            this.notifyDataSetChanged();
         }
     }
     public void removeItem(ClassroomSubject classroomSubject){

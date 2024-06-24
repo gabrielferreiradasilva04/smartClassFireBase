@@ -19,10 +19,12 @@ import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.Student;
 import com.gabriel.smartclass.model.Subject;
 import com.gabriel.smartclass.model.Teacher;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @SuppressLint("NotifyDataSetChanged")
@@ -122,6 +124,7 @@ public class CreateClassroomViewModel extends ViewModel {
     public void createClassroom(String description, int period) {
         if (!this.subjectsAdapter.getClassroomSubjects().getValue().isEmpty() && !this.teachersOnClass.getMutableLiveDataT().getValue().isEmpty() && !this.studentsOnClass.getMutableLiveDataT().getValue().isEmpty()
                 && !description.equals("") && period != 0) {
+            ClassroomDAO classroomDAO = new ClassroomDAO();
             List<DocumentReference> students_id = new ArrayList<>();
             for (Student student : this.studentsOnClass.getMutableLiveDataT().getValue()) {
                 DocumentReference studentReference = FirebaseFirestore.getInstance().collection(Institution.class.getSimpleName())
@@ -158,13 +161,19 @@ public class CreateClassroomViewModel extends ViewModel {
             classroom.setStudents_id(students_id);
             classroom.setTeachers_id(teachers_id);
             classroom.setSubjects_id(subjects_id);
-            new ClassroomDAO().saveClassroom(this.institution.getId(), this.course.getId(), classroom, task -> {
+            classroomDAO.saveClassroom(this.institution.getId(), this.course.getId(), classroom, task -> {
+                updateClassroom(task);
+                classroomDAO.addSubjectsOnClassroom(this.institution.getId(), this.course.getId(), task.getResult().getId(), subjectsAdapter.getClassroomSubjects().getValue());
                 snackbarText.setValue("Classe adicionada com sucesso...");
             });
         } else {
             snackbarText.setValue("Certifique-se de que preencheu todos os campos, todos eles são obrigatórios...");
         }
-
+    }
+    private void updateClassroom(Task<DocumentReference> task) {
+        HashMap<String, Object> update = new HashMap<>();
+        update.put("id", task.getResult().getId());
+        new ClassroomDAO().updateClassroom(this.institution.getId(), this.course.getId(), task.getResult().getId(),update);
     }
 
     public void getCourseStudents() {
@@ -199,10 +208,14 @@ public class CreateClassroomViewModel extends ViewModel {
 
     public void addTeacherOnClassroom(Teacher teacher) {
         this.teachersOnClass.addItem(teacher);
+        this.snackbarText.setValue("Professor adicionado");
     }
 
     public void addStudentOnClassroom(Student student) {
         this.studentsOnClass.addItem(student);
+        this.studentsOnClass.notifyDataSetChanged();
+        snackbarText.setValue("Aluno adicionado");
+
     }
     public void removeTeacherFromClassroom(Teacher teacher){
         if(this.teachersOnClass.getMutableLiveDataT().getValue().contains(teacher)){
@@ -239,6 +252,11 @@ public class CreateClassroomViewModel extends ViewModel {
         classroomSubject.setId(subject.getId());
         classroomSubject.setMinimum_grade(subject.getMinimum_grade());
         classroomSubject.setTeacher(teacher);
-        this.subjectsAdapter.addItem(classroomSubject);
+        if(!this.subjectsAdapter.getClassroomSubjects().getValue().contains(classroomSubject)){
+            this.subjectsAdapter.addItem(classroomSubject);
+            snackbarText.setValue("Nova matéria adicionada");
+        }else{
+            snackbarText.setValue("Já existe uma matéria com essas configurações");
+        }
     }
 }
