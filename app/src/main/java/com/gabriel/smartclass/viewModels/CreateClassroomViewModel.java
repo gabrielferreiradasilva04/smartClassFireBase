@@ -19,6 +19,7 @@ import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.Student;
 import com.gabriel.smartclass.model.Subject;
 import com.gabriel.smartclass.model.Teacher;
+import com.gabriel.smartclass.model.TimeTable;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -161,6 +162,7 @@ public class CreateClassroomViewModel extends ViewModel {
             classroom.setStudents_id(students_id);
             classroom.setTeachers_id(teachers_id);
             classroom.setSubjects_id(subjects_id);
+            classroom.setTimeTable(new TimeTable());
             classroomDAO.saveClassroom(this.institution.getId(), this.course.getId(), classroom, task -> {
                 updateClassroom(task);
                 classroomDAO.addSubjectsOnClassroom(this.institution.getId(), this.course.getId(), task.getResult().getId(), subjectsAdapter.getClassroomSubjects().getValue());

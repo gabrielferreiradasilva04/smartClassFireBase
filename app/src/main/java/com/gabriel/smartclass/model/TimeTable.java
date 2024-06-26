@@ -3,8 +3,6 @@ package com.gabriel.smartclass.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.firebase.firestore.DocumentReference;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -13,7 +11,7 @@ public class TimeTable implements Parcelable {
     private List<String> mondaySubjects;
     private List<String> tuesdaySubjects;
     private List<String> wednesdaySubjects;
-    private List<String> thurdaySubjects;
+    private List<String> thursdaySubjects;
     private List<String> FridaySubjects;
     private List<String> SaturdaySubjects;
 
@@ -22,7 +20,7 @@ public class TimeTable implements Parcelable {
         mondaySubjects = in.createStringArrayList();
         tuesdaySubjects = in.createStringArrayList();
         wednesdaySubjects = in.createStringArrayList();
-        thurdaySubjects = in.createStringArrayList();
+        thursdaySubjects = in.createStringArrayList();
         FridaySubjects = in.createStringArrayList();
         SaturdaySubjects = in.createStringArrayList();
     }
@@ -33,7 +31,7 @@ public class TimeTable implements Parcelable {
         dest.writeStringList(mondaySubjects);
         dest.writeStringList(tuesdaySubjects);
         dest.writeStringList(wednesdaySubjects);
-        dest.writeStringList(thurdaySubjects);
+        dest.writeStringList(thursdaySubjects);
         dest.writeStringList(FridaySubjects);
         dest.writeStringList(SaturdaySubjects);
     }
@@ -87,12 +85,12 @@ public class TimeTable implements Parcelable {
         this.wednesdaySubjects = wednesdaySubjects;
     }
 
-    public List<String> getThurdaySubjects() {
-        return thurdaySubjects;
+    public List<String> getThursdaySubjects() {
+        return thursdaySubjects;
     }
 
-    public void setThurdaySubjects(List<String> thurdaySubjects) {
-        this.thurdaySubjects = thurdaySubjects;
+    public void setThursdaySubjects(List<String> thursdaySubjects) {
+        this.thursdaySubjects = thursdaySubjects;
     }
 
     public List<String> getFridaySubjects() {
@@ -116,12 +114,12 @@ public class TimeTable implements Parcelable {
         if (this == o) return true;
         if (!(o instanceof TimeTable)) return false;
         TimeTable timeTable = (TimeTable) o;
-        return Objects.equals(getSundaySubjects(), timeTable.getSundaySubjects()) && Objects.equals(getMondaySubjects(), timeTable.getMondaySubjects()) && Objects.equals(getTuesdaySubjects(), timeTable.getTuesdaySubjects()) && Objects.equals(getWednesdaySubjects(), timeTable.getWednesdaySubjects()) && Objects.equals(getThurdaySubjects(), timeTable.getThurdaySubjects()) && Objects.equals(getFridaySubjects(), timeTable.getFridaySubjects()) && Objects.equals(getSaturdaySubjects(), timeTable.getSaturdaySubjects());
+        return Objects.equals(getSundaySubjects(), timeTable.getSundaySubjects()) && Objects.equals(getMondaySubjects(), timeTable.getMondaySubjects()) && Objects.equals(getTuesdaySubjects(), timeTable.getTuesdaySubjects()) && Objects.equals(getWednesdaySubjects(), timeTable.getWednesdaySubjects()) && Objects.equals(getThursdaySubjects(), timeTable.getThursdaySubjects()) && Objects.equals(getFridaySubjects(), timeTable.getFridaySubjects()) && Objects.equals(getSaturdaySubjects(), timeTable.getSaturdaySubjects());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSundaySubjects(), getMondaySubjects(), getTuesdaySubjects(), getWednesdaySubjects(), getThurdaySubjects(), getFridaySubjects(), getSaturdaySubjects());
+        return Objects.hash(getSundaySubjects(), getMondaySubjects(), getTuesdaySubjects(), getWednesdaySubjects(), getThursdaySubjects(), getFridaySubjects(), getSaturdaySubjects());
     }
 
     public TimeTable() {
@@ -132,7 +130,7 @@ public class TimeTable implements Parcelable {
         this.mondaySubjects = mondaySubjects;
         this.tuesdaySubjects = tuesdaySubjects;
         this.wednesdaySubjects = wednesdaySubjects;
-        this.thurdaySubjects = thurdaySubjects;
+        this.thursdaySubjects = thurdaySubjects;
         FridaySubjects = fridaySubjects;
         SaturdaySubjects = saturdaySubjects;
     }

@@ -1,9 +1,12 @@
-package com.gabriel.smartclass.view.course.fragments;
+package com.gabriel.smartclass.view.course.fragmentAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
+import com.gabriel.smartclass.view.course.fragments.AddCourse;
+import com.gabriel.smartclass.view.course.fragments.SearchAndEditCourses;
 
 public class CourseFragmentAdapter extends FragmentPagerAdapter {
 
