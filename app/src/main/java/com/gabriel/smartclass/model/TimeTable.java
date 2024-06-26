@@ -3,17 +3,18 @@ package com.gabriel.smartclass.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class TimeTable implements Parcelable {
-    private List<String> sundaySubjects;
-    private List<String> mondaySubjects;
-    private List<String> tuesdaySubjects;
-    private List<String> wednesdaySubjects;
-    private List<String> thursdaySubjects;
-    private List<String> FridaySubjects;
-    private List<String> SaturdaySubjects;
+    private List<String> sundaySubjects = new ArrayList<>();
+    private List<String> mondaySubjects = new ArrayList<>();
+    private List<String> tuesdaySubjects = new ArrayList<>();
+    private List<String> wednesdaySubjects = new ArrayList<>();
+    private List<String> thursdaySubjects = new ArrayList<>();
+    private List<String> FridaySubjects = new ArrayList<>();
+    private List<String> SaturdaySubjects = new ArrayList<>();
 
     protected TimeTable(Parcel in) {
         sundaySubjects = in.createStringArrayList();

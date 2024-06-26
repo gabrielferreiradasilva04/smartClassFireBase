@@ -66,13 +66,14 @@ public class CoordinatorCourseClasses extends Fragment {
     }
 
     private DefaultClickListener<Classroom> timeTableClickListener() {
-        return classroom ->{
-            this.callTimeTableView();
-        };
+        return this::callTimeTableView;
     }
 
-    private void callTimeTableView() {
+    private void callTimeTableView(Classroom classroom) {
         Intent i = new Intent(this.getActivity(), TimeTableView.class);
+        i.putExtra("institution", this.viewModel.getInstitution());
+        i.putExtra("course", this.viewModel.getCourse());
+        i.putExtra("classroom", classroom);
         startActivity(i);
     }
 
