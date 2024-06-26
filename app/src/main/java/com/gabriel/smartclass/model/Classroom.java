@@ -3,17 +3,12 @@ package com.gabriel.smartclass.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
-
 import com.gabriel.smartclass.model.baseEntitys.SimpleAuxEntity;
-import com.google.firebase.Firebase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public class Classroom extends SimpleAuxEntity implements Parcelable {
@@ -25,10 +20,13 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
     private List<DocumentReference> subjects_id;
     private TimeTable timeTable;
 
+
     protected Classroom(Parcel in) {
         id = in.readString();
         description = in.readString();
         period = in.readInt();
+        timeTable = in.readParcelable(TimeTable.class.getClassLoader());
+
     }
 
     @Override
@@ -36,6 +34,8 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
         dest.writeString(id);
         dest.writeString(description);
         dest.writeInt(period);
+        dest.writeParcelable(timeTable, flags);
+
         dest.writeInt(students_id.size()); // tamanho da lista de alunos
         for (DocumentReference students_id : students_id) { // lista de alunos/estudantes
             dest.writeString(students_id.getPath());
@@ -61,12 +61,12 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
             String id = in.readString();
             String description = in.readString();
             int period = in.readInt();
-
+            TimeTable timeTable = in.readParcelable(TimeTable.class.getClassLoader());
             int studentsSize = in.readInt(); //encontrar lista de estudantes
             List<DocumentReference> students_id = new ArrayList<>();
             for (int i = 0; i < studentsSize; i++) {
                 String studentPath = in.readString();
-                if(studentPath != null){
+                if (studentPath != null) {
                     DocumentReference studentReference = FirebaseFirestore.getInstance().document(studentPath);
                     students_id.add(studentReference);
                 }
@@ -91,7 +91,7 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
                     subjects_id.add(subjectReference);
                 }
             }
-            return new Classroom(id, description, period, students_id, teachers_id, subjects_id);
+            return new Classroom(id, description, period, students_id, teachers_id, subjects_id, timeTable);
         }
 
         @Override
@@ -159,14 +159,27 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
     }
 
 
+    @Override
+    public String toString() {
+        return "Classroom{" +
+                "id='" + id + '\'' +
+                ", description='" + description + '\'' +
+                ", period=" + period +
+                ", students_id=" + students_id +
+                ", teachers_id=" + teachers_id +
+                ", subjects_id=" + subjects_id +
+                ", timeTable=" + timeTable +
+                '}';
+    }
 
-    public Classroom(String id, String description, int period, List<DocumentReference> students_id, List<DocumentReference> teachers_id, List<DocumentReference> subjects_id) {
+    public Classroom(String id, String description, int period, List<DocumentReference> students_id, List<DocumentReference> teachers_id, List<DocumentReference> subjects_id, TimeTable timeTable) {
         this.id = id;
         this.description = description;
         this.period = period;
         this.students_id = students_id;
         this.teachers_id = teachers_id;
         this.subjects_id = subjects_id;
+        this.timeTable = timeTable;
     }
 
     public Classroom() {
@@ -185,16 +198,4 @@ public class Classroom extends SimpleAuxEntity implements Parcelable {
         return Objects.hash(getId(), getDescription(), getPeriod(), getStudents_id(), getTeachers_id(), getSubjects_id(), getTimeTable());
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        return "Classroom{" +
-                "id='" + id + '\'' +
-                ", description='" + description + '\'' +
-                ", period=" + period +
-                ", students_id=" + students_id +
-                ", teachers_id=" + teachers_id +
-                ", subjects_id=" + subjects_id +
-                '}';
-    }
 }
