@@ -1,13 +1,11 @@
 package com.gabriel.smartclass.view.course.views;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import android.os.Bundle;
-
-import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.databinding.ActivityMainCoursesBinding;
-import com.gabriel.smartclass.view.course.fragments.CourseFragmentAdapter;
+import com.gabriel.smartclass.view.course.fragmentAdapter.CourseFragmentAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainCourses extends AppCompatActivity {

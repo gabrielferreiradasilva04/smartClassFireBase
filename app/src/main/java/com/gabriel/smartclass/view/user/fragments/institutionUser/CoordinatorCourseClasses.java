@@ -13,9 +13,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.gabriel.smartclass.adapter.interfaces.DefaultClickListener;
 import com.gabriel.smartclass.databinding.EmptyRequestBinding;
 import com.gabriel.smartclass.databinding.FragmentCoordinatorCourseClassesBinding;
+import com.gabriel.smartclass.model.Classroom;
 import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
+import com.gabriel.smartclass.view.course.views.TimeTableView;
 import com.gabriel.smartclass.view.user.views.institutionUser.CoordinatorCourseMainMenu;
 import com.gabriel.smartclass.view.user.views.institutionUser.CreateClassroom;
 import com.gabriel.smartclass.viewModels.CoordinatorCourseViewModel;
@@ -59,6 +62,18 @@ public class CoordinatorCourseClasses extends Fragment {
         binding.recyclerviewclasses.setHasFixedSize(false);
         binding.recyclerviewclasses.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerviewclasses.setAdapter(viewModel.getClassroomAdapter());
+        this.viewModel.getClassroomAdapter().setClickListenerTimeTable(this.timeTableClickListener());
+    }
+
+    private DefaultClickListener<Classroom> timeTableClickListener() {
+        return classroom ->{
+            this.callTimeTableView();
+        };
+    }
+
+    private void callTimeTableView() {
+        Intent i = new Intent(this.getActivity(), TimeTableView.class);
+        startActivity(i);
     }
 
     private void buildMenu() {

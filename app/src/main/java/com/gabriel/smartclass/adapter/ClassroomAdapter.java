@@ -26,7 +26,7 @@ public class ClassroomAdapter extends RecyclerView.Adapter{
     private final HashSet<String> tIds;
     private boolean showUserDetails = false;
     private boolean addAdapter = false;
-    private DefaultClickListener<Classroom> clickListener;
+    private DefaultClickListener<Classroom> clickListenerTimeTable;
 
     public ClassroomAdapter(){
         this.classrooms = new MutableLiveData<>(new ArrayList<>());
@@ -57,12 +57,12 @@ public class ClassroomAdapter extends RecyclerView.Adapter{
         return tIds;
     }
 
-    public DefaultClickListener<Classroom> getClickListener() {
-        return clickListener;
+    public DefaultClickListener<Classroom> getClickListenerTimeTable() {
+        return clickListenerTimeTable;
     }
 
-    public void setClickListener(DefaultClickListener<Classroom> clickListener) {
-        this.clickListener = clickListener;
+    public void setClickListenerTimeTable(DefaultClickListener<Classroom> clickListenerTimeTable) {
+        this.clickListenerTimeTable = clickListenerTimeTable;
     }
     @NonNull
     @Override
@@ -79,6 +79,9 @@ public class ClassroomAdapter extends RecyclerView.Adapter{
         ImageButton deletebutton = holder.itemView.findViewById(R.id.buttondelete_rcclassroom);
         ImageButton timetable = holder.itemView.findViewById(R.id.buttonTimetable);
         textDescription.setText(this.classrooms.getValue().get(position).getDescription());
+        if(this.clickListenerTimeTable != null){
+            timetable.setOnClickListener(view -> this.clickListenerTimeTable.onClick(this.classrooms.getValue().get(position)));
+        }
         holder.itemView.setVisibility(View.VISIBLE);
     }
 

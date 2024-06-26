@@ -26,4 +26,12 @@
     <string name="classrooms_institution_mainmenu">Turmas</string>
     <string name="especial_search_character">\uf8ff</string>
 
+    <string name="seg">seg</string>
+    <string name="ter">ter</string>
+    <string name="qua">qua</string>
+    <string name="qui">qui</string>
+    <string name="sex">sex</string>
+    <string name="sab">sab</string>
+    <string name="dom">dom</string>
+
 </resources>
