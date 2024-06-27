@@ -26,7 +26,23 @@
         android:src="@drawable/add_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         tools:ignore="SpeakableTextPresentCheck" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/saturdaysubject"
+        style="@style/Edit_Text_Forms"
+        android:layout_width="0dp"
+        android:layout_margin="10dp"
+        android:hint="adicionar matéria"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/addSaturdayButton"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <include
+        android:id="@+id/emptySaturday"
+        layout="@layout/empty_timetable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

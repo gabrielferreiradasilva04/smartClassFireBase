@@ -1,65 +1,96 @@
 package com.gabriel.smartclass.view.course.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.gabriel.smartclass.R;
+import com.gabriel.smartclass.adapter.TimeTableItemsRCA;
+import com.gabriel.smartclass.databinding.EmptyTimetableBinding;
+import com.gabriel.smartclass.databinding.FragmentSaturdayFragmentsBinding;
+import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
+import com.gabriel.smartclass.viewModels.TimeTableViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SaturdayFragments#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.List;
+import java.util.Objects;
+@SuppressLint("NotifyDataSetChanged")
+
 public class SaturdayFragments extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FragmentSaturdayFragmentsBinding binding;
+    private final TimeTableItemsRCA adapter = new TimeTableItemsRCA();
+    private TimeTableViewModel viewModel;
+    public static final int DAY = 6;
 
     public SaturdayFragments() {
-        // Required empty public constructor
+
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SaturdayFragments.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SaturdayFragments newInstance(String param1, String param2) {
-        SaturdayFragments fragment = new SaturdayFragments();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        this.binding = FragmentSaturdayFragmentsBinding.inflate(inflater, container, false);
+        this.initialize();
+        return this.binding.getRoot();
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public void onResume() {
+        super.onResume();
+        this.emptyView();
+    }
+
+    public void initialize() {
+        this.buildRecyclerView();
+        this.buildViewModel();
+        this.subjectsObserver();
+        this.binding.addSaturdayButton.setOnClickListener(this.addSubjectListener());
+    }
+
+    private View.OnClickListener addSubjectListener() {
+        return view -> addSubject();
+    }
+
+    private void addSubject() {
+        String subject = Objects.requireNonNull(this.binding.saturdaysubject.getText()).toString();
+        if(!subject.equals("")){
+            this.viewModel.addNewSubject(subject, DAY);
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_saturday_fragments, container, false);
+    private void subjectsObserver() {
+        this.viewModel.getSaturdaySubjectsLiveData().observe(this.getViewLifecycleOwner(), observerList());
+    }
+
+    private Observer<? super List<String>> observerList() {
+        return list -> {
+            this.adapter.getSubjects().setValue(list);
+            this.adapter.notifyDataSetChanged();
+        };
+    }
+
+    private void buildViewModel() {
+        this.viewModel = new ViewModelProvider(this.requireActivity()).get(TimeTableViewModel.class);
+    }
+
+    private void buildRecyclerView() {
+        this.binding.rcSaturday.setHasFixedSize(true);
+        this.binding.rcSaturday.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        this.binding.rcSaturday.setAdapter(adapter);
+        this.adapter.setRemoveSubject(index -> this.viewModel.removeSubject(index, DAY));
+    }
+
+    private void emptyView() {
+        EmptyTimetableBinding emptyBinding = binding.emptySaturday;
+        EmptyRecyclerViewObserver emptyRecyclerViewObserver = new EmptyRecyclerViewObserver(binding.rcSaturday, emptyBinding.getRoot());
+        this.adapter.registerAdapterDataObserver(emptyRecyclerViewObserver);
+        this.adapter.notifyDataSetChanged();
     }
 }
