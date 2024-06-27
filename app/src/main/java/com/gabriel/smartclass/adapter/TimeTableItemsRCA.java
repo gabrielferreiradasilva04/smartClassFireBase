@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.ViewHolders.DefaultViewHolder;
+import com.gabriel.smartclass.adapter.interfaces.TimeTableSubjectClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,24 @@ import java.util.List;
 
 public class TimeTableItemsRCA extends RecyclerView.Adapter {
     private MutableLiveData<List<String>> subjects;
-    private View.OnClickListener removeSubject;
+    private TimeTableSubjectClickListener removeSubject;
+
+    public MutableLiveData<List<String>> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(MutableLiveData<List<String>> subjects) {
+        this.subjects = subjects;
+    }
+
+    public TimeTableSubjectClickListener getRemoveSubject() {
+        return removeSubject;
+    }
+
+    public void setRemoveSubject(TimeTableSubjectClickListener removeSubject) {
+        this.removeSubject = removeSubject;
+    }
+
     public TimeTableItemsRCA (){
         this.subjects = new MutableLiveData<>(new ArrayList<>());
     }
@@ -40,7 +58,7 @@ public class TimeTableItemsRCA extends RecyclerView.Adapter {
         TextView txtSubject = holder.itemView.findViewById(R.id.subject_string);
         txtSubject.setText(subject);
         if(this.removeSubject != null){
-            buttonRemove.setOnClickListener(this.removeSubject);
+            buttonRemove.setOnClickListener(view -> this.removeSubject.onClick(position));
         }
     }
 

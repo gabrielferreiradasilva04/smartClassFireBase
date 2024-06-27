@@ -26,7 +26,25 @@
         android:src="@drawable/add_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         tools:ignore="SpeakableTextPresentCheck" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/thursdaysubjects"
+        android:hint="adicionar matéria"
+        android:layout_width="0dp"
+        style="@style/Edit_Text_Forms"
+        android:layout_margin="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/addThursdayButton"/>
+
+    <include
+        android:id="@+id/emptyThursday"
+        layout="@layout/empty_timetable"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

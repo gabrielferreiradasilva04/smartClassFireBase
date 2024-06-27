@@ -1,0 +1,796 @@
+[33mcommit 5710f59d7d825b8f604b215da9aa47ce214492e3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mcriar-salas[m[33m, [m[1;31morigin/criar-salas[m[33m)[m
+Author: Gabriel F. Silva <gabrielferreirasilva04@outlook.com>
+Date:   Wed Jun 26 11:08:13 2024 -0300
+
+    lógica da tableTime pronta
+
+[1mdiff --git a/app/src/main/java/com/gabriel/smartclass/model/Classroom.java b/app/src/main/java/com/gabriel/smartclass/model/Classroom.java[m
+[1mindex a7f86e7..aab3748 100644[m
+[1m--- a/app/src/main/java/com/gabriel/smartclass/model/Classroom.java[m
+[1m+++ b/app/src/main/java/com/gabriel/smartclass/model/Classroom.java[m
+[36m@@ -3,17 +3,12 @@[m [mpackage com.gabriel.smartclass.model;[m
+ import android.os.Parcel;[m
+ import android.os.Parcelable;[m
+ [m
+[31m-import androidx.annotation.NonNull;[m
+[31m-[m
+ import com.gabriel.smartclass.model.baseEntitys.SimpleAuxEntity;[m
+[31m-import com.google.firebase.Firebase;[m
+ import com.google.firebase.firestore.DocumentReference;[m
+ import com.google.firebase.firestore.FirebaseFirestore;[m
+ [m
+ import java.util.ArrayList;[m
+[31m-import java.util.HashMap;[m
+ import java.util.List;[m
+[31m-import java.util.Map;[m
+ import java.util.Objects;[m
+ [m
+ public class Classroom extends SimpleAuxEntity implements Parcelable {[m
+[36m@@ -25,10 +20,13 @@[m [mpublic class Classroom extends SimpleAuxEntity implements Parcelable {[m
+     private List<DocumentReference> subjects_id;[m
+     private TimeTable timeTable;[m
+ [m
+[32m+[m
+     protected Classroom(Parcel in) {[m
+         id = in.readString();[m
+         description = in.readString();[m
+         period = in.readInt();[m
+[32m+[m[32m        timeTable = in.readParcelable(TimeTable.class.getClassLoader());[m
+[32m+[m
+     }[m
+ [m
+     @Override[m
+[36m@@ -36,6 +34,8 @@[m [mpublic class Classroom extends SimpleAuxEntity implements Parcelable {[m
+         dest.writeString(id);[m
+         dest.writeString(description);[m
+         dest.writeInt(period);[m
+[32m+[m[32m        dest.writeParcelable(timeTable, flags);[m
+[32m+[m
+         dest.writeInt(students_id.size()); // tamanho da lista de alunos[m
+         for (DocumentReference students_id : students_id) { // lista de alunos/estudantes[m
+             dest.writeString(students_id.getPath());[m
+[36m@@ -61,12 +61,12 @@[m [mpublic class Classroom extends SimpleAuxEntity implements Parcelable {[m
+             String id = in.readString();[m
+             String description = in.readString();[m
+             int period = in.readInt();[m
+[31m-[m
+[32m+[m[32m            TimeTable timeTable = in.readParcelable(TimeTable.class.getClassLoader());[m
+             int studentsSize = in.readInt(); //encontrar lista de estudantes[m
+             List<DocumentReference> students_id = new ArrayList<>();[m
+             for (int i = 0; i < studentsSize; i++) {[m
+                 String studentPath = in.readString();[m
+[31m-                if(studentPath != null){[m
+[32m+[m[32m                if (studentPath != null) {[m
+                     DocumentReference studentReference = FirebaseFirestore.getInstance().document(studentPath);[m
+                     students_id.add(studentReference);[m
+                 }[m
+[36m@@ -91,7 +91,7 @@[m [mpublic class Classroom extends SimpleAuxEntity implements Parcelable {[m
+                     subjects_id.add(subjectReference);[m
+                 }[m
+             }[m
+[31m-            return new Classroom(id, description, period, students_id, teachers_id, subjects_id);[m
+[32m+[m[32m            return new Classroom(id, description, period, students_id, teachers_id, subjects_id, timeTable);[m
+         }[m
+ [m
+         @Override[m
+[36m@@ -159,14 +159,27 @@[m [mpublic class Classroom extends SimpleAuxEntity implements Parcelable {[m
+     }[m
+ [m
+ [m
+[32m+[m[32m    @Override[m
+[32m+[m[32m    public String toString() {[m
+[32m+[m[32m        return "Classroom{" +[m
+[32m+[m[32m                "id='" + id + '\'' +[m
+[32m+[m[32m                ", description='" + description + '\'' +[m
+[32m+[m[32m                ", period=" + period +[m
+[32m+[m[32m                ", students_id=" + students_id +[m
+[32m+[m[32m                ", teachers_id=" + teachers_id +[m
+[32m+[m[32m                ", subjects_id=" + subjects_id +[m
+[32m+[m[32m                ", timeTable=" + timeTable +[m
+[32m+[m[32m                '}';[m
+[32m+[m[32m    }[m
+ [m
+[31m-    public Classroom(String id, String description, int period, List<DocumentReference> students_id, List<DocumentReference> teachers_id, List<DocumentReference> subjects_id) {[m
+[32m+[m[32m    public Classroom(String id, String description, int period, List<DocumentReference> students_id, List<DocumentReference> teachers_id, List<DocumentReference> subjects_id, TimeTable timeTable) {[m
+         this.id = id;[m
+         this.description = description;[m
+         this.period = period;[m
+         this.students_id = students_id;[m
+         this.teachers_id = teachers_id;[m
+         this.subjects_id = subjects_id;[m
+[32m+[m[32m        this.timeTable = timeTable;[m
+     }[m
+ [m
+     public Classroom() {[m
+[36m@@ -185,16 +198,4 @@[m [mpublic class Classroom extends SimpleAuxEntity implements Parcelable {[m
+         return Objects.hash(getId(), getDescription(), getPeriod(), getStudents_id(), getTeachers_id(), getSubjects_id(), getTimeTable());[m
+     }[m
+ [m
+[31m-    @NonNull[m
+[31m-    @Override[m
+[31m-    public String toString() {[m
+[31m-        return "Classroom{" +[m
+[31m-                "id='" + id + '\'' +[m
+[31m-                ", description='" + description + '\'' +[m
+[31m-                ", period=" + period +[m
+[31m-                ", students_id=" + students_id +[m
+[31m-                ", teachers_id=" + teachers_id +[m
+[31m-                ", subjects_id=" + subjects_id +[m
+[31m-                '}';[m
+[31m-    }[m
+ }[m
+[1mdiff --git a/app/src/main/java/com/gabriel/smartclass/model/TimeTable.java b/app/src/main/java/com/gabriel/smartclass/model/TimeTable.java[m
+[1mindex 495806b..c04527d 100644[m
+[1m--- a/app/src/main/java/com/gabriel/smartclass/model/TimeTable.java[m
+[1m+++ b/app/src/main/java/com/gabriel/smartclass/model/TimeTable.java[m
+[36m@@ -3,17 +3,18 @@[m [mpackage com.gabriel.smartclass.model;[m
+ import android.os.Parcel;[m
+ import android.os.Parcelable;[m
+ [m
+[32m+[m[32mimport java.util.ArrayList;[m
+ import java.util.List;[m
+ import java.util.Objects;[m
+ [m
+ public class TimeTable implements Parcelable {[m
+[31m-    private List<String> sundaySubjects;[m
+[31m-    private List<String> mondaySubjects;[m
+[31m-    private List<String> tuesdaySubjects;[m
+[31m-    private List<String> wednesdaySubjects;[m
+[31m-    private List<String> thursdaySubjects;[m
+[31m-    private List<String> FridaySubjects;[m
+[31m-    private List<String> SaturdaySubjects;[m
+[32m+[m[32m    private List<String> sundaySubjects = new ArrayList<>();[m
+[32m+[m[32m    private List<String> mondaySubjects = new ArrayList<>();[m
+[32m+[m[32m    private List<String> tuesdaySubjects = new ArrayList<>();[m
+[32m+[m[32m    private List<String> wednesdaySubjects = new ArrayList<>();[m
+[32m+[m[32m    private List<String> thursdaySubjects = new ArrayList<>();[m
+[32m+[m[32m    private List<String> FridaySubjects = new ArrayList<>();[m
+[32m+[m[32m    private List<String> SaturdaySubjects = new ArrayList<>();[m
+ [m
+     protected TimeTable(Parcel in) {[m
+         sundaySubjects = in.createStringArrayList();[m
+[1mdiff --git a/app/src/main/java/com/gabriel/smartclass/view/course/fragments/FridayFragment.java b/app/src/main/java/com/gabriel/smartclass/view/course/fragments/FridayFragment.java[m
+[1mindex 45ff81f..3a43389 100644[m
+[1m--- a/app/src/main/java/com/gabriel/smartclass/view/course/fragments/FridayFragment.java[m
+[1m+++ b/app/src/main/java/com/gabriel/smartclass/view/course/fragments/FridayFragment.java[m
+[36m@@ -5,61 +5,31 @@[m [mimport android.view.LayoutInflater;[m
+ import android.view.View;[m
+ import android.view.ViewGroup;[m
+ [m
+[32m+[m[32mimport androidx.annotation.NonNull;[m
+ import androidx.fragment.app.Fragment;[m
+[32m+[m[32mimport androidx.lifecycle.ViewModelProvider;[m
+ [m
+[31m-import com.gabriel.smartclass.R;[m
+[32m+[m[32mimport com.gabriel.smartclass.databinding.FragmentFridaySubjectsBinding;[m
+[32m+[m[32mimport com.gabriel.smartclass.viewModels.TimeTableViewModel;[m
+ [m
+[31m-/**[m
+[31m- * A simple {@link Fragment} subclass.[m
+[31m- * Use the {@link FridayFragment#newInstance} factory method to[m
+[31m- * create an instance of this fragment.[m
+[31m- */[m
+ public class FridayFragment extends Fragment {[m
+[32m+[m[32m    private FragmentFridaySubjectsBinding binding;[m
+[32m+[m[32m    private TimeTableViewModel viewModel;[m
+[32m+[m[32m    public FridayFragment(){[m
+ [m
+[31m-    // TODO: Rename parameter arguments, choose names that match[m
+[31m-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER[m
+[31m-    private static final String ARG_PARAM1 = "param1";[m
+[31m-    private static final String ARG_PARAM2 = "param2";[m
+[31m-[m
+[31m-    // TODO: Rename and change types of parameters[m
+[31m-    private String mParam1;[m
+[31m-    private String mParam2;[m
+[31m-[m
+[31m-    public FridayFragment() {[m
+[31m-        // Required empty public constructor[m
+     }[m
+[31m-[m
+[31m-    /**[m
+[31m-     * Use this factory method to create a new instance of[m
+[31m-     * this fragment using the provided parameters.[m
+[31m-     *[m
+[31m-     * @param param1 Parameter 1.[m
+[31m-     * @param param2 Parameter 2.[m
+[31m-     * @return A new instance of fragment FridayFragment.[m
+[31m-     */[m
+[31m-    // TODO: Rename and change types and number of parameters[m
+[31m-    public static FridayFragment newInstance(String param1, String param2) {[m
+[31m-        FridayFragment fragment = new FridayFragment();[m
+[31m-        Bundle args = new Bundle();[m
+[31m-        args.putString(ARG_PARAM1, param1);[m
+[31m-        args.putString(ARG_PARAM2, param2);[m
+[31m-        fragment.setArguments(args);[m
+[31m-        return fragment;[m
+[31m-    }[m
+[31m-[m
+     @Override[m
+[31m-    public void onCreate(Bundle savedInstanceState) {[m
+[31m-        super.onCreate(savedInstanceState);[m
+[31m-        if (getArguments() != null) {[m
+[31m-            mParam1 = getArguments().getString(ARG_PARAM1);[m
+[31m-            mParam2 = getArguments().getString(ARG_PARAM2);[m
+[31m-        }[m
+[32m+[m[32m    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,[m
+[32m+[m[32m                             Bundle savedInstanceState) {[m
+[32m+[m[32m        this. binding = FragmentFridaySubjectsBinding.inflate(inflater, container, false);[m
+[32m+[m[32m        this.initialize();[m
+[32m+[m[32m        return this.binding.getRoot();[m
+[32m+[m[32m    }[m
+[32m+[m[32m    public void initialize(){[m
+[32m+[m[32m        this.buildViewModel();[m
+     }[m
+ [m
+[31m-    @Override[m
+[31m-    public View onCreateView(LayoutInflater inflater, ViewGroup container,[m
+[31m-                             Bundle savedInstanceState) {[m
+[31m-        // Inflate the layout for this fragment[m
+[31m-        return inflater.inflate(R.layout.fragment_friday_subjects, container, false);[m
+[32m+[m[32m    private void buildViewModel() {[m
+[32m+[m[32m        this.viewModel = new ViewModelProvider(requireActivity()).get(TimeTableViewModel.class);[m
+     }[m
+ }[m
+\ No newline at end of file[m
+[1mdiff --git a/app/src/main/java/com/gabriel/smartclass/view/course/views/TimeTableView.java b/app/src/main/java/com/gabriel/smartclass/view/course/views/TimeTableView.java[m
+[1mindex 514515c..537b051 100644[m
+[1m--- a/app/src/main/java/com/gabriel/smartclass/view/course/views/TimeTableView.java[m
+[1m+++ b/app/src/main/java/com/gabriel/smartclass/view/course/views/TimeTableView.java[m
+[36m@@ -3,13 +3,18 @@[m [mpackage com.gabriel.smartclass.view.course.views;[m
+ import android.os.Bundle;[m
+ [m
+ import androidx.appcompat.app.AppCompatActivity;[m
+[32m+[m[32mimport androidx.lifecycle.Observer;[m
+[32m+[m[32mimport androidx.lifecycle.ViewModelProvider;[m
+ import androidx.viewpager.widget.ViewPager;[m
+ [m
+ import com.gabriel.smartclass.databinding.ActivityTimeTableViewBinding;[m
+ import com.gabriel.smartclass.view.course.fragmentAdapter.TabDayFragmentAdapter;[m
+[32m+[m[32mimport com.gabriel.smartclass.viewModels.TimeTableViewModel;[m
+[32m+[m[32mimport com.google.android.material.snackbar.Snackbar;[m
+ import com.google.android.material.tabs.TabLayout;[m
+ [m
+ public class TimeTableView extends AppCompatActivity {[m
+[32m+[m[32m    private TimeTableViewModel viewModel;[m
+     private ActivityTimeTableViewBinding binding;[m
+     private TabLayout tabLayout;[m
+     private ViewPager viewPager;[m
+[36m@@ -24,6 +29,27 @@[m [mpublic class TimeTableView extends AppCompatActivity {[m
+     }[m
+ [m
+     private void initialize() {[m
+[32m+[m[32m        navigation();[m
+[32m+[m[32m        buildViewModel();[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    private void buildViewModel() {[m
+[32m+[m[32m        this.viewModel = new ViewModelProvider(this).get(TimeTableViewModel.class);[m
+[32m+[m[32m        this.viewModel.setInstitution(getIntent().getParcelableExtra("institution"));[m
+[32m+[m[32m        this.viewModel.setCourse(getIntent().getParcelableExtra("course"));[m
+[32m+[m[32m        this.viewModel.setClassroom(getIntent().getParcelableExtra("classroom"));[m
+[32m+[m[32m        this.viewModel.getSnackbarText().observe(this, this.snackbarObserver());[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    private Observer<? super String> snackbarObserver() {[m
+[32m+[m[32m        return text ->{[m
+[32m+[m[32m            if(text != null && !text.equals("")){[m
+[32m+[m[32m                Snackbar.make(binding.tabDaysPager, text, Snackbar.LENGTH_SHORT).show();[m
+[32m+[m[32m            }[m
+[32m+[m[32m        };[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    private void navigation() {[m
+         getSupportActionBar().setDisplayHomeAsUpEnabled(true);[m
+         getSupportActionBar().setTitle("Horário");[m
+         this.viewPager = binding.tabDaysPager;[m
+[1mdiff --git a/app/src/main/java/com/gabriel/smartclass/view/user/fragments/institutionUser/CoordinatorCourseClasses.java b/app/src/main/java/com/gabriel/smartclass/view/user/fragments/institutionUser/CoordinatorCourseClasses.java[m
+[1mindex 575f847..ce023de 100644[m
+[1m--- a/app/src/main/java/com/gabriel/smartclass/view/user/fragments/institutionUser/CoordinatorCourseClasses.java[m
+[1m+++ b/app/src/main/java/com/gabriel/smartclass/view/user/fragments/institutionUser/CoordinatorCourseClasses.java[m
+[36m@@ -66,13 +66,14 @@[m [mpublic class CoordinatorCourseClasses extends Fragment {[m
+     }[m
+ [m
+     private DefaultClickListener<Classroom> timeTableClickListener() {[m
+[31m-        return classroom ->{[m
+[31m-            this.callTimeTableView();[m
+[31m-        };[m
+[32m+[m[32m        return this::callTimeTableView;[m
+     }[m
+ [m
+[31m-    private void callTimeTableView() {[m
+[32m+[m[32m    private void callTimeTableView(Classroom classroom) {[m
+         Intent i = new Intent(this.getActivity(), TimeTableView.class);[m
+[32m+[m[32m        i.putExtra("institution", this.viewModel.getInstitution());[m
+[32m+[m[32m        i.putExtra("course", this.viewModel.getCourse());[m
+[32m+[m[32m        i.putExtra("classroom", classroom);[m
+         startActivity(i);[m
+     }[m
+ [m
+[1mdiff --git a/app/src/main/java/com/gabriel/smartclass/viewModels/TimeTableViewModel.java b/app/src/main/java/com/gabriel/smartclass/viewModels/TimeTableViewModel.java[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ce55be3[m
+[1m--- /dev/null[m
+[1m+++ b/app/src/main/java/com/gabriel/smartclass/viewModels/TimeTableViewModel.java[m
+[36m@@ -0,0 +1,166 @@[m
+[32m+[m[32mpackage com.gabriel.smartclass.viewModels;[m
+[32m+[m
+[32m+[m[32mimport androidx.lifecycle.MutableLiveData;[m
+[32m+[m[32mimport androidx.lifecycle.ViewModel;[m
+[32m+[m
+[32m+[m[32mimport com.gabriel.smartclass.dao.ClassroomDAO;[m
+[32m+[m[32mimport com.gabriel.smartclass.model.Classroom;[m
+[32m+[m[32mimport com.gabriel.smartclass.model.Course;[m
+[32m+[m[32mimport com.gabriel.smartclass.model.Institution;[m
+[32m+[m[32mimport com.gabriel.smartclass.model.TimeTable;[m
+[32m+[m
+[32m+[m[32mimport java.util.ArrayList;[m
+[32m+[m[32mimport java.util.HashMap;[m
+[32m+[m[32mimport java.util.List;[m
+[32m+[m
+[32m+[m[32mpublic class TimeTableViewModel extends ViewModel {[m
+[32m+[m[32m    private Classroom classroom;[m
+[32m+[m[32m    private Course course;[m
+[32m+[m[32m    private Institution institution;[m
+[32m+[m[32m    private final MutableLiveData<String> snackbarText = new MutableLiveData<>();[m
+[32m+[m[32m    private final MutableLiveData<List<String>> mondaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());[m
+[32m+[m[32m    private final MutableLiveData<List<String>> tuesdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());[m
+[32m+[m[32m    private final MutableLiveData<List<String>> wednesdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());[m
+[32m+[m[32m    private final MutableLiveData<List<String>> thursdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());[m
+[32m+[m[32m    private final MutableLiveData<List<String>> fridaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());[m
+[32m+[m[32m    private final MutableLiveData<List<String>> saturdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());[m
+[32m+[m[32m    private final MutableLiveData<List<String>> sundaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());[m
+[32m+[m[32m    public MutableLiveData<String> getSnackbarText() {[m
+[32m+[m[32m        return snackbarText;[m
+[32m+[m[32m    }[m
+[32m+[m[32m    public MutableLiveData<List<String>> getMondaySubjectsLiveData() {[m
+[32m+[m[32m        return mondaySubjectsLiveData;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public MutableLiveData<List<String>> getTuesdaySubjectsLiveData() {[m
+[32m+[m[32m        return tuesdaySubjectsLiveData;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public MutableLiveData<List<String>> getWednesdaySubjectsLiveData() {[m
+[32m+[m[32m        return wednesdaySubjectsLiveData;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public MutableLiveData<List<String>> getThursdaySubjectsLiveData() {[m
+[32m+[m[32m        return thursdaySubjectsLiveData;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public MutableLiveData<List<String>> getFridaySubjectsLiveData() {[m
+[32m+[m[32m        return fridaySubjectsLiveData;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public MutableLiveData<List<String>> getSaturdaySubjectsLiveData() {[m
+[32m+[m[32m        return saturdaySubjectsLiveData;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public MutableLiveData<List<String>> getSundaySubjectsLiveData() {[m
+[32m+[m[32m        return sundaySubjectsLiveData;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public Classroom getClassroom() {[m
+[32m+[m[32m        return classroom;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public void setClassroom(Classroom classroom) {[m
+[32m+[m[32m        this.classroom = classroom;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public Course getCourse() {[m
+[32m+[m[32m        return course;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public void setCourse(Course course) {[m
+[32m+[m[32m        this.course = course;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public Institution getInstitution() {[m
+[32m+[m[32m        return institution;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public void setInstitution(Institution institution) {[m
+[32m+[m[32m        this.institution = institution;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public void getMondaySubjects(){[m
+[32m+[m[32m        this.mondaySubjectsLiveData.setValue(this.classroom.getTimeTable().getMondaySubjects());[m
+[32m+[m[32m    }[m
+[32m+[m[32m    public void getTuesdaySubjects(){[m
+[32m+[m[32m        this.tuesdaySubjectsLiveData.setValue(this.classroom.getTimeTable().getTuesdaySubjects());[m
+[32m+[m[32m    }[m
+[32m+[m[32m    public void getWednesdaySubjects(){[m
+[32m+[m[32m        this.wednesdaySubjectsLiveData.setValue(this.classroom.getTimeTable().getWednesdaySubjects());[m
+[32m+[m[32m    }[m
+[32m+[m[32m    public void getThursdaySubjects(){[m
+[32m+[m[32m        this.thursdaySubjectsLiveData.setValue(this.classroom.getTimeTable().getThursdaySubjects());[m
+[32m+[m[32m    }[m
+[32m+[m[32m    public void getFridaySubjects(){[m
+[32m+[m[32m        this.fridaySubjectsLiveData.setValue(this.classroom.getTimeTable().getFridaySubjects());[m
+[32m+[m[32m    }[m
+[32m+[m[32m    public void getSaturdaySubjects(){[m
+[32m+[m[32m        this.saturdaySubjectsLiveData.setValue(this.classroom.getTimeTable().getSaturdaySubjects());[m
+[32m+[m[32m    }[m
+[32m+[m[32m    public void getSundaySubjects(){[m
+[32m+[m[32m        this.sundaySubjectsLiveData.setValue(this.classroom.getTimeTable().getSundaySubjects());[m
+[32m+[m[32m    }[m
+[32m+[m[32m    public void addNewSubject(String subject, int day){[m
+[32m+[m[32m        TimeTable timeTable = this.classroom.getTimeTable();[m
+[32m+[m[32m        switch (day){[m
+[32m+[m[32m            case 1:[m
+[32m+[m[32m                timeTable.getMondaySubjects().add(subject);[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case 2:[m
+[32m+[m[32m                timeTable.getTuesdaySubjects().add(subject);[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case 3:[m
+[32m+[m[32m                timeTable.getWednesdaySubjects().add(subject);[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case 4:[m
+[32m+[m[32m                timeTable.getThursdaySubjects().add(subject);[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case 5:[m
+[32m+[m[32m                timeTable.getFridaySubjects().add(subject);[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case 6:[m
+[32m+[m[32m                timeTable.getSaturdaySubjects().add(subject);[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case 7:[m
+[32m+[m[32m                timeTable.getSundaySubjects().add(subject);[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            default: snackbarText.setValue("Selecione um dia válido...");[m
+[32m+[m[32m            break;[m
+[32m+[m[32m        }[m
+[32m+[m[32m        HashMap<String, Object> classroomUpdates = new HashMap<>();[m
+[32m+[m[32m        classroomUpdates.put("timeTable", timeTable);[m
+[32m+[m[32m        new ClassroomDAO().updateClassroom(this.getInstitution().getId(), this.course.getId(), this.classroom.getId(), classroomUpdates);[m
+[32m+[m[32m    }[m
+[32m+[m[32m    public void removeSubject(int subjectIndex, int day){[m
+[32m+[m[32m        TimeTable timeTable = this.getClassroom().getTimeTable();[m
+[32m+[m[32m        switch (day){[m
+[32m+[m[32m            case 1:[m
+[32m+[m[32m                timeTable.getMondaySubjects().remove(subjectIndex);[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case 2:[m
+[32m+[m[32m                timeTable.getTuesdaySubjects().remove(subjectIndex);[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case 3:[m
+[32m+[m[32m                timeTable.getWednesdaySubjects().remove(subjectIndex);[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case 4:[m
+[32m+[m[32m                timeTable.getThursdaySubjects().remove(subjectIndex);[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case 5:[m
+[32m+[m[32m                timeTable.getFridaySubjects().remove(subjectIndex);[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case 6:[m
+[32m+[m[32m                timeTable.getSaturdaySubjects().remove(subjectIndex);[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            case 7:[m
+[32m+[m[32m                timeTable.getSundaySubjects().remove(subjectIndex);[m
+[32m+[m[32m                break;[m
+[32m+[m[32m            default: snackbarText.setValue("Selecione um dia válido...");[m
+[32m+[m[32m                break;[m
+[32m+[m[32m        }[m
+[32m+[m[32m        HashMap<String, Object> classroomUpdates = new HashMap<>();[m
+[32m+[m[32m        classroomUpdates.put("timeTable", timeTable);[m
+[32m+[m[32m        new ClassroomDAO().updateClassroom(this.getInstitution().getId(), this.course.getId(), this.classroom.getId(), classroomUpdates);[m
+[32m+[m[32m    }[m
+[32m+[m[32m}[m
+[1mdiff --git a/app/src/main/res/layout/fragment_friday_subjects.xml b/app/src/main/res/layout/fragment_friday_subjects.xml[m
+[1mindex 36634c1..efb68cd 100644[m
+[1m--- a/app/src/main/res/layout/fragment_friday_subjects.xml[m
+[1m+++ b/app/src/main/res/layout/fragment_friday_subjects.xml[m
+[36m@@ -1,14 +1,32 @@[m
+ <?xml version="1.0" encoding="utf-8"?>[m
+[31m-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m    xmlns:app="http://schemas.android.com/apk/res-auto"[m
+     xmlns:tools="http://schemas.android.com/tools"[m
+     android:layout_width="match_parent"[m
+     android:layout_height="match_parent"[m
+[32m+[m[32m    android:orientation="vertical"[m
+     tools:context=".view.course.fragments.FridayFragment">[m
+ [m
+[31m-    <!-- TODO: Update blank fragment layout -->[m
+[31m-    <TextView[m
+[32m+[m[32m    <androidx.recyclerview.widget.RecyclerView[m
+[32m+[m[32m        android:id="@+id/rc_friday"[m
+         android:layout_width="match_parent"[m
+[31m-        android:layout_height="match_parent"[m
+[31m-        android:text="@string/hello_blank_fragment" />[m
+[32m+[m[32m        android:layout_height="0dp"[m
+[32m+[m[32m        android:layout_margin="10dp"[m
+[32m+[m[32m        app:layout_constraintBottom_toTopOf="@+id/addFridayButton"[m
+[32m+[m[32m        app:layout_constraintEnd_toEndOf="parent"[m
+[32m+[m[32m        app:layout_constraintStart_toStartOf="parent"[m
+[32m+[m[32m        app:layout_constraintTop_toTopOf="parent" />[m
+ [m
+[31m-</FrameLayout>[m
+\ No newline at end of file[m
+[32m+[m[32m    <androidx.appcompat.widget.AppCompatImageButton[m
+[32m+[m[32m        android:id="@+id/addFridayButton"[m
+[32m+[m[32m        style="@style/Custom_ImageButtons"[m
+[32m+[m[32m        android:layout_width="wrap_content"[m
+[32m+[m[32m        android:layout_height="wrap_content"[m
+[32m+[m[32m        android:layout_weight="1"[m
+[32m+[m[32m        android:src="@drawable/add_icon"[m
+[32m+[m[32m        app:layout_constraintBottom_toBottomOf="parent"[m
+[32m+[m[32m        app:layout_constraintEnd_toEndOf="parent"[m
+[32m+[m[32m        app:layout_constraintStart_toStartOf="parent"[m
+[32m+[m[32m        tools:ignore="SpeakableTextPresentCheck" />[m
+[32m+[m
+[32m+[m[32m</androidx.constraintlayout.widget.ConstraintLayout>[m
+\ No newline at end of file[m
+[1mdiff --git a/app/src/main/res/layout/fragment_monday.xml b/app/src/main/res/layout/fragment_monday.xml[m
+[1mindex 40a0d1d..4f36c1d 100644[m
+[1m--- a/app/src/main/res/layout/fragment_monday.xml[m
+[1m+++ b/app/src/main/res/layout/fragment_monday.xml[m
+[36m@@ -1,13 +1,32 @@[m
+ <?xml version="1.0" encoding="utf-8"?>[m
+[31m-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m    xmlns:app="http://schemas.android.com/apk/res-auto"[m
+     xmlns:tools="http://schemas.android.com/tools"[m
+     android:layout_width="match_parent"[m
+     android:layout_height="match_parent"[m
+[32m+[m[32m    android:orientation="vertical"[m
+     tools:context=".view.course.fragments.MondayFragment">[m
+ [m
+[31m-    <!-- TODO: Update blank fragment layout -->[m
+[31m-    <androidx.appcompat.widget.AppCompatButton[m
+[31m-        style="@style/Button_Confirm_Forms"[m
+[31m-        android:text="button"/>[m
+[32m+[m[32m    <androidx.recyclerview.widget.RecyclerView[m
+[32m+[m[32m        android:id="@+id/rc_monday"[m
+[32m+[m[32m        android:layout_width="match_parent"[m
+[32m+[m[32m        android:layout_height="0dp"[m
+[32m+[m[32m        android:layout_margin="10dp"[m
+[32m+[m[32m        app:layout_constraintBottom_toTopOf="@+id/addMondayButton"[m
+[32m+[m[32m        app:layout_constraintEnd_toEndOf="parent"[m
+[32m+[m[32m        app:layout_constraintStart_toStartOf="parent"[m
+[32m+[m[32m        app:layout_constraintTop_toTopOf="parent" />[m
+ [m
+[31m-</LinearLayout>[m
+\ No newline at end of file[m
+[32m+[m[32m    <androidx.appcompat.widget.AppCompatImageButton[m
+[32m+[m[32m        android:id="@+id/addMondayButton"[m
+[32m+[m[32m        style="@style/Custom_ImageButtons"[m
+[32m+[m[32m        android:layout_width="wrap_content"[m
+[32m+[m[32m        android:layout_height="wrap_content"[m
+[32m+[m[32m        android:layout_weight="1"[m
+[32m+[m[32m        android:src="@drawable/add_icon"[m
+[32m+[m[32m        app:layout_constraintBottom_toBottomOf="parent"[m
+[32m+[m[32m        app:layout_constraintEnd_toEndOf="parent"[m
+[32m+[m[32m        app:layout_constraintStart_toStartOf="parent"[m
+[32m+[m[32m        tools:ignore="SpeakableTextPresentCheck" />[m
+[32m+[m
+[32m+[m[32m</androidx.constraintlayout.widget.ConstraintLayout>[m
+\ No newline at end of file[m
+[1mdiff --git a/app/src/main/res/layout/fragment_saturday_fragments.xml b/app/src/main/res/layout/fragment_saturday_fragments.xml[m
+[1mindex 162881f..fbe835f 100644[m
+[1m--- a/app/src/main/res/layout/fragment_saturday_fragments.xml[m
+[1m+++ b/app/src/main/res/layout/fragment_saturday_fragments.xml[m
+[36m@@ -1,14 +1,32 @@[m
+ <?xml version="1.0" encoding="utf-8"?>[m
+[31m-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m    xmlns:app="http://schemas.android.com/apk/res-auto"[m
+     xmlns:tools="http://schemas.android.com/tools"[m
+     android:layout_width="match_parent"[m
+     android:layout_height="match_parent"[m
+[32m+[m[32m    android:orientation="vertical"[m
+     tools:context=".view.course.fragments.SaturdayFragments">[m
+ [m
+[31m-    <!-- TODO: Update blank fragment layout -->[m
+[31m-    <TextView[m
+[32m+[m[32m    <androidx.recyclerview.widget.RecyclerView[m
+[32m+[m[32m        android:id="@+id/rc_saturday"[m
+         android:layout_width="match_parent"[m
+[31m-        android:layout_height="match_parent"[m
+[31m-        android:text="@string/hello_blank_fragment" />[m
+[32m+[m[32m        android:layout_height="0dp"[m
+[32m+[m[32m        android:layout_margin="10dp"[m
+[32m+[m[32m        app:layout_constraintBottom_toTopOf="@+id/addSaturdayButton"[m
+[32m+[m[32m        app:layout_constraintEnd_toEndOf="parent"[m
+[32m+[m[32m        app:layout_constraintStart_toStartOf="parent"[m
+[32m+[m[32m        app:layout_constraintTop_toTopOf="parent" />[m
+ [m
+[31m-</FrameLayout>[m
+\ No newline at end of file[m
+[32m+[m[32m    <androidx.appcompat.widget.AppCompatImageButton[m
+[32m+[m[32m        android:id="@+id/addSaturdayButton"[m
+[32m+[m[32m        style="@style/Custom_ImageButtons"[m
+[32m+[m[32m        android:layout_width="wrap_content"[m
+[32m+[m[32m        android:layout_height="wrap_content"[m
+[32m+[m[32m        android:layout_weight="1"[m
+[32m+[m[32m        android:src="@drawable/add_icon"[m
+[32m+[m[32m        app:layout_constraintBottom_toBottomOf="parent"[m
+[32m+[m[32m        app:layout_constraintEnd_toEndOf="parent"[m
+[32m+[m[32m        app:layout_constraintStart_toStartOf="parent"[m
+[32m+[m[32m        tools:ignore="SpeakableTextPresentCheck" />[m
+[32m+[m
+[32m+[m[32m</androidx.constraintlayout.widget.ConstraintLayout>[m
+\ No newline at end of file[m
+[1mdiff --git a/app/src/main/res/layout/fragment_sunday.xml b/app/src/main/res/layout/fragment_sunday.xml[m
+[1mindex bc90f4a..e7b0d3d 100644[m
+[1m--- a/app/src/main/res/layout/fragment_sunday.xml[m
+[1m+++ b/app/src/main/res/layout/fragment_sunday.xml[m
+[36m@@ -1,14 +1,32 @@[m
+ <?xml version="1.0" encoding="utf-8"?>[m
+[31m-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m    xmlns:app="http://schemas.android.com/apk/res-auto"[m
+     xmlns:tools="http://schemas.android.com/tools"[m
+     android:layout_width="match_parent"[m
+     android:layout_height="match_parent"[m
+[32m+[m[32m    android:orientation="vertical"[m
+     tools:context=".view.course.fragments.SundayFragment">[m
+ [m
+[31m-    <!-- TODO: Update blank fragment layout -->[m
+[31m-    <TextView[m
+[32m+[m[32m    <androidx.recyclerview.widget.RecyclerView[m
+[32m+[m[32m        android:id="@+id/rc_sunday"[m
+         android:layout_width="match_parent"[m
+[31m-        android:layout_height="match_parent"[m
+[31m-        android:text="@string/hello_blank_fragment" />[m
+[32m+[m[32m        android:layout_height="0dp"[m
+[32m+[m[32m        android:layout_margin="10dp"[m
+[32m+[m[32m        app:layout_constraintBottom_toTopOf="@+id/addSundayButton"[m
+[32m+[m[32m        app:layout_constraintEnd_toEndOf="parent"[m
+[32m+[m[32m        app:layout_constraintStart_toStartOf="parent"[m
+[32m+[m[32m        app:layout_constraintTop_toTopOf="parent" />[m
+ [m
+[31m-</FrameLayout>[m
+\ No newline at end of file[m
+[32m+[m[32m    <androidx.appcompat.widget.AppCompatImageButton[m
+[32m+[m[32m        android:id="@+id/addSundayButton"[m
+[32m+[m[32m        style="@style/Custom_ImageButtons"[m
+[32m+[m[32m        android:layout_width="wrap_content"[m
+[32m+[m[32m        android:layout_height="wrap_content"[m
+[32m+[m[32m        android:layout_weight="1"[m
+[32m+[m[32m        android:src="@drawable/add_icon"[m
+[32m+[m[32m        app:layout_constraintBottom_toBottomOf="parent"[m
+[32m+[m[32m        app:layout_constraintEnd_toEndOf="parent"[m
+[32m+[m[32m        app:layout_constraintStart_toStartOf="parent"[m
+[32m+[m[32m        tools:ignore="SpeakableTextPresentCheck" />[m
+[32m+[m
+[32m+[m[32m</androidx.constraintlayout.widget.ConstraintLayout>[m
+\ No newline at end of file[m
+[1mdiff --git a/app/src/main/res/layout/fragment_thursday.xml b/app/src/main/res/layout/fragment_thursday.xml[m
+[1mindex 0e8736b..0d04096 100644[m
+[1m--- a/app/src/main/res/layout/fragment_thursday.xml[m
+[1m+++ b/app/src/main/res/layout/fragment_thursday.xml[m
+[36m@@ -1,14 +1,32 @@[m
+ <?xml version="1.0" encoding="utf-8"?>[m
+[31m-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m    xmlns:app="http://schemas.android.com/apk/res-auto"[m
+     xmlns:tools="http://schemas.android.com/tools"[m
+     android:layout_width="match_parent"[m
+     android:layout_height="match_parent"[m
+[32m+[m[32m    android:orientation="vertical"[m
+     tools:context=".view.course.fragments.ThursdayFragment">[m
+ [m
+[31m-    <!-- TODO: Update blank fragment layout -->[m
+[31m-    <TextView[m
+[32m+[m[32m    <androidx.recyclerview.widget.RecyclerView[m
+[32m+[m[32m        android:id="@+id/rc_thursday"[m
+         android:layout_width="match_parent"[m
+[31m-        android:layout_height="match_parent"[m
+[31m-        android:text="@string/hello_blank_fragment" />[m
+[32m+[m[32m        android:layout_height="0dp"[m
+[32m+[m[32m        android:layout_margin="10dp"[m
+[32m+[m[32m        app:layout_constraintBottom_toTopOf="@+id/addThursdayButton"[m
+[32m+[m[32m        app:layout_constraintEnd_toEndOf="parent"[m
+[32m+[m[32m        app:layout_constraintStart_toStartOf="parent"[m
+[32m+[m[32m        app:layout_constraintTop_toTopOf="parent" />[m
+ [m
+[31m-</FrameLayout>[m
+\ No newline at end of file[m
+[32m+[m[32m    <androidx.appcompat.widget.AppCompatImageButton[m
+[32m+[m[32m        android:id="@+id/addThursdayButton"[m
+[32m+[m[32m        style="@style/Custom_ImageButtons"[m
+[32m+[m[32m        android:layout_width="wrap_content"[m
+[32m+[m[32m        android:layout_height="wrap_content"[m
+[32m+[m[32m        android:layout_weight="1"[m
+[32m+[m[32m        android:src="@drawable/add_icon"[m
+[32m+[m[32m        app:layout_constraintBottom_toBottomOf="parent"[m
+[32m+[m[32m        app:layout_constraintEnd_toEndOf="parent"[m
+[32m+[m[32m        app:layout_constraintStart_toStartOf="parent"[m
+[32m+[m[32m        tools:ignore="SpeakableTextPresentCheck" />[m
+[32m+[m
+[32m+[m[32m</androidx.constraintlayout.widget.ConstraintLayout>[m
+\ No newline at end of file[m
+[1mdiff --git a/app/src/main/res/layout/fragment_tuesday.xml b/app/src/main/res/layout/fragment_tuesday.xml[m
+[1mindex 1b132d5..7d472ab 100644[m
+[1m--- a/app/src/main/res/layout/fragment_tuesday.xml[m
+[1m+++ b/app/src/main/res/layout/fragment_tuesday.xml[m
+[36m@@ -1,14 +1,32 @@[m
+ <?xml version="1.0" encoding="utf-8"?>[m
+[31m-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m    xmlns:app="http://schemas.android.com/apk/res-auto"[m
+     xmlns:tools="http://schemas.android.com/tools"[m
+     android:layout_width="match_parent"[m
+     android:layout_height="match_parent"[m
+[32m+[m[32m    android:orientation="vertical"[m
+     tools:context=".view.course.fragments.TuesdayFragment">[m
+ [m
+[31m-    <!-- TODO: Update blank fragment layout -->[m
+[31m-    <TextView[m
+[32m+[m[32m    <androidx.recyclerview.widget.RecyclerView[m
+[32m+[m[32m        android:id="@+id/rc_tuesday"[m
+         android:layout_width="match_parent"[m
+[31m-        android:layout_height="match_parent"[m
+[31m-        android:text="@string/hello_blank_fragment" />[m
+[32m+[m[32m        android:layout_height="0dp"[m
+[32m+[m[32m        android:layout_margin="10dp"[m
+[32m+[m[32m        app:layout_constraintBottom_toTopOf="@+id/addTuesdayButton"[m
+[32m+[m[32m        app:layout_constraintEnd_toEndOf="parent"[m
+[32m+[m[32m        app:layout_constraintStart_toStartOf="parent"[m
+[32m+[m[32m        app:layout_constraintTop_toTopOf="parent" />[m
+ [m
+[31m-</FrameLayout>[m
+\ No newline at end of file[m
+[32m+[m[32m    <androidx.appcompat.widget.AppCompatImageButton[m
+[32m+[m[32m        android:id="@+id/addTuesdayButton"[m
+[32m+[m[32m        style="@style/Custom_ImageButtons"[m
+[32m+[m[32m        android:layout_width="wrap_content"[m
+[32m+[m[32m        android:layout_height="wrap_content"[m
+[32m+[m[32m        android:layout_weight="1"[m
+[32m+[m[32m        android:src="@drawable/add_icon"[m
+[32m+[m[32m        app:layout_constraintBottom_toBottomOf="parent"[m
+[32m+[m[32m        app:layout_constraintEnd_toEndOf="parent"[m
+[32m+[m[32m        app:layout_constraintStart_toStartOf="parent"[m
+[32m+[m[32m        tools:ignore="SpeakableTextPresentCheck" />[m
+[32m+[m
+[32m+[m[32m</androidx.constraintlayout.widget.ConstraintLayout>[m
+\ No newline at end of file[m
+[1mdiff --git a/app/src/main/res/layout/fragment_wednesday.xml b/app/src/main/res/layout/fragment_wednesday.xml[m
+[1mindex c647b29..0037329 100644[m
+[1m--- a/app/src/main/res/layout/fragment_wednesday.xml[m
+[1m+++ b/app/src/main/res/layout/fragment_wednesday.xml[m
+[36m@@ -1,14 +1,33 @@[m
+ <?xml version="1.0" encoding="utf-8"?>[m
+[31m-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"[m
+[32m+[m[32m    xmlns:app="http://schemas.android.com/apk/res-auto"[m
+     xmlns:tools="http://schemas.android.com/tools"[m
+     android:layout_width="match_parent"[m
+     android:layout_height="match_parent"[m
+[32m+[m[32m    android:orientation="vertical"[m
+     tools:context=".view.course.fragments.WednesdayFragment">[m
+ [m
+     <!-- TODO: Update blank fragment layout -->[m
+[31m-    <TextView[m
+[32m+[m[32m    <androidx.recyclerview.widget.RecyclerView[m
+[32m+[m[32m        android:id="@+id/rc_wednesday"[m
+         android:layout_width="match_parent"[m
+[31m-        android:layout_height="match_parent"[m
+[31m-        android:text="@string/hello_blank_fragment" />[m
+[32m+[m[32m        android:layout_height="0dp"[m
+[32m+[m[32m        android:layout_margin="10dp"[m
+[32m+[m[32m        app:layout_constraintBottom_toTopOf="@+id/addWednesdayButton"[m
+[32m+[m[32m        app:layout_constraintEnd_toEndOf="parent"[m
+[32m+[m[32m        app:layout_constraintStart_toStartOf="parent"[m
+[32m+[m[32m        app:layout_constraintTop_toTopOf="parent" />[m
+ [m
+[31m-</FrameLayout>[m
+\ No newline at end of file[m
+[32m+[m[32m    <androidx.appcompat.widget.AppCompatImageButton[m
+[32m+[m[32m        android:id="@+id/addWednesdayButton"[m
+[32m+[m[32m        style="@style/Custom_ImageButtons"[m
+[32m+[m[32m        android:layout_width="wrap_content"[m
+[32m+[m[32m        android:layout_height="wrap_content"[m
+[32m+[m[32m        android:layout_weight="1"[m
+[32m+[m[32m        android:src="@drawable/add_icon"[m
+[32m+[m[32m        app:layout_constraintBottom_toBottomOf="parent"[m
+[32m+[m[32m        app:layout_constraintEnd_toEndOf="parent"[m
+[32m+[m[32m        app:layout_constraintStart_toStartOf="parent"[m
+[32m+[m[32m        tools:ignore="SpeakableTextPresentCheck" />[m
+[32m+[m
+[32m+[m[32m</androidx.constraintlayout.widget.ConstraintLayout>[m
+\ No newline at end of file[m

@@ -25,9 +25,11 @@ public class TimeTableViewModel extends ViewModel {
     private final MutableLiveData<List<String>> fridaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<String>> saturdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<String>> sundaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
+
     public MutableLiveData<String> getSnackbarText() {
         return snackbarText;
     }
+
     public MutableLiveData<List<String>> getMondaySubjectsLiveData() {
         return mondaySubjectsLiveData;
     }
@@ -80,83 +82,134 @@ public class TimeTableViewModel extends ViewModel {
         this.institution = institution;
     }
 
-    public void getMondaySubjects(){
+    public void getMondaySubjects() {
         this.mondaySubjectsLiveData.setValue(this.classroom.getTimeTable().getMondaySubjects());
     }
-    public void getTuesdaySubjects(){
+
+    public void getTuesdaySubjects() {
         this.tuesdaySubjectsLiveData.setValue(this.classroom.getTimeTable().getTuesdaySubjects());
     }
-    public void getWednesdaySubjects(){
+
+    public void getWednesdaySubjects() {
         this.wednesdaySubjectsLiveData.setValue(this.classroom.getTimeTable().getWednesdaySubjects());
     }
-    public void getThursdaySubjects(){
+
+    public void getThursdaySubjects() {
         this.thursdaySubjectsLiveData.setValue(this.classroom.getTimeTable().getThursdaySubjects());
     }
-    public void getFridaySubjects(){
+
+    public void getFridaySubjects() {
         this.fridaySubjectsLiveData.setValue(this.classroom.getTimeTable().getFridaySubjects());
     }
-    public void getSaturdaySubjects(){
+
+    public void getSaturdaySubjects() {
         this.saturdaySubjectsLiveData.setValue(this.classroom.getTimeTable().getSaturdaySubjects());
     }
-    public void getSundaySubjects(){
+
+    public void getSundaySubjects() {
         this.sundaySubjectsLiveData.setValue(this.classroom.getTimeTable().getSundaySubjects());
     }
-    public void addNewSubject(String subject, int day){
-        TimeTable timeTable = this.classroom.getTimeTable();
-        switch (day){
-            case 1:
-                timeTable.getMondaySubjects().add(subject);
-                break;
-            case 2:
-                timeTable.getTuesdaySubjects().add(subject);
-                break;
-            case 3:
-                timeTable.getWednesdaySubjects().add(subject);
-                break;
-            case 4:
-                timeTable.getThursdaySubjects().add(subject);
-                break;
-            case 5:
-                timeTable.getFridaySubjects().add(subject);
-                break;
-            case 6:
-                timeTable.getSaturdaySubjects().add(subject);
-                break;
-            case 7:
-                timeTable.getSundaySubjects().add(subject);
-                break;
-            default: snackbarText.setValue("Selecione um dia válido...");
-            break;
-        }
-        HashMap<String, Object> classroomUpdates = new HashMap<>();
-        classroomUpdates.put("timeTable", timeTable);
-        new ClassroomDAO().updateClassroom(this.getInstitution().getId(), this.course.getId(), this.classroom.getId(), classroomUpdates);
+
+    public void loadAllTimeTables(){
+        this.getMondaySubjects();
+        this.getTuesdaySubjects();
+        this.getWednesdaySubjects();
+        this.getThursdaySubjects();
+        this.getFridaySubjects();
+        this.getSundaySubjects();
+        this.getSaturdaySubjects();
     }
-    public void removeSubject(int subjectIndex, int day){
+    public List<String> updateLists(List<String> actualList, List<String> newList, String subject, int index, boolean add){
+        if(add){
+            newList = actualList;
+            newList.add(subject);
+            return newList;
+        }else{
+            newList = actualList;
+            newList.remove(index);
+            return newList;
+        }
+    }
+    public void addNewSubject(String subject, int day) {
+        if (subject != null && !subject.equals("")) {
+            TimeTable timeTable = this.classroom.getTimeTable();
+            List<String> newList = new ArrayList<>();
+            switch (day) {
+                case 1:
+                    timeTable.setMondaySubjects(updateLists(timeTable.getMondaySubjects(), newList, subject, 0, true));
+                    this.mondaySubjectsLiveData.setValue(timeTable.getMondaySubjects());
+                    break;
+                case 2:
+                    timeTable.setTuesdaySubjects(updateLists(timeTable.getTuesdaySubjects(), newList, subject, 0, true));
+                    this.tuesdaySubjectsLiveData.setValue(timeTable.getTuesdaySubjects());
+                    break;
+                case 3:
+                    timeTable.setWednesdaySubjects(updateLists(timeTable.getWednesdaySubjects(), newList, subject, 0, true));
+                    this.wednesdaySubjectsLiveData.setValue(timeTable.getWednesdaySubjects());
+                    break;
+                case 4:
+                    timeTable.setThursdaySubjects(updateLists(timeTable.getThursdaySubjects(), newList, subject, 0, true));
+                    this.thursdaySubjectsLiveData.setValue(timeTable.getThursdaySubjects());
+                    break;
+                case 5:
+                    timeTable.setFridaySubjects(updateLists(timeTable.getFridaySubjects(), newList, subject, 0, true));
+                    this.fridaySubjectsLiveData.setValue(timeTable.getFridaySubjects());
+                    break;
+                case 6:
+                    timeTable.setSaturdaySubjects(updateLists(timeTable.getSaturdaySubjects(), newList, subject, 0, true));
+                    this.saturdaySubjectsLiveData.setValue(timeTable.getSaturdaySubjects());
+                    break;
+                case 7:
+                    timeTable.setSundaySubjects(updateLists(timeTable.getSundaySubjects(), newList, subject, 0, true));
+                    this.sundaySubjectsLiveData.setValue(timeTable.getSundaySubjects());
+                    break;
+                default:
+                    snackbarText.setValue("Selecione um dia válido...");
+                    break;
+            }
+            HashMap<String, Object> classroomUpdates = new HashMap<>();
+            classroomUpdates.put("timeTable", timeTable);
+            new ClassroomDAO().updateClassroom(this.getInstitution().getId(), this.course.getId(), this.classroom.getId(), classroomUpdates);
+        }else{
+            this.snackbarText.setValue("Preencha o campo 'matéria'...");
+        }
+
+    }
+
+    public void removeSubject(int subjectIndex, int day) {
         TimeTable timeTable = this.getClassroom().getTimeTable();
-        switch (day){
+        List<String> newList = new ArrayList<>();
+        switch (day) {
             case 1:
-                timeTable.getMondaySubjects().remove(subjectIndex);
+                timeTable.setMondaySubjects(updateLists(timeTable.getMondaySubjects(), newList, null, subjectIndex, false));
+                this.mondaySubjectsLiveData.setValue(timeTable.getMondaySubjects());
                 break;
             case 2:
-                timeTable.getTuesdaySubjects().remove(subjectIndex);
+                timeTable.setTuesdaySubjects(updateLists(timeTable.getTuesdaySubjects(), newList, null, subjectIndex, false));
+                this.tuesdaySubjectsLiveData.setValue(timeTable.getTuesdaySubjects());;
                 break;
             case 3:
-                timeTable.getWednesdaySubjects().remove(subjectIndex);
+                timeTable.setWednesdaySubjects(updateLists(timeTable.getWednesdaySubjects(), newList, null, subjectIndex, false));
+                this.wednesdaySubjectsLiveData.setValue(timeTable.getWednesdaySubjects());
                 break;
             case 4:
-                timeTable.getThursdaySubjects().remove(subjectIndex);
+                timeTable.setThursdaySubjects(updateLists(timeTable.getThursdaySubjects(), newList, null, subjectIndex, false));
+                this.thursdaySubjectsLiveData.setValue(timeTable.getThursdaySubjects());
                 break;
             case 5:
-                timeTable.getFridaySubjects().remove(subjectIndex);
+                timeTable.setFridaySubjects(updateLists(timeTable.getFridaySubjects(), newList, null, subjectIndex, false));
+                this.fridaySubjectsLiveData.setValue(timeTable.getFridaySubjects());
                 break;
             case 6:
-                timeTable.getSaturdaySubjects().remove(subjectIndex);
+                timeTable.setSaturdaySubjects(updateLists(timeTable.getSaturdaySubjects(), newList, null, subjectIndex, false));
+                this.saturdaySubjectsLiveData.setValue(timeTable.getSaturdaySubjects());
                 break;
             case 7:
-                timeTable.getSundaySubjects().remove(subjectIndex);
+                timeTable.setSundaySubjects(updateLists(timeTable.getSundaySubjects(), newList, null, subjectIndex, false));
+                this.sundaySubjectsLiveData.setValue(timeTable.getSundaySubjects());
                 break;
-            default: snackbarText.setValue("Selecione um dia válido...");
+            default:
+                snackbarText.setValue("Selecione um dia válido...");
                 break;
         }
         HashMap<String, Object> classroomUpdates = new HashMap<>();

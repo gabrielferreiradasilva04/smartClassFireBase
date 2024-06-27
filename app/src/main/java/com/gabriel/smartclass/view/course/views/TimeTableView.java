@@ -39,6 +39,13 @@ public class TimeTableView extends AppCompatActivity {
         this.viewModel.setCourse(getIntent().getParcelableExtra("course"));
         this.viewModel.setClassroom(getIntent().getParcelableExtra("classroom"));
         this.viewModel.getSnackbarText().observe(this, this.snackbarObserver());
+        this.viewModel.getMondaySubjects();
+        this.viewModel.getTuesdaySubjects();
+        this.viewModel.getWednesdaySubjects();
+        this.viewModel.getThursdaySubjects();
+        this.viewModel.getFridaySubjects();
+        this.viewModel.getSaturdaySubjects();
+        this.viewModel.getSundaySubjects();
     }
 
     private Observer<? super String> snackbarObserver() {
