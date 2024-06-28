@@ -21,6 +21,7 @@ import com.gabriel.smartclass.model.Teacher;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -117,12 +118,14 @@ public class CoordinatorCourseViewModel extends ViewModel {
     public void addNewMemberOnCourse(InstitutionUser institutionUser, boolean isStudent) {
         if (!this.membersAdapter.getInstitutionUsers().getValue().contains(institutionUser)) {
             if (!isStudent) {
+                CourseDAO courseDAO = new CourseDAO();
                 Teacher teacher = new Teacher();
                 teacher.setId(institutionUser.getId());
                 teacher.setDescription(institutionUser.getDescription());
                 teacher.setMainUserReference(institutionUser.getUser_id());
-                new CourseDAO().addTeacher(this.institution.getId(), this.course.getId(), teacher, unused -> {
+                courseDAO.addTeacher(this.institution.getId(), this.course.getId(), teacher, unused -> {
                     if (unused.isSuccessful()) {
+                        updateTeachersList(institutionUser, courseDAO, true );
                         this.membersAdapter.addItem(institutionUser);
 
                     } else {
@@ -132,13 +135,15 @@ public class CoordinatorCourseViewModel extends ViewModel {
                     snackbarText.setValue("Ocorreu um erro inesperado, tente novamente mais tarde");
                 });
             } else {
+                CourseDAO courseDAO = new CourseDAO();
                 Student student = new Student();
                 student.setId(institutionUser.getId());
                 student.setDescription(institutionUser.getDescription());
                 student.setMainUserReference(institutionUser.getUser_id());
-                new CourseDAO().addStudent(this.institution.getId(), this.course.getId(), student, unused -> {
+                courseDAO.addStudent(this.institution.getId(), this.course.getId(), student, unused -> {
                     if (unused.isSuccessful()) {
                         this.membersAdapter.addItem(institutionUser);
+                        this.updateStudentList(institutionUser, courseDAO, true);
                     } else {
                         snackbarText.setValue("Ocorreu um erro ao adicionar o estudante ao curso");
                     }
@@ -148,6 +153,31 @@ public class CoordinatorCourseViewModel extends ViewModel {
             snackbarText.setValue("Esse usuário já está vinculado ao curso...");
         }
 
+    }
+
+    private void updateStudentList(InstitutionUser institutionUser, CourseDAO courseDAO, boolean add) {
+        HashMap<String, Object> updateCourse = new HashMap<>();
+        List<String> students_id = this.course.getStudents_id();
+        if(add){
+            students_id.add(institutionUser.getId());
+        }else{
+            students_id.removeIf(object -> object.equals(institutionUser.getId()));
+        }
+        updateCourse.put("students_id", students_id);
+        courseDAO.updateCourse(this.course.getId(), this.institution.getId(), updateCourse, complete ->{}, fail ->{});
+
+    }
+
+    private void updateTeachersList(InstitutionUser institutionUser, CourseDAO courseDAO, boolean add) {
+        HashMap<String, Object> updateCourse = new HashMap<>();
+        List<String> teachers_id = this.course.getTeachers_id();
+        if(add){
+            teachers_id.add(institutionUser.getId());
+        }else{
+            teachers_id.removeIf(object -> object.equals(institutionUser.getId()));
+        }
+        updateCourse.put("teachers_id", teachers_id);
+        courseDAO.updateCourse(this.course.getId(), this.institution.getId(), updateCourse, complete ->{}, fail ->{});
     }
 
     public void removeMemberFromCourse(InstitutionUser institutionUser) {
@@ -166,6 +196,7 @@ public class CoordinatorCourseViewModel extends ViewModel {
                 Teacher teacher = task.getResult();
                 if (teacher != null) {
                     courseDAO.removeTeacher(this.institution.getId(), this.course.getId(), teacher, taskRemoveTeacher -> {
+                        this.updateTeachersList(institutionUser, courseDAO, false);
                         snackbarText.setValue("Professor removido do curso");
                         this.membersAdapter.removeItem(institutionUser);
                     }, eRemoveTeacher -> snackbarText.setValue("Ocorreu um erro ao remover o membro do curso, tente novamente mais tarde.."));
@@ -182,6 +213,7 @@ public class CoordinatorCourseViewModel extends ViewModel {
                 if (student != null) {
                     courseDAO.removeStudent(this.institution.getId(), this.course.getId(), student, taskRemoveStudent -> {
                         if (task.isSuccessful()) {
+                            this.updateStudentList(institutionUser, courseDAO, false);
                             snackbarText.setValue("Estudante Removido do Curso");
                             this.membersAdapter.removeItem(institutionUser);
                         } else {

@@ -31,6 +31,7 @@ public class TimeTableView extends AppCompatActivity {
     private void initialize() {
         navigation();
         buildViewModel();
+        this.viewModel.liveSyncClassroom();
     }
 
     private void buildViewModel() {
@@ -39,18 +40,12 @@ public class TimeTableView extends AppCompatActivity {
         this.viewModel.setCourse(getIntent().getParcelableExtra("course"));
         this.viewModel.setClassroom(getIntent().getParcelableExtra("classroom"));
         this.viewModel.getSnackbarText().observe(this, this.snackbarObserver());
-        this.viewModel.getMondaySubjects();
-        this.viewModel.getTuesdaySubjects();
-        this.viewModel.getWednesdaySubjects();
-        this.viewModel.getThursdaySubjects();
-        this.viewModel.getFridaySubjects();
-        this.viewModel.getSaturdaySubjects();
-        this.viewModel.getSundaySubjects();
+        this.viewModel.loadAllTimeTables();
     }
 
     private Observer<? super String> snackbarObserver() {
-        return text ->{
-            if(text != null && !text.equals("")){
+        return text -> {
+            if (text != null && !text.equals("")) {
                 Snackbar.make(binding.tabDaysPager, text, Snackbar.LENGTH_SHORT).show();
             }
         };

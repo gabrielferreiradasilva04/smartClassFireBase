@@ -1,7 +1,6 @@
 package com.gabriel.smartclass.viewModels;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -75,16 +74,29 @@ public class InstitutionUserMainMenuViewModel extends ViewModel {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void loadUserCourses(boolean isCoordinator) {
-        this.courseAdapter = new CourseRCAdapter();
-        this.courseAdapter.setShowOnlyCourseView(true);
-        this.courseAdapter.setEnableCourseAccess(true);
-        new InstitutionUserDAO().getInstitutionUserCourses(this.currentInstitution.getId(), this.currentInstitutionUser.getId(), isCoordinator, task -> {
-            if (task.isComplete() && task.isSuccessful()) {
-                this.courseAdapter.getMutableliveDataCourse().setValue(task.getResult().toObjects(Course.class));
-                this.courseAdapter.notifyDataSetChanged();
-            }
-        }, e -> snackbarText.setValue("Erro ao recuperar seus cursos, tente novamente mais tarde..."));
+    public void loadUserCourses(String userType) {
+        if(userType.equals("Coordenador")){
+            this.courseAdapter = new CourseRCAdapter();
+            this.courseAdapter.setShowOnlyCourseView(true);
+            this.courseAdapter.setEnableCourseAccess(true);
+            new InstitutionUserDAO().getInstitutionUserCourses(this.currentInstitution.getId(), this.currentInstitutionUser.getId(), userType, task -> {
+                if (task.isComplete() && task.isSuccessful()) {
+                    this.courseAdapter.getMutableliveDataCourse().setValue(task.getResult().toObjects(Course.class));
+                    this.courseAdapter.notifyDataSetChanged();
+                }
+            }, e -> snackbarText.setValue("Erro ao recuperar seus cursos, tente novamente mais tarde..."));
+        }else{
+            this.courseAdapter = new CourseRCAdapter();
+            this.courseAdapter.setShowOnlyCourseView(false);
+            this.courseAdapter.setEnableCourseAccess(true);
+            new InstitutionUserDAO().getInstitutionUserCourses(this.currentInstitution.getId(), this.currentInstitutionUser.getId(), userType, task -> {
+                if (task.isComplete() && task.isSuccessful()) {
+                    this.courseAdapter.getMutableliveDataCourse().setValue(task.getResult().toObjects(Course.class));
+                    this.courseAdapter.notifyDataSetChanged();
+                }
+            }, e -> snackbarText.setValue("Erro ao recuperar seus cursos, tente novamente mais tarde..."));
+        }
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -96,12 +108,11 @@ public class InstitutionUserMainMenuViewModel extends ViewModel {
                     searchCoursesAdapter.getMutableliveDataCourse().setValue(task.getResult().toObjects(Course.class));
                     searchCoursesAdapter.notifyDataSetChanged();
                 } else {
-                    Log.d("Buscando", "searchCourses: nao encontrou");
                     searchCoursesAdapter.getMutableliveDataCourse().setValue(new ArrayList<>());
                     searchCoursesAdapter.notifyDataSetChanged();
                 }
             }, e -> {
-                snackbarText.setValue("Não foi encontrada nenhuma instituição com esses parâmtros...");
+                snackbarText.setValue("Não foi encontrada nenhuma instituição com esses parâmetros...");
                 searchCoursesAdapter.getMutableliveDataCourse().setValue(new ArrayList<>());
                 searchCoursesAdapter.notifyDataSetChanged();
             });

@@ -41,7 +41,7 @@ public class InstitutionUserMainMenu extends BaseActivity {
         navigation();
         viewModel.loadUserByInstitutionUser();
         viewModel.getUserTypeByInstitutionUser().observe(this, userType -> {
-            viewModel.loadUserCourses(userType.getDescription().equals("Coordenador"));
+            viewModel.loadUserCourses(userType.getDescription());
             this.courseClickListener();
         });
         viewModel.getSnackbarText().observe(this,this.snackbarObserver());

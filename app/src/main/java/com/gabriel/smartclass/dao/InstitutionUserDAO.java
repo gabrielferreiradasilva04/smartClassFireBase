@@ -1,11 +1,10 @@
 package com.gabriel.smartclass.dao;
 
 
-import android.util.Log;
-
 import com.gabriel.smartclass.model.Course;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionUser;
+import com.gabriel.smartclass.model.Student;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -22,6 +21,7 @@ public class InstitutionUserDAO {
     private final String COLLECTION = InstitutionUser.class.getSimpleName();
     private final String institutionsCollection = Institution.class.getSimpleName();
     private final String courseCollection = Course.class.getSimpleName();
+    private final String studentCollection = Student.class.getSimpleName();
 
     private final FirebaseFirestore fb = FirebaseFirestore.getInstance();
 
@@ -65,21 +65,44 @@ public class InstitutionUserDAO {
         FirebaseFirestore.getInstance().collection(institutionsCollection).document(institutionID).collection(COLLECTION).document(institutionUserID).update(updates).addOnCompleteListener(onCompleteListener).addOnFailureListener(onFailureListener);
     }
 
-    public void getInstitutionUserCourses(String institutionID, String institutionUserID, boolean iscoordinator, OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener) {
+    public void getInstitutionUserCourses(String institutionID, String institutionUserID, String userType, OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener) {
         FirebaseFirestore fb = FirebaseFirestore.getInstance();
         DocumentReference institutionUserReference = fb.collection(institutionsCollection).document(institutionID).collection(COLLECTION).document(institutionUserID);
-        if (!iscoordinator) {
-            fb.collection(institutionsCollection).document(institutionID).collection(courseCollection)
-                    .whereArrayContains("students_id", institutionUserReference)
-                    .get().addOnCompleteListener(onCompleteListener)
-                    .addOnFailureListener(onFailureListener);
-        } else{
-            fb.collection(institutionsCollection).document(institutionID).collection(courseCollection)
-                    .whereEqualTo("coordinator_id", institutionUserReference)
-                    .get().addOnCompleteListener(onCompleteListener)
-                    .addOnFailureListener(onFailureListener);
+        DocumentReference institutionReference = fb.collection(institutionsCollection).document(institutionID);
+        switch (userType) {
+            case "Estudante":
+                this.getStudentCourse(institutionReference, institutionUserReference, onCompleteListener, onFailureListener);
+                break;
+            case "Coordenador":
+                getCoordinatorCourse(institutionID, onCompleteListener, onFailureListener, fb, institutionUserReference);
+                break;
+            case "Professor":
+                this.getTeacherCourse(institutionReference, institutionUserReference, onCompleteListener, onFailureListener);
+                break;
         }
     }
+
+    private void getTeacherCourse(DocumentReference institutionReference, DocumentReference institutionUserReference,OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener) {
+        institutionReference.collection(courseCollection).whereArrayContains("teachers_id", institutionUserReference.getId())
+                .get()
+                .addOnCompleteListener(onCompleteListener)
+                .addOnFailureListener(onFailureListener);
+    }
+
+    private void getStudentCourse(DocumentReference institutionReference, DocumentReference institutionUserReference,OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener) {
+        institutionReference.collection(courseCollection).whereArrayContains("students_id", institutionUserReference.getId())
+                .get()
+                .addOnCompleteListener(onCompleteListener)
+                .addOnFailureListener(onFailureListener);
+    }
+
+    private void getCoordinatorCourse(String institutionID, OnCompleteListener<QuerySnapshot> onCompleteListener, OnFailureListener onFailureListener, FirebaseFirestore fb, DocumentReference institutionUserReference) {
+        fb.collection(institutionsCollection).document(institutionID).collection(courseCollection)
+                .whereEqualTo("coordinator_id", institutionUserReference)
+                .get().addOnCompleteListener(onCompleteListener)
+                .addOnFailureListener(onFailureListener);
+    }
+
     public void getInstitutionUserByID(String institutionID ,String userId, OnCompleteListener<DocumentSnapshot> onCompleteListener){
         FirebaseFirestore.getInstance().collection(institutionsCollection).document(institutionID).collection(COLLECTION).document(userId).get().addOnCompleteListener(onCompleteListener);
     }

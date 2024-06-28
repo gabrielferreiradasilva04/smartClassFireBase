@@ -9,6 +9,8 @@ import com.gabriel.smartclass.model.baseEntitys.SimpleAuxEntity;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Course extends SimpleAuxEntity implements Parcelable {
@@ -19,11 +21,19 @@ public class Course extends SimpleAuxEntity implements Parcelable {
     private int division_of_the_school_year;
     private DocumentReference area_id;
     private DocumentReference coordinator_id;
+    private List<String> students_id = new ArrayList<>();
+    private List<String> teachers_id = new ArrayList<>();
+
+
     protected Course(Parcel in) {
         id = in.readString();
         name = in.readString();
         description = in.readString();
         duration = in.readInt();
+        division_of_the_school_year = in.readInt();
+        students_id = in.createStringArrayList();
+        teachers_id = in.createStringArrayList();
+
     }
 
     @Override
@@ -33,8 +43,11 @@ public class Course extends SimpleAuxEntity implements Parcelable {
         dest.writeString(description);
         dest.writeInt(duration);
         dest.writeInt(division_of_the_school_year);
+        dest.writeStringList(students_id);
+        dest.writeStringList(teachers_id);
         dest.writeString(area_id.getPath());
         dest.writeString(coordinator_id.getPath());
+
     }
 
     @Override
@@ -50,6 +63,8 @@ public class Course extends SimpleAuxEntity implements Parcelable {
             String description = in.readString();
             int duration = in.readInt();
             int division_of_the_school_year = in.readInt();
+            List<String> students_id = in.createStringArrayList();
+            List<String> teachers_id = in.createStringArrayList();
             String areaReferenceString = in.readString();
             String coordinatorReferenceString = in.readString();
             DocumentReference area_id = null;
@@ -60,7 +75,7 @@ public class Course extends SimpleAuxEntity implements Parcelable {
             if (coordinatorReferenceString != null){
                 coordinator_id = FirebaseFirestore.getInstance().document(coordinatorReferenceString);
             }
-                return new Course(id, name, description, duration, division_of_the_school_year, coordinator_id, area_id);
+            return new Course(id, name, description, duration, division_of_the_school_year, coordinator_id, area_id, students_id, teachers_id);
         }
 
         @Override
@@ -68,6 +83,22 @@ public class Course extends SimpleAuxEntity implements Parcelable {
             return new Course[size];
         }
     };
+
+    public List<String> getStudents_id() {
+        return students_id;
+    }
+
+    public void setStudents_id(List<String> students_id) {
+        this.students_id = students_id;
+    }
+
+    public List<String> getTeachers_id() {
+        return teachers_id;
+    }
+
+    public void setTeachers_id(List<String> teachers_id) {
+        this.teachers_id = teachers_id;
+    }
 
     public String getId() {
         return id;
@@ -166,7 +197,7 @@ public class Course extends SimpleAuxEntity implements Parcelable {
         this.division_of_the_school_year = division_of_the_school_year;
     }
 
-    public Course(String id, String name, String description, int duration, int division_of_the_school_year, DocumentReference area_id, DocumentReference coordinator_id) {
+    public Course(String id, String name, String description, int duration, int division_of_the_school_year, DocumentReference area_id, DocumentReference coordinator_id, List<String> students_id, List<String> teachers_id) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -174,5 +205,7 @@ public class Course extends SimpleAuxEntity implements Parcelable {
         this.division_of_the_school_year = division_of_the_school_year;
         this.area_id = area_id;
         this.coordinator_id = coordinator_id;
+        this.students_id = students_id;
+        this.teachers_id = teachers_id;
     }
 }
