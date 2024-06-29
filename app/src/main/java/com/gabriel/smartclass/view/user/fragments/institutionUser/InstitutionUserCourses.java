@@ -60,7 +60,7 @@ public class InstitutionUserCourses extends Fragment {
 
     private void refresh() {
         this.refreshLayout.setOnRefreshListener(() -> {
-            viewModel.loadUserCourses(viewModel.getUserTypeByInstitutionUser().getValue().getDescription().equals("Coordenador"));
+            viewModel.loadUserCourses(viewModel.getUserTypeByInstitutionUser().getValue().getDescription());
             if(this.refreshLayout.isRefreshing()){
                 this.refreshLayout.setRefreshing(false);
             }

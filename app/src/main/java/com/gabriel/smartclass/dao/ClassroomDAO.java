@@ -9,6 +9,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
@@ -56,5 +58,8 @@ public class ClassroomDAO {
             batch.set(reference.document(), subject);
         }
         batch.commit();
+    }
+    public void liveSyncClassroom(String institutionID, String courseID, String classroomID, EventListener<DocumentSnapshot> eventListener){
+       FirebaseFirestore.getInstance().collection(INSTITUTIONCOLLECTION).document(institutionID).collection(COURSECOLLECTION).document(courseID).collection(COLLECTION).document(classroomID).addSnapshotListener(eventListener);
     }
 }

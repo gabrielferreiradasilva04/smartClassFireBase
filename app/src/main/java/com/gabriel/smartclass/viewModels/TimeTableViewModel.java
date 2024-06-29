@@ -17,14 +17,14 @@ public class TimeTableViewModel extends ViewModel {
     private Classroom classroom;
     private Course course;
     private Institution institution;
-    private final MutableLiveData<String> snackbarText = new MutableLiveData<>();
-    private final MutableLiveData<List<String>> mondaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
-    private final MutableLiveData<List<String>> tuesdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
-    private final MutableLiveData<List<String>> wednesdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
-    private final MutableLiveData<List<String>> thursdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
-    private final MutableLiveData<List<String>> fridaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
-    private final MutableLiveData<List<String>> saturdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
-    private final MutableLiveData<List<String>> sundaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
+    private  MutableLiveData<String> snackbarText = new MutableLiveData<>();
+    private  MutableLiveData<List<String>> mondaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
+    private  MutableLiveData<List<String>> tuesdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
+    private  MutableLiveData<List<String>> wednesdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
+    private  MutableLiveData<List<String>> thursdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
+    private  MutableLiveData<List<String>> fridaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
+    private  MutableLiveData<List<String>> saturdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
+    private  MutableLiveData<List<String>> sundaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
 
     public MutableLiveData<String> getSnackbarText() {
         return snackbarText;
@@ -215,5 +215,13 @@ public class TimeTableViewModel extends ViewModel {
         HashMap<String, Object> classroomUpdates = new HashMap<>();
         classroomUpdates.put("timeTable", timeTable);
         new ClassroomDAO().updateClassroom(this.getInstitution().getId(), this.course.getId(), this.classroom.getId(), classroomUpdates);
+    }
+    public void liveSyncClassroom(){
+        new ClassroomDAO().liveSyncClassroom(this.institution.getId(), this.course.getId(), this.classroom.getId(), (value, error) -> {
+            if(error == null && value != null){
+                this.classroom = value.toObject(Classroom.class);
+                this.loadAllTimeTables();
+            }
+        });
     }
 }
