@@ -2,7 +2,6 @@ package com.gabriel.smartclass.view.user.views.institutionUser;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -10,7 +9,6 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.ActivityCreateClassroomBinding;
 import com.gabriel.smartclass.view.user.fragments.institutionUser.AddSubjectOnClassDialog;
 import com.gabriel.smartclass.view.user.fragments.institutionUser.DialogAddMembersOnClass;
@@ -86,7 +84,6 @@ public class CreateClassroom extends AppCompatActivity {
         if (!period.equals("") && !description.equals("")){
             int periodInt = Integer.parseInt(period);
             this.viewModel.createClassroom(description, periodInt);
-            this.clearAllComponents();
         }else{
             Snackbar.make(binding.buttoncreate, "Preencha todos os ccampos", Snackbar.LENGTH_SHORT).show();
         }
@@ -135,11 +132,7 @@ public class CreateClassroom extends AppCompatActivity {
         getSupportActionBar().setTitle("Criar Classe");
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu_action_bar, menu);
-        return true;
-    }
+
 
     @Override
     public boolean onSupportNavigateUp() {

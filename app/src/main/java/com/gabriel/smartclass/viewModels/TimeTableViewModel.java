@@ -17,6 +17,7 @@ public class TimeTableViewModel extends ViewModel {
     private Classroom classroom;
     private Course course;
     private Institution institution;
+    private boolean showEdition = true;
     private  MutableLiveData<String> snackbarText = new MutableLiveData<>();
     private  MutableLiveData<List<String>> mondaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
     private  MutableLiveData<List<String>> tuesdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
@@ -25,6 +26,14 @@ public class TimeTableViewModel extends ViewModel {
     private  MutableLiveData<List<String>> fridaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
     private  MutableLiveData<List<String>> saturdaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
     private  MutableLiveData<List<String>> sundaySubjectsLiveData = new MutableLiveData<>(new ArrayList<>());
+
+    public boolean isShowEdition() {
+        return showEdition;
+    }
+
+    public void setShowEdition(boolean showEdition) {
+        this.showEdition = showEdition;
+    }
 
     public MutableLiveData<String> getSnackbarText() {
         return snackbarText;

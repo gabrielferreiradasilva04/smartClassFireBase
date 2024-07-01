@@ -78,6 +78,10 @@ public class SaturdayFragments extends Fragment {
 
     private void buildViewModel() {
         this.viewModel = new ViewModelProvider(this.requireActivity()).get(TimeTableViewModel.class);
+        if(!this.viewModel.isShowEdition()){
+            binding.saturdaysubject.setVisibility(View.INVISIBLE);
+            binding.addSaturdayButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void buildRecyclerView() {

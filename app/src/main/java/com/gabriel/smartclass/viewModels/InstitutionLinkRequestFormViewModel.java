@@ -155,7 +155,6 @@ public class InstitutionLinkRequestFormViewModel {
             context.startActivity(i);
             institutionLinkRequestForm.finish();
         });
-
     }
 
 

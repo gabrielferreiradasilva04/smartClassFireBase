@@ -1,7 +1,6 @@
 package com.gabriel.smartclass.view.user.views.institutionUser;
 
 import android.os.Bundle;
-import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -49,11 +48,6 @@ public class CoordinatorCourseMainMenu extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu_action_bar, menu);
-        return true;
-    }
     private Observer<? super String> snackbarObserver() {
         return text ->{
             if(text != null && !text.equals("")){

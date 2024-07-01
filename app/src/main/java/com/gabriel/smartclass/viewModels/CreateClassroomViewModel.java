@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.gabriel.smartclass.adapter.ClassroomSubjectsAdapter;
-import com.gabriel.smartclass.adapter.SimpleAdapter;
+import com.gabriel.smartclass.adapter.CourseMembersSimpleAdapter;
 import com.gabriel.smartclass.adapter.spinnerAdapters.SpinnerAdapterGeneric;
 import com.gabriel.smartclass.dao.ClassroomDAO;
 import com.gabriel.smartclass.dao.CourseDAO;
@@ -33,10 +33,10 @@ import java.util.List;
 public class CreateClassroomViewModel extends ViewModel {
     private Institution institution;
     private Course course;
-    private SimpleAdapter<Teacher> teachersToadd = new SimpleAdapter();
-    private SimpleAdapter<Student> studentsToAdd = new SimpleAdapter();
-    private SimpleAdapter<Teacher> teachersOnClass = new SimpleAdapter<>();
-    private SimpleAdapter<Student> studentsOnClass = new SimpleAdapter<>();
+    private CourseMembersSimpleAdapter<Teacher> teachersToadd = new CourseMembersSimpleAdapter();
+    private CourseMembersSimpleAdapter<Student> studentsToAdd = new CourseMembersSimpleAdapter();
+    private CourseMembersSimpleAdapter<Teacher> teachersOnClass = new CourseMembersSimpleAdapter<>();
+    private CourseMembersSimpleAdapter<Student> studentsOnClass = new CourseMembersSimpleAdapter<>();
     private MutableLiveData<String> snackbarText = new MutableLiveData<>();
     private SpinnerAdapterGeneric<Subject> subjectSpinnerAdapter;
     private SpinnerAdapterGeneric<Teacher> teachersSpinnerAdapter;
@@ -58,27 +58,27 @@ public class CreateClassroomViewModel extends ViewModel {
         this.course = course;
     }
 
-    public void setTeachersToadd(SimpleAdapter<Teacher> teachersToadd) {
+    public void setTeachersToadd(CourseMembersSimpleAdapter<Teacher> teachersToadd) {
         this.teachersToadd = teachersToadd;
     }
 
-    public void setStudentsToAdd(SimpleAdapter<Student> studentsToAdd) {
+    public void setStudentsToAdd(CourseMembersSimpleAdapter<Student> studentsToAdd) {
         this.studentsToAdd = studentsToAdd;
     }
 
-    public SimpleAdapter<Teacher> getTeachersOnClass() {
+    public CourseMembersSimpleAdapter<Teacher> getTeachersOnClass() {
         return teachersOnClass;
     }
 
-    public void setTeachersOnClass(SimpleAdapter<Teacher> teachersOnClass) {
+    public void setTeachersOnClass(CourseMembersSimpleAdapter<Teacher> teachersOnClass) {
         this.teachersOnClass = teachersOnClass;
     }
 
-    public SimpleAdapter<Student> getStudentsOnClass() {
+    public CourseMembersSimpleAdapter<Student> getStudentsOnClass() {
         return studentsOnClass;
     }
 
-    public void setStudentsOnClass(SimpleAdapter<Student> studentsOnClass) {
+    public void setStudentsOnClass(CourseMembersSimpleAdapter<Student> studentsOnClass) {
         this.studentsOnClass = studentsOnClass;
     }
 
@@ -114,11 +114,11 @@ public class CreateClassroomViewModel extends ViewModel {
         this.subjectsAdapter = subjectsAdapter;
     }
 
-    public SimpleAdapter<Student> getStudentsToAdd() {
+    public CourseMembersSimpleAdapter<Student> getStudentsToAdd() {
         return studentsToAdd;
     }
 
-    public SimpleAdapter<Teacher> getTeachersToadd() {
+    public CourseMembersSimpleAdapter<Teacher> getTeachersToadd() {
         return teachersToadd;
     }
 

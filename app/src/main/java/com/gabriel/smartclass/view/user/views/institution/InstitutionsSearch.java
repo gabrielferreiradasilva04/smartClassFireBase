@@ -3,7 +3,6 @@ package com.gabriel.smartclass.view.user.views.institution;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -78,12 +77,6 @@ public class InstitutionsSearch extends BaseActivity {
             i.putExtra("institution", institution);
             startActivity(i);
         };
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu_action_bar, menu);
-        return true;
     }
 
     @Override
