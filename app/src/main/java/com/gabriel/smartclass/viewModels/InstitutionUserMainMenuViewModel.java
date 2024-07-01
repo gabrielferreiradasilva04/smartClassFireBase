@@ -10,6 +10,7 @@ import com.gabriel.smartclass.dao.CourseDAO;
 import com.gabriel.smartclass.dao.InstitutionUserDAO;
 import com.gabriel.smartclass.dao.UserDAO;
 import com.gabriel.smartclass.dao.UserTypeDAO;
+import com.gabriel.smartclass.model.Classroom;
 import com.gabriel.smartclass.model.Course;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionUser;
@@ -17,15 +18,26 @@ import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.model.UserType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InstitutionUserMainMenuViewModel extends ViewModel {
     private InstitutionUser currentInstitutionUser;
     private final MutableLiveData<User> userByInstitutionUser = new MutableLiveData<>();
     private final MutableLiveData<UserType> userTypeByInstitutionUser = new MutableLiveData<>();
+    private final MutableLiveData<List<Classroom>> classroomMutableLiveData = new MutableLiveData<>();
     private Institution currentInstitution;
     private CourseRCAdapter courseAdapter;
     private final MutableLiveData<String> snackbarText = new MutableLiveData<>();
     private final CourseRCAdapter searchCoursesAdapter = new CourseRCAdapter();
+    public Course selected_course;
+
+    public Course getSelected_course() {
+        return selected_course;
+    }
+
+    public void setSelected_course(Course selected_course) {
+        this.selected_course = selected_course;
+    }
 
     public InstitutionUser getCurrentInstitutionUser() {
         return currentInstitutionUser;
@@ -55,6 +67,9 @@ public class InstitutionUserMainMenuViewModel extends ViewModel {
         return userTypeByInstitutionUser;
     }
 
+    public MutableLiveData<List<Classroom>> getClassroomMutableLiveData() {
+        return classroomMutableLiveData;
+    }
 
     public CourseRCAdapter getCourseAdapter() {
         return courseAdapter;
@@ -75,28 +90,15 @@ public class InstitutionUserMainMenuViewModel extends ViewModel {
 
     @SuppressLint("NotifyDataSetChanged")
     public void loadUserCourses(String userType) {
-        if(userType.equals("Coordenador")){
-            this.courseAdapter = new CourseRCAdapter();
-            this.courseAdapter.setShowOnlyCourseView(true);
-            this.courseAdapter.setEnableCourseAccess(true);
-            new InstitutionUserDAO().getInstitutionUserCourses(this.currentInstitution.getId(), this.currentInstitutionUser.getId(), userType, task -> {
-                if (task.isComplete() && task.isSuccessful()) {
-                    this.courseAdapter.getMutableliveDataCourse().setValue(task.getResult().toObjects(Course.class));
-                    this.courseAdapter.notifyDataSetChanged();
-                }
-            }, e -> snackbarText.setValue("Erro ao recuperar seus cursos, tente novamente mais tarde..."));
-        }else{
-            this.courseAdapter = new CourseRCAdapter();
-            this.courseAdapter.setShowOnlyCourseView(false);
-            this.courseAdapter.setEnableCourseAccess(true);
-            new InstitutionUserDAO().getInstitutionUserCourses(this.currentInstitution.getId(), this.currentInstitutionUser.getId(), userType, task -> {
-                if (task.isComplete() && task.isSuccessful()) {
-                    this.courseAdapter.getMutableliveDataCourse().setValue(task.getResult().toObjects(Course.class));
-                    this.courseAdapter.notifyDataSetChanged();
-                }
-            }, e -> snackbarText.setValue("Erro ao recuperar seus cursos, tente novamente mais tarde..."));
-        }
-
+        this.courseAdapter = new CourseRCAdapter();
+        this.courseAdapter.setShowOnlyCourseView(true);
+        this.courseAdapter.setEnableCourseAccess(true);
+        new InstitutionUserDAO().getInstitutionUserCourses(this.currentInstitution.getId(), this.currentInstitutionUser.getId(), userType, task -> {
+            if (task.isComplete() && task.isSuccessful()) {
+                this.courseAdapter.getMutableliveDataCourse().setValue(task.getResult().toObjects(Course.class));
+                this.courseAdapter.notifyDataSetChanged();
+            }
+        }, e -> snackbarText.setValue("Erro ao recuperar seus cursos, tente novamente mais tarde..."));
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -119,6 +121,18 @@ public class InstitutionUserMainMenuViewModel extends ViewModel {
         } else {
             snackbarText.setValue("Erro ao realizar a sua busca, tente novamente mais tarde ");
         }
-
     }
+
+    public void loadClassroomsUser() {
+        if (this.selected_course != null) {
+            new CourseDAO().getCourseClassroomsByUser(this.currentInstitution.getId(), this.selected_course.getId(), this.currentInstitutionUser.getId(), task -> {
+                if (task.isSuccessful()) {
+                    this.classroomMutableLiveData.setValue(task.getResult());
+                } else {
+                    snackbarText.setValue("Erro ao buscar salas");
+                }
+            });
+        }
+    }
+
 }

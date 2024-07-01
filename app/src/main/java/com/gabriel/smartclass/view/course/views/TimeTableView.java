@@ -39,6 +39,7 @@ public class TimeTableView extends AppCompatActivity {
         this.viewModel.setInstitution(getIntent().getParcelableExtra("institution"));
         this.viewModel.setCourse(getIntent().getParcelableExtra("course"));
         this.viewModel.setClassroom(getIntent().getParcelableExtra("classroom"));
+        this.viewModel.setShowEdition(this.getIntent().getBooleanExtra("courseMember", this.viewModel.isShowEdition()));
         this.viewModel.getSnackbarText().observe(this, this.snackbarObserver());
         this.viewModel.loadAllTimeTables();
     }

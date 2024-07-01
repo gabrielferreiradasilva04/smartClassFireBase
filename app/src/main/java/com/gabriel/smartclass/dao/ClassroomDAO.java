@@ -1,5 +1,7 @@
 package com.gabriel.smartclass.dao;
 
+import android.util.Log;
+
 import com.gabriel.smartclass.model.Classroom;
 import com.gabriel.smartclass.model.ClassroomSubject;
 import com.gabriel.smartclass.model.Course;
@@ -54,8 +56,10 @@ public class ClassroomDAO {
     public void addSubjectsOnClassroom(String institutionID, String courseID, String classroomID, List<ClassroomSubject> list) {
         CollectionReference reference = FirebaseFirestore.getInstance().collection(INSTITUTIONCOLLECTION).document(institutionID).collection(COURSECOLLECTION).document(courseID).collection(COLLECTION).document(classroomID).collection(ClassroomSubject.class.getSimpleName());
         WriteBatch batch = FirebaseFirestore.getInstance().batch();
+
         for (ClassroomSubject subject:list) {
             batch.set(reference.document(), subject);
+            Log.d("teste", "addSubjectsOnClassroom: chamou");
         }
         batch.commit();
     }

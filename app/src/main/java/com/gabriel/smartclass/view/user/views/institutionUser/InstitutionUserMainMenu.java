@@ -2,8 +2,6 @@ package com.gabriel.smartclass.view.user.views.institutionUser;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.Observer;
@@ -14,17 +12,17 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.gabriel.smartclass.R;
-import com.gabriel.smartclass.dao.UserTypeDAO;
 import com.gabriel.smartclass.databinding.ActivityInstitutionuserMainmenuBinding;
 import com.gabriel.smartclass.model.Course;
 import com.gabriel.smartclass.view.base.BaseActivity;
+import com.gabriel.smartclass.view.user.fragments.institutionUser.ChooseClassDialog;
 import com.gabriel.smartclass.viewModels.InstitutionUserMainMenuViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Objects;
+
 public class InstitutionUserMainMenu extends BaseActivity {
     private ActivityInstitutionuserMainmenuBinding binding;
-    private NavHost navHostFragment;
-    private NavController navController;
     private InstitutionUserMainMenuViewModel viewModel;
 
     @Override
@@ -42,19 +40,21 @@ public class InstitutionUserMainMenu extends BaseActivity {
         viewModel.loadUserByInstitutionUser();
         viewModel.getUserTypeByInstitutionUser().observe(this, userType -> {
             viewModel.loadUserCourses(userType.getDescription());
-            this.courseClickListener();
+            this.courseClickListener(userType.getDescription());
         });
-        viewModel.getSnackbarText().observe(this,this.snackbarObserver());
+        viewModel.getSnackbarText().observe(this, this.snackbarObserver());
     }
+
     private Observer<? super String> snackbarObserver() {
-        return text ->{
-            if(text != null && !text.equals("")){
+        return text -> {
+            if (text != null && !text.equals("")) {
                 Snackbar.make(binding.bottomActionBarInstitutionUsers, text, Snackbar.LENGTH_SHORT).show();
             }
         };
     }
+
     private void buildMenu() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
 
@@ -63,13 +63,29 @@ public class InstitutionUserMainMenu extends BaseActivity {
         viewModel.setCurrentInstitution(getIntent().getParcelableExtra("institution"));
         viewModel.setCurrentInstitutionUser(getIntent().getParcelableExtra("institutionUser"));
     }
-    private void courseClickListener() {
-        this.viewModel.getCourseAdapter().setClickListenerAccess(course ->{
-            if(this.viewModel.getCurrentInstitutionUser().getUserType_id().equals(new UserTypeDAO().COORDINATOR_TYPE_REFERENCE)){
-                Log.d("click no curso", "initialize: chamou o metodo de click");
-                this.callCoordinatorView(course);
+
+    private void courseClickListener(String userType) {
+        this.viewModel.getCourseAdapter().setClickListenerAccess(course -> {
+            switch (userType) {
+                case "Coordenador":
+                    this.callCoordinatorView(course);
+                    break;
+                case "Professor":
+                case "Estudante":
+                    this.inflateClassDialog(course);
+                    break;
+                default:
+                    Snackbar.make(binding.bottomActionBarInstitutionUsers, "Selecione uma opção válida", Snackbar.LENGTH_SHORT).show();
+                    break;
             }
         });
+    }
+
+    private void inflateClassDialog(Course course) {
+        this.viewModel.setSelected_course(course);
+        this.viewModel.loadClassroomsUser();
+        ChooseClassDialog dialog = new ChooseClassDialog();
+        dialog.show(this.getSupportFragmentManager(), dialog.getTag());
     }
 
     private void callCoordinatorView(Course course) {
@@ -80,8 +96,9 @@ public class InstitutionUserMainMenu extends BaseActivity {
         this.startActivity(i);
     }
 
+
     public void updateTitle(String title) {
-        getSupportActionBar().setTitle(title);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(title);
     }
 
     @Override
@@ -90,16 +107,17 @@ public class InstitutionUserMainMenu extends BaseActivity {
         return true;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu_action_bar, menu);
-        return true;
-    }
+
 
     private void navigation() {
-        navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container_institution_user);
-        navController = navHostFragment.getNavController();
-        NavigationUI.setupWithNavController(binding.bottomActionBarInstitutionUsers, navController);
+        NavHost navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container_institution_user);
+        NavController navController = null;
+        if (navHostFragment != null) {
+            navController = navHostFragment.getNavController();
+        }
+        if (navController != null) {
+            NavigationUI.setupWithNavController(binding.bottomActionBarInstitutionUsers, navController);
+        }
     }
 
 }

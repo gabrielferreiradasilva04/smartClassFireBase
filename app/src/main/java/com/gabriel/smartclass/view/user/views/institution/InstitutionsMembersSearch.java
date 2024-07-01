@@ -2,7 +2,6 @@ package com.gabriel.smartclass.view.user.views.institution;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.Menu;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -10,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.SimpleDefaultAdapter;
 import com.gabriel.smartclass.adapter.interfaces.DefaultClickListener;
 import com.gabriel.smartclass.databinding.ActivityInstitutionsMembersSearchBinding;
@@ -73,10 +71,6 @@ public class InstitutionsMembersSearch extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Membros");
         }
-    }
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu_action_bar, menu);
-        return true;
     }
     @Override
     public boolean onSupportNavigateUp() {

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Frequência" android:id="@+id/menu_frequency" android:icon="@drawable/baseline_crisis_alert_24"/>
+    <item android:title="Notas" android:id="@+id/menu_grades" android:icon="@drawable/baseline_table_chart_24"/>
+    <item android:title="Ranking" android:id="@+id/menu_ranking" android:icon="@drawable/baseline_rank_alt_24"/>
+</menu>

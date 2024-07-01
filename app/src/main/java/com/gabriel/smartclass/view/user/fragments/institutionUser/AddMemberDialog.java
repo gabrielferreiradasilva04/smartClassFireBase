@@ -22,7 +22,6 @@ import com.gabriel.smartclass.viewModels.CoordinatorCourseViewModel;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class AddMemberDialog extends DialogFragment {
     DialogCoordinatorAddteacherBinding binding;
@@ -39,9 +38,9 @@ public class AddMemberDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DialogCoordinatorAddteacherBinding.inflate(inflater, container, false);
         this.viewModel = new ViewModelProvider(requireActivity()).get(CoordinatorCourseViewModel.class);
-        if(!this.isStudents){
+        if (!this.isStudents) {
             initializeTeachers();
-        }else{
+        } else {
             initializeStudents();
         }
         return binding.getRoot();
@@ -50,7 +49,7 @@ public class AddMemberDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
     }
 
     @Override
@@ -62,24 +61,24 @@ public class AddMemberDialog extends DialogFragment {
     }
 
     @SuppressLint("SetTextI18n")
-    public void initializeTeachers(){
+    public void initializeTeachers() {
         loadComponents();
         binding.title.setText("Professores");
         this.viewModel.getSnackbarText().observe(getViewLifecycleOwner(), this.snackbarobserver());
         buildRecyclerViewTeachers();
     }
+
     @SuppressLint("SetTextI18n")
-    public void initializeStudents(){
+    public void initializeStudents() {
         loadComponents();
         binding.title.setText("Estudantes");
-
         this.viewModel.getSnackbarText().observe(getViewLifecycleOwner(), this.snackbarobserver());
         buildRecyclerViewStudents();
     }
 
     private Observer<? super String> snackbarobserver() {
-        return text ->{
-            if(text != null && !text.equals("")){
+        return text -> {
+            if (text != null && !text.equals("")) {
                 Snackbar.make(getContext(), this.recyclerView, text, Snackbar.LENGTH_SHORT).show();
             }
         };
@@ -89,14 +88,15 @@ public class AddMemberDialog extends DialogFragment {
         return institutionUser -> this.viewModel.addNewMemberOnCourse(institutionUser, this.isStudents);
     }
 
-    public void buildRecyclerViewTeachers(){
+    public void buildRecyclerViewTeachers() {
         this.viewModel.getAllTeachers();
         this.recyclerView.setHasFixedSize(false);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         this.recyclerView.setAdapter(this.viewModel.getMembersSelectionAdapter());
         this.viewModel.getMembersSelectionAdapter().setClickListener(this.addMemberListener());
     }
-    public void buildRecyclerViewStudents(){
+
+    public void buildRecyclerViewStudents() {
         this.viewModel.getAllStudents();
         this.recyclerView.setHasFixedSize(false);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -104,7 +104,7 @@ public class AddMemberDialog extends DialogFragment {
         this.viewModel.getMembersSelectionAdapter().setClickListener(this.addMemberListener());
     }
 
-    public void loadComponents(){
+    public void loadComponents() {
         this.recyclerView = binding.dialogAddteacherRecyclerview;
     }
 }

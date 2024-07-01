@@ -17,6 +17,21 @@
         android:theme="@style/Theme.SmartClass"
         tools:targetApi="31">
         <activity
+            android:name=".view.user.views.institutionUser.ClassroomTeacherMainMenu"
+            android:exported="false" />
+        <activity
+            android:name=".view.user.views.institutionUser.ClassroomTeacherManagement"
+            android:exported="false" />
+        <activity
+            android:name=".view.user.views.institutionUser.TeacherGradeManagement"
+            android:exported="false" />
+        <activity
+            android:name=".view.user.views.institutionUser.ClassroomStudentMainMenu"
+            android:exported="false" />
+        <activity
+            android:name=".view.user.views.institutionUser.TeacherMainMenu"
+            android:exported="false" />
+        <activity
             android:name=".view.course.views.TimeTableView"
             android:exported="false" />
         <activity

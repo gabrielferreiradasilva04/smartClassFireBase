@@ -65,4 +65,25 @@
     <color name="rosa_choque">#FFC0CB</color>
 <!--    vermelho-->
     <color name="vermelho">#FF0000</color>
+
+    <color name="yellow_50">#FFFDE7</color>
+    <color name="yellow_100">#FFF9C4</color>
+    <color name="yellow_200">#FFF59D</color>
+    <color name="yellow_300">#FFF176</color>
+
+    <!-- Medium Yellows -->
+    <color name="yellow_400">#FFEE58</color>
+    <color name="yellow_500">#FFEB3B</color>
+    <color name="yellow_600">#FDD835</color>
+    <color name="yellow_700">#FBC02D</color>
+
+    <!-- Dark Yellows -->
+    <color name="yellow_800">#F9A825</color>
+    <color name="yellow_900">#F57F17</color>
+
+    <!-- Accent Yellows -->
+    <color name="yellow_A100">#FFFF8D</color>
+    <color name="yellow_A200">#FFFF00</color>
+    <color name="yellow_A400">#FFEA00</color>
+    <color name="yellow_A700">#FFD600</color>
 </resources>

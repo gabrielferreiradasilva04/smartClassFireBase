@@ -9,10 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.ViewHolders.DefaultViewHolder;
 import com.gabriel.smartclass.adapter.interfaces.DefaultClickListener;
-import com.gabriel.smartclass.model.CourseMember;
+import com.gabriel.smartclass.model.baseEntitys.SimpleAuxEntity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,14 +19,32 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class SimpleAdapter<T extends CourseMember> extends RecyclerView.Adapter {
+public class DefaultAdapter <T extends SimpleAuxEntity> extends RecyclerView.Adapter {
     private final MutableLiveData<List<T>> mutableLiveDataT;
     private final HashSet<String> tIds;
+    private boolean showUserDetails = false;
+    private boolean addAdapter = false;
     private DefaultClickListener<T> clickListener;
 
-    public SimpleAdapter(){
+    public DefaultAdapter(){
         this.mutableLiveDataT = new MutableLiveData<>(new ArrayList<>());
         this.tIds = new HashSet<>();
+    }
+
+    public void setShowUserDetails(boolean showUserDetails) {
+        this.showUserDetails = showUserDetails;
+    }
+
+    public boolean isAddAdapter() {
+        return addAdapter;
+    }
+
+    public void setAddAdapter(boolean addAdapter) {
+        this.addAdapter = addAdapter;
+    }
+
+    public boolean isShowUserDetails() {
+        return showUserDetails;
     }
 
     public MutableLiveData<List<T>> getMutableLiveDataT() {
@@ -48,7 +65,7 @@ public class SimpleAdapter<T extends CourseMember> extends RecyclerView.Adapter 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.simple_adapter, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
         return new DefaultViewHolder(itemView);
     }
     @Override
@@ -56,12 +73,11 @@ public class SimpleAdapter<T extends CourseMember> extends RecyclerView.Adapter 
         holder.itemView.setAlpha(0f);
         holder.itemView.animate().alpha(1f).setDuration(300).start();
         String description = mutableLiveDataT.getValue().get(position).getDescription();
-        TextView textDescription = holder.itemView.findViewById(R.id.description);
+        TextView textDescription = holder.itemView.findViewById(android.R.id.text1);
         textDescription.setText(description);
-        if(clickListener != null){
-            holder.itemView.setOnClickListener(view -> clickListener.onClick(this.getMutableLiveDataT().getValue().get(position)));
+        if(this.clickListener != null){
+            holder.itemView.setOnClickListener(view ->{this.clickListener.onClick(this.mutableLiveDataT.getValue().get(position));});
         }
-        holder.itemView.setVisibility(View.VISIBLE);
     }
 
     @Override

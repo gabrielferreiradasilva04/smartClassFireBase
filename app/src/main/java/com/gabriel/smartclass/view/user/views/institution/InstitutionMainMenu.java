@@ -1,7 +1,6 @@
 package com.gabriel.smartclass.view.user.views.institution;
 
 import android.os.Bundle;
-import android.view.Menu;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -71,11 +70,7 @@ public class InstitutionMainMenu extends BaseActivity {
         NavController navController = navHost.getNavController();
         NavigationUI.setupWithNavController(binding.bottomActionBarInstitutions, navController);
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu_action_bar, menu);
-        return true;
-    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

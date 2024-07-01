@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/classroom_nav_main"
+    app:startDestination="@id/menu_grades">
+
+    <fragment
+        android:id="@+id/menu_frequency"
+        android:name="com.gabriel.smartclass.view.user.fragments.institutionUser.FrequencyFragment"
+        android:label="fragment_frquency"
+        tools:layout="@layout/fragment_frquency" />
+    <fragment
+        android:id="@+id/menu_grades"
+        android:name="com.gabriel.smartclass.view.user.fragments.institutionUser.GradeFragment"
+        android:label="fragment_grade"
+        tools:layout="@layout/fragment_grade" />
+    <fragment
+        android:id="@+id/menu_ranking"
+        android:name="com.gabriel.smartclass.view.user.fragments.institutionUser.RankFragment"
+        android:label="fragment_rank"
+        tools:layout="@layout/fragment_rank" />
+</navigation>

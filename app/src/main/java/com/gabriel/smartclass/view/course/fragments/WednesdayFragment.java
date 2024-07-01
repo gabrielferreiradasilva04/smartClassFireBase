@@ -53,6 +53,10 @@ public class WednesdayFragment extends Fragment {
         this.buildViewModel();
         this.subjectsObserver();
         this.binding.addWednesdayButton.setOnClickListener(this.addSubjectListener());
+        if(!this.viewModel.isShowEdition()){
+            binding.wednesdaySubject.setVisibility(View.GONE);
+            binding.addWednesdayButton.setVisibility(View.GONE);
+        }
     }
 
     private View.OnClickListener addSubjectListener() {

@@ -2,7 +2,6 @@ package com.gabriel.smartclass.view.course.views;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -13,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.interfaces.DefaultClickListener;
 import com.gabriel.smartclass.databinding.ActivityAddSubjectsOnCourseBinding;
 import com.gabriel.smartclass.model.Subject;
@@ -105,11 +103,6 @@ public class AddSubjectsOnCourse extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
-        return true;
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu_action_bar, menu);
         return true;
     }
 }

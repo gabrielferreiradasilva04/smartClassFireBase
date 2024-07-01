@@ -4,33 +4,76 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.gabriel.smartclass.model.baseEntitys.SimpleAuxEntity;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
 public class Frequency extends SimpleAuxEntity implements Parcelable {
-    private String id;
-    private String description;
-    private DocumentReference type_id;
-    private Timestamp date;
+    private String finalDescription;
+    private double percent;
+    private Subject subject;
+    private Classroom classroom;
+
+    public Frequency() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Frequency)) return false;
+        Frequency frequency = (Frequency) o;
+        return Double.compare(frequency.getPercent(), getPercent()) == 0 && Objects.equals(getFinalDescription(), frequency.getFinalDescription()) && Objects.equals(getSubject(), frequency.getSubject()) && Objects.equals(getClassroom(), frequency.getClassroom());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFinalDescription(), getPercent(), getSubject(), getClassroom());
+    }
+
+    public String getFinalDescription() {
+        return finalDescription;
+    }
+
+    public void setFinalDescription(String finalDescription) {
+        this.finalDescription = finalDescription;
+    }
+
+    public double getPercent() {
+        return percent;
+    }
+
+    public void setPercent(double percent) {
+        this.percent = percent;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
+    public Classroom getClassroom() {
+        return classroom;
+    }
+
+    public void setClassroom(Classroom classroom) {
+        this.classroom = classroom;
+    }
 
     protected Frequency(Parcel in) {
-        id = in.readString();
-        description = in.readString();
-        long seconds = in.readLong();
-        int nanoseconds = in.readInt();
-        this.date = new Timestamp(seconds, nanoseconds);
+        finalDescription = in.readString();
+        percent = in.readDouble();
+        subject = in.readParcelable(Subject.class.getClassLoader());
+        classroom = in.readParcelable(Classroom.class.getClassLoader());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(description);
-        dest.writeString(type_id.getPath());
-        dest.writeLong(date.getSeconds());
-        dest.writeInt(date.getNanoseconds());
+        dest.writeString(finalDescription);
+        dest.writeDouble(percent);
+        dest.writeParcelable(subject, flags);
+        dest.writeParcelable(classroom, flags);
     }
 
     @Override
@@ -41,17 +84,7 @@ public class Frequency extends SimpleAuxEntity implements Parcelable {
     public static final Creator<Frequency> CREATOR = new Creator<Frequency>() {
         @Override
         public Frequency createFromParcel(Parcel in) {
-            String id = in.readString();
-            String description = in.readString();
-            String typeReferenceString = in.readString();
-            DocumentReference typeReference  = null;
-            long seconds = in.readLong();
-            int nanoseconds = in.readInt();
-            Timestamp date = new Timestamp(seconds, nanoseconds);
-            if(typeReferenceString != null){
-                typeReference = FirebaseFirestore.getInstance().collection(FrequencyType.class.getSimpleName()).document(typeReferenceString);
-            }
-            return new Frequency(id,description,typeReference, date);
+            return new Frequency(in);
         }
 
         @Override
@@ -59,66 +92,4 @@ public class Frequency extends SimpleAuxEntity implements Parcelable {
             return new Frequency[size];
         }
     };
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public DocumentReference getType_id() {
-        return type_id;
-    }
-
-    public void setType_id(DocumentReference type_id) {
-        this.type_id = type_id;
-    }
-
-    public Frequency() {
-    }
-
-    public Frequency(String id, String description, DocumentReference type_id, Timestamp date) {
-        this.id = id;
-        this.description = description;
-        this.type_id = type_id;
-        this.date = date;
-    }
-
-    public Frequency(String id, String description) {
-        this.id = id;
-        this.description = description;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Frequency)) return false;
-        Frequency frequency = (Frequency) o;
-        return Objects.equals(getId(), frequency.getId()) && Objects.equals(getDescription(), frequency.getDescription());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getDescription());
-    }
-
-    @Override
-    public String toString() {
-        return "Frequency{" +
-                "id='" + id + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
 }
