@@ -59,7 +59,6 @@ public class AddMemberDialog extends DialogFragment {
         this.viewModel.getMembersSelectionAdapter().getMutableLiveDataT().setValue(new ArrayList<>());
         this.viewModel.getSnackbarText().setValue("");
     }
-
     @SuppressLint("SetTextI18n")
     public void initializeTeachers() {
         loadComponents();

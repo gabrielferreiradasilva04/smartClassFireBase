@@ -85,6 +85,12 @@
         <item name="android:layout_margin">16dp</item>
         <item name="android:background">@drawable/simple_view_container</item>
     </style>
+    <style name="SimpleViewContainer2">
+        <item name="android:layout_height">630dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="android:background">@drawable/bg_simpleviewcontainer</item>
+    </style>
     <style name="coursecontainer">
         <item name="android:layout_height">150dp</item>
         <item name="android:layout_width">match_parent</item>
