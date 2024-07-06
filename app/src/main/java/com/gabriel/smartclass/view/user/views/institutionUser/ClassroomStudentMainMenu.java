@@ -14,6 +14,8 @@ import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.databinding.ActivityClassroomStudentMainMenuBinding;
 import com.gabriel.smartclass.viewModels.ClassroomStudentMainMenuViewModel;
 
+import java.util.Objects;
+
 public class ClassroomStudentMainMenu extends AppCompatActivity {
     private ActivityClassroomStudentMainMenuBinding binding;
     private ClassroomStudentMainMenuViewModel viewModel;
@@ -30,7 +32,6 @@ public class ClassroomStudentMainMenu extends AppCompatActivity {
         buildMenu();
         buildViewModel();
         this.studentInitialize();
-
     }
 
     public void studentInitialize(){
@@ -38,7 +39,7 @@ public class ClassroomStudentMainMenu extends AppCompatActivity {
     }
 
     private void buildMenu() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Sala de aula");
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }

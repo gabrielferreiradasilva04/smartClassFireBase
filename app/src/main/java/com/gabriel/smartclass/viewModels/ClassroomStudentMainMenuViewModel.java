@@ -3,16 +3,19 @@ package com.gabriel.smartclass.viewModels;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.gabriel.smartclass.dao.CourseDAO;
 import com.gabriel.smartclass.model.Classroom;
 import com.gabriel.smartclass.model.Course;
 import com.gabriel.smartclass.model.Institution;
 import com.gabriel.smartclass.model.InstitutionUser;
+import com.gabriel.smartclass.model.Student;
 
 public class ClassroomStudentMainMenuViewModel extends ViewModel{
     private Classroom classroom;
     private Course course;
     private InstitutionUser institutionUser;
     private Institution institution;
+    private final MutableLiveData<Student> mldStudent = new MutableLiveData<>();
     private MutableLiveData<String> snackbarText = new MutableLiveData<>();
 
     public Classroom getClassroom() {
@@ -56,10 +59,10 @@ public class ClassroomStudentMainMenuViewModel extends ViewModel{
     }
 
     public void getStudent(){
-
-    }
-    public void getTeacher(){
-
+        new CourseDAO().getStudentByID(this.institution.getId(), this.course.getId(), this.institutionUser.getId(), task -> {
+            if(task.getResult() != null) this.mldStudent.setValue(task.getResult());
+            else this.snackbarText.setValue("Erro ao encontrar o estudante correspondente ao usuario");
+        });
     }
 
 
