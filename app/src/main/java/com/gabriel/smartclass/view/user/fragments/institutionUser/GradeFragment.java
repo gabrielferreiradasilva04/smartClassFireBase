@@ -5,11 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.gabriel.smartclass.databinding.FragmentGradeBinding;
+import com.gabriel.smartclass.model.Student;
 import com.gabriel.smartclass.viewModels.ClassroomStudentMainMenuViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,14 +32,49 @@ public class GradeFragment extends Fragment {
                              Bundle savedInstanceState) {
         this.binding = FragmentGradeBinding.inflate(inflater, container, false);
         this.buildViewModel();
+        buildRecyclerView();
         return this.binding.getRoot();
     }
 
-    private void buildRecyeclerview(){
+    private void buildRecyclerView(){
         this.binding.rcGradefragment.setHasFixedSize(false);
         this.binding.rcGradefragment.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        this.binding.rcGradefragment.setAdapter(viewModel.getGradeAdapter());
+        this.viewModel.getGradeAdapter().registerAdapterDataObserver(this.adapterObserver());
     }
 
+    private RecyclerView.AdapterDataObserver adapterObserver() {
+        return new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+            }
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                super.onItemRangeChanged(positionStart, itemCount);
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount, @Nullable Object payload) {
+                super.onItemRangeChanged(positionStart, itemCount, payload);
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+            }
+
+            @Override
+            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+                super.onItemRangeMoved(fromPosition, toPosition, itemCount);
+            }
+        };
+    }
 
 
     public void buildViewModel(){
