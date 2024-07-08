@@ -5,8 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".view.user.fragments.institutionUser.GradeFragment">
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_margin="5dp"
         android:id="@+id/rc_gradefragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <include
+        android:id="@+id/empty_gradecontainer"
+        layout="@layout/empty_rc_gradelayout"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 </FrameLayout>

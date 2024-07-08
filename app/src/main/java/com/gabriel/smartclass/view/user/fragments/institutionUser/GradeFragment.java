@@ -7,13 +7,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gabriel.smartclass.databinding.EmptyRcGradelayoutBinding;
 import com.gabriel.smartclass.databinding.FragmentGradeBinding;
-import com.gabriel.smartclass.model.Student;
+import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
 import com.gabriel.smartclass.viewModels.ClassroomStudentMainMenuViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +34,16 @@ public class GradeFragment extends Fragment {
         this.buildViewModel();
         buildRecyclerView();
         return this.binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EmptyRcGradelayoutBinding viewEmpty = binding.emptyGradecontainer;
+        EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(binding.rcGradefragment, viewEmpty.getRoot());
+        viewModel.getGradeAdapter().registerAdapterDataObserver(observer);
+        viewModel.getGradeAdapter().notifyDataSetChanged();
+
     }
 
     private void buildRecyclerView(){
