@@ -13,48 +13,42 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.adapter.ViewHolders.DefaultViewHolder;
-import com.gabriel.smartclass.model.StudentGrade;
+import com.gabriel.smartclass.model.Frequency;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GradesAdapter extends RecyclerView.Adapter{
-    private MutableLiveData<List<StudentGrade>> list;
+public class FrequencyAdapter extends RecyclerView.Adapter {
+    private MutableLiveData<List<Frequency>> list;
 
-    public MutableLiveData<List<StudentGrade>> getList() {
+    public MutableLiveData<List<Frequency>> getList() {
         return list;
     }
 
-    public void setList(MutableLiveData<List<StudentGrade>> list) {
+    public void setList(MutableLiveData<List<Frequency>> list) {
         this.list = list;
     }
 
-    public GradesAdapter(){
+    public FrequencyAdapter(){
         this.list = new MutableLiveData<>(new ArrayList<>());
     }
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.rc_grade_layout, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.rc_frequency_layout, parent, false);
         return new DefaultViewHolder(itemView);    }
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        TextView subject = holder.itemView.findViewById(R.id.text_subjectname);
-        TextView status = holder.itemView.findViewById(R.id.text_status);
-        AppCompatButton grade_button = holder.itemView.findViewById(R.id.button_grade);
+        TextView subject = holder.itemView.findViewById(R.id.text_subjectname_frequency);
+        AppCompatButton button_frequency = holder.itemView.findViewById(R.id.button_frequency);
         subject.setText(this.list.getValue().get(position).getSubject().getDescription());
-        status.setText(this.list.getValue().get(position).getFinalResult());
-        if(this.list.getValue().get(position).getFinalResult().equals("")){
-            status.setText("Andamento");
-        }
-        grade_button.setText(Double.toString(this.list.getValue().get(position).getFinalGrade()));
+        button_frequency.setText(Double.toString(this.list.getValue().get(position).getPercent())+"%");
     }
 
     @Override
     public int getItemCount() {
-       return this.list.getValue().size();
+        return this.list.getValue().size();
     }
 }

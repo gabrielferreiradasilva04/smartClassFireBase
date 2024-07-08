@@ -5,10 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".view.user.fragments.institutionUser.FrequencyFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rc_frequency"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <include
+        android:id="@+id/emptyfrequency_container"
+        layout="@layout/empty_frequency_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:visibility="gone"/>
+
 
 </FrameLayout>

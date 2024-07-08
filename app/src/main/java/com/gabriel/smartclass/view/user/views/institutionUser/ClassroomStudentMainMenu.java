@@ -1,6 +1,7 @@
 package com.gabriel.smartclass.view.user.views.institutionUser;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -35,7 +36,7 @@ public class ClassroomStudentMainMenu extends AppCompatActivity {
     }
 
     public void studentInitialize(){
-
+        this.viewModel.getStudentByID();
     }
 
     private void buildMenu() {

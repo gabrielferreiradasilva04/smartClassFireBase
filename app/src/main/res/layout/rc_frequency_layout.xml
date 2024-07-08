@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
     <View
-        android:id="@+id/main_container"
+        android:id="@+id/main_container_frequency"
         style="@style/SimpleViewContainer2"
         android:layout_width="match_parent"
         android:layout_height="150dp"
@@ -17,27 +16,27 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_subjectname"
+        android:id="@+id/text_subjectname_frequency"
         android:layout_width="0dp"
         android:textColor="@color/black"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/button_grade"
-        app:layout_constraintStart_toStartOf="@+id/main_container"
-        app:layout_constraintTop_toTopOf="@+id/button_grade" />
+        app:layout_constraintEnd_toStartOf="@+id/button_frequency"
+        app:layout_constraintStart_toStartOf="@+id/main_container_frequency"
+        app:layout_constraintTop_toTopOf="@+id/button_frequency" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button_grade"
+        android:id="@+id/button_frequency"
         style="@style/circle_image_button_profile_picture_large"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_margin="16dp"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/main_container"
-        app:layout_constraintTop_toTopOf="@+id/main_container"
+        app:layout_constraintEnd_toEndOf="@+id/main_container_frequency"
+        app:layout_constraintTop_toTopOf="@+id/main_container_frequency"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <View
@@ -45,16 +44,5 @@
         style="@style/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_container" />
-
-    <TextView
-        android:id="@+id/text_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/main_container"
-        app:layout_constraintEnd_toEndOf="@+id/button_grade"
-        app:layout_constraintStart_toStartOf="@+id/button_grade"
-        app:layout_constraintTop_toBottomOf="@+id/button_grade" />
+        app:layout_constraintTop_toBottomOf="@+id/main_container_frequency" />
 </androidx.constraintlayout.widget.ConstraintLayout>
