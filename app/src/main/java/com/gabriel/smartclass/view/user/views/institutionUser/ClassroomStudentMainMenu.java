@@ -37,6 +37,12 @@ public class ClassroomStudentMainMenu extends AppCompatActivity {
 
     public void studentInitialize(){
         this.viewModel.getStudentByID();
+        try {
+            this.viewModel.buildRank();
+        }catch (NullPointerException e){
+            Log.d("ERROOOOOOO", "studentInitialize: "+e.getMessage());
+        }
+
     }
 
     private void buildMenu() {

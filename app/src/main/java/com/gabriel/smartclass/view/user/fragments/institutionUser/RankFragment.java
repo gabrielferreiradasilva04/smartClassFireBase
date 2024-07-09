@@ -5,18 +5,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.gabriel.smartclass.R;
+import com.gabriel.smartclass.databinding.FragmentRankBinding;
+import com.gabriel.smartclass.viewModels.ClassroomStudentMainMenuViewModel;
 
 public class RankFragment extends Fragment {
+    private FragmentRankBinding binding;
+    private ClassroomStudentMainMenuViewModel viewModel;
 
     public RankFragment(){
 
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_rank, container, false);
+        this.binding = FragmentRankBinding.inflate(inflater, container, false);
+        buildViewModel();
+        buildRecyclerView();
+        return this.binding.getRoot();
     }
+    public void buildViewModel(){
+        this.viewModel = new ViewModelProvider(requireActivity()).get(ClassroomStudentMainMenuViewModel.class);
+    }
+    public void buildRecyclerView(){
+        this.binding.rcRanking.setHasFixedSize(false);
+        this.binding.rcRanking.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        this.binding.rcRanking.setAdapter(this.viewModel.getRankAdapter());
+    }
+
 }
