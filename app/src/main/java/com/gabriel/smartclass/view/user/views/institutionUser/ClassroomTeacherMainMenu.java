@@ -2,7 +2,6 @@ package com.gabriel.smartclass.view.user.views.institutionUser;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.PopupMenu;
@@ -54,7 +53,6 @@ public class ClassroomTeacherMainMenu extends AppCompatActivity {
         this.viewModel.setInstitution(this.getIntent().getParcelableExtra("institution"));
         this.viewModel.setClassroom(this.getIntent().getParcelableExtra("classroom"));
         this.viewModel.setCourse(this.getIntent().getParcelableExtra("course"));
-        Log.d("Recebimento", "buildViewModel: "+this.viewModel.getInstitutionUser().getDescription()+"\n"+this.viewModel.getInstitution().getName()+"\n"+this.viewModel.getClassroom().getDescription()+"\n"+this.viewModel.getCourse().getDescription() );
         this.viewModel.getAllStudents();
         this.viewModel.getTeacherSubjects();
         binding.teachermenubutton.setOnClickListener(this.floatClickListener());
@@ -76,6 +74,7 @@ public class ClassroomTeacherMainMenu extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+
     private DefaultClickListener<CourseMember> OnTeacherClick() {
         return member -> {
             this.viewModel.setStudent(member);
@@ -83,24 +82,33 @@ public class ClassroomTeacherMainMenu extends AppCompatActivity {
             dialog.show(getSupportFragmentManager(), dialog.getTag());
         };
     }
+
     private Observer<? super List<CourseMember>> studentsObserver() {
-        return list ->{
+        return list -> {
             this.studentAdapter.getMutableLiveDataT().setValue(list);
             this.studentAdapter.notifyDataSetChanged();
         };
     }
+
     private void openMenuOptions(View v) {
         PopupMenu popupMenu = new PopupMenu(this, v);
         MenuInflater inflater = popupMenu.getMenuInflater();
         inflater.inflate(R.menu.teacher_classroom_menu, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
-            if(id == R.id.teacher_timetable){
+            if (id == R.id.teacher_timetable) {
                 Intent i = new Intent(this, TimeTableView.class);
                 i.putExtra("institution", this.viewModel.getInstitution());
                 i.putExtra("course", this.viewModel.getCourse());
                 i.putExtra("classroom", this.viewModel.getClassroom());
                 i.putExtra("courseMember", false);
+                this.startActivity(i);
+            }
+            if (id == R.id.teacher_students_ranking) {
+                Intent i = new Intent(this, RankTeacherActivity.class);
+                i.putExtra("institution", this.viewModel.getInstitution());
+                i.putExtra("course", this.viewModel.getCourse());
+                i.putExtra("classroom", this.viewModel.getClassroom());
                 this.startActivity(i);
             }
             return true;

@@ -11,11 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:cropToPadding="true"
+        android:clipToOutline="true"
+        android:scaleType="centerCrop"
         android:id="@+id/button_position"
         style="@style/circle_image_button_profile_picture"
         android:layout_width="80dp"
@@ -30,6 +34,7 @@
         style="@style/circle_image_button_profile_picture"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:textSize="22sp"
         android:text=""
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@id/view"
@@ -41,9 +46,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:layout_marginStart="106dp"
         android:text="TextView"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/view"
-        app:layout_constraintStart_toEndOf="@+id/button_position"
         app:layout_constraintTop_toTopOf="@id/view" />
 
     <View

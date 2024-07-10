@@ -11,6 +11,7 @@ import android.widget.PopupMenu;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +28,7 @@ import com.gabriel.smartclass.observer.EmptyRecyclerViewObserver;
 import com.gabriel.smartclass.viewModels.InstitutionLinkRequestsFragmentViewModel;
 import com.gabriel.smartclass.viewModels.factorys.InstitutionLinkRequestsViewModelFactory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
@@ -57,6 +59,7 @@ public class InstitutionLinkRequestFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         viewModel.getSnackBarText().setValue("");
+        viewModel.getSnackBarText().removeObserver(this.snackbarObserver());
     }
 
     private void initialize(){
@@ -65,9 +68,18 @@ public class InstitutionLinkRequestFragment extends Fragment {
         ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity(), factory);
         viewModel = viewModelProvider.get(InstitutionLinkRequestsFragmentViewModel.class);
         viewModel.getInstitutionLinkRequests(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), LinkRequestStatusDAO.PENDING_REFERENCE);
+        viewModel.getSnackBarText().observe(this.getViewLifecycleOwner(), this.snackbarObserver());
         buildRecyclerView();
         refresh();
         actionButton.setOnClickListener(openMenu());
+    }
+
+    private Observer<? super String> snackbarObserver() {
+        return text ->{
+          if(text != null && !text.equals("")){
+              Snackbar.make(binding.institutionNotificationsRecyclerView, text, Snackbar.LENGTH_SHORT).show();
+          }
+        };
     }
 
     private void loadComponents(){

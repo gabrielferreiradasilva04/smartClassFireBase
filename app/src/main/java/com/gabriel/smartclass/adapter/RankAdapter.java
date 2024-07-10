@@ -56,10 +56,12 @@ public class RankAdapter extends RecyclerView.Adapter {
             button_position.setImageResource(R.drawable.terceiro_lugar);
         } else if (position == 3) {
             button_position.setImageResource(R.drawable.quarto_lugar);
+        } else if (position == 4) {
+            button_position.setImageResource(R.drawable.quinto_lugar);
         } else {
             button_position.setVisibility(View.GONE);
-            button_position_text.setText(View.VISIBLE);
-            button_position_text.setText(position + 1);
+            button_position_text.setVisibility(View.VISIBLE);
+            button_position_text.setText(Integer.toString(position + 1)+"°");
         }
 }
 
