@@ -1,5 +1,6 @@
 package com.gabriel.smartclass.view.user.fragments.institutionUser;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.gabriel.smartclass.R;
 import com.gabriel.smartclass.model.User;
 import com.gabriel.smartclass.model.UserType;
+import com.gabriel.smartclass.view.user.views.institutionUser.CardIDView;
 import com.gabriel.smartclass.view.user.views.institutionUser.InstitutionUserMainMenu;
 import com.gabriel.smartclass.viewModels.InstitutionUserMainMenuViewModel;
 
@@ -53,7 +55,22 @@ public class InstitutionUserProfile extends Fragment {
         buildViewModel();
         loadComponents();
         viewModelObservers();
+        this.binding.buttonCardId.setOnClickListener(this.cardViewListener());
     }
+
+    private View.OnClickListener cardViewListener() {
+        return view ->{
+          this.openCardIDView();
+        };
+    }
+
+    private void openCardIDView() {
+        Intent i = new Intent(this.getContext(), CardIDView.class);
+        i.putExtra("institution", this.viewModel.getCurrentInstitution());
+        i.putExtra("institutionUser", this.viewModel.getCurrentInstitutionUser());
+        startActivity(i);
+    }
+
     public void viewModelObservers(){
         this.viewModel.getUserByInstitutionUser().observe(getViewLifecycleOwner(), userObserver());
         this.viewModel.getUserTypeByInstitutionUser().observe(getViewLifecycleOwner(), userTypeObserver());
@@ -93,5 +110,6 @@ public class InstitutionUserProfile extends Fragment {
         edtxt_userType = binding.institutionUserMainmenuEdtxtUsertype;
         imageButton = binding.institutionUserMainmenuProfilePicture;
     }
+
 
 }

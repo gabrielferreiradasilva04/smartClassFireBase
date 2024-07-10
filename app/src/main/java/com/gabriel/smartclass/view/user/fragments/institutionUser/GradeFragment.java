@@ -43,7 +43,6 @@ public class GradeFragment extends Fragment {
         EmptyRecyclerViewObserver observer = new EmptyRecyclerViewObserver(binding.rcGradefragment, viewEmpty.getRoot());
         viewModel.getGradeAdapter().registerAdapterDataObserver(observer);
         viewModel.getGradeAdapter().notifyDataSetChanged();
-
     }
 
     private void buildRecyclerView(){

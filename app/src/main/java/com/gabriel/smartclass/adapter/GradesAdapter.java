@@ -47,7 +47,7 @@ public class GradesAdapter extends RecyclerView.Adapter{
         AppCompatButton grade_button = holder.itemView.findViewById(R.id.button_grade);
         subject.setText(this.list.getValue().get(position).getSubject().getDescription());
         status.setText(this.list.getValue().get(position).getFinalResult());
-        if(this.list.getValue().get(position).getFinalResult().equals("")){
+        if(this.list.getValue().get(position).getFinalResult() == null || this.list.getValue().get(position).getFinalResult().equals("") ){
             status.setText("Andamento");
         }
         grade_button.setText(Double.toString(this.list.getValue().get(position).getFinalGrade()));

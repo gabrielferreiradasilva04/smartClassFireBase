@@ -29,4 +29,16 @@
         app:menu="@menu/bottom_action_bar_menu_classroom"
         android:backgroundTint="@color/baby_blue"
         />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button_time_table"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        app:backgroundTint="@color/azul_celeste"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_container_classroom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/baseline_calendar_month_24"
+        tools:ignore="SpeakableTextPresentCheck" />
 </androidx.constraintlayout.widget.ConstraintLayout>
